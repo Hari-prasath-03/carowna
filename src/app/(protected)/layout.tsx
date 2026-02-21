@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { Figtree } from "next/font/google";
-import "../../globals.css";
+import { cn } from "@/lib/utils";
+import "../globals.css";
 
 const figtree = Figtree({
   variable: "--font-figtree",
@@ -19,7 +20,7 @@ export default function ProtectedLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${figtree.variable} antialiased`}>
+      <body className={cn(figtree.variable, "antialiased")}>
         <div className="min-h-screen bg-background text-foreground">
           {children}
         </div>

@@ -1,10 +1,17 @@
 import { Metadata } from "next";
-import { Figtree } from "next/font/google";
+import { Georama, Montserrat } from "next/font/google";
+import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 import "../globals.css";
 
-const figtree = Figtree({
-  variable: "--font-figtree",
+const montserrat = Montserrat({
   subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const georama = Georama({
+  subsets: ["latin"],
+  variable: "--font-serif",
 });
 
 export const metadata: Metadata = {
@@ -19,10 +26,18 @@ export default function AuthLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${figtree.variable} antialiased`}>
+      <body
+        className={cn(
+          montserrat.variable,
+          georama.className,
+          georama.variable,
+          "antialiased",
+        )}
+      >
         <div className="min-h-screen flex items-center justify-center bg-linear-to-br from-primary/5 via-background to-accent/10 p-4">
           <div className="w-full max-w-md">{children}</div>
         </div>
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

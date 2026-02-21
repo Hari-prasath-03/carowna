@@ -1,16 +1,22 @@
 import { Metadata } from "next";
-import { Figtree } from "next/font/google";
+import { Montserrat, Georama } from "next/font/google";
+import { cn } from "@/lib/utils";
 import "../globals.css";
-
-const figtree = Figtree({
-  variable: "--font-figtree",
-  subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
   title: "Carvona",
   description: "Carvona - Premium Car Rentals",
 };
+
+const montserrat = Montserrat({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
+
+const georama = Georama({
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
 
 export default function UserLayout({
   children,
@@ -19,7 +25,9 @@ export default function UserLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${figtree.variable} antialiased`}>
+      <body
+        className={cn(montserrat.className, georama.className, "antialiased")}
+      >
         <div className="min-h-screen bg-background text-foreground">
           {children}
         </div>

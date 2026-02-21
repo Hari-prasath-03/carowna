@@ -1,0 +1,112 @@
+High-Level System Model
+
+This is a 3-role system with compliance enforcement.
+
+Core ideas:
+- User may rent vehicle with or without driver
+- If without driver → legal verification required
+- Vendor supplies vehicles & drivers
+- Admin governs supply + compliance
+
+User Flow (Rental Side)
+
+Step 1 — Registration
+- Register
+- Complete Profile
+    - Personal details
+    - Contact
+    - Address
+    - ID verification metadata
+
+Step 2 — Browse Vehicles
+- View available vehicles
+- Filter by:
+    - Type
+    - Price
+
+Step 3 — Booking Decision
+User selects vehicle → System asks:
+Need driver?
+Case A — With Driver
+ - Select driver (from vendor pool)
+ - Continue to payment
+
+Case B — Without Driver
+ - Mandatory uploads:
+    - Driving License
+    - Aadhaar
+ - Verification status = Pending
+Then:
+ - Admin verification (optional automation later)
+ - Allow payment only after verification? (Design choice)
+OR
+ - Allow payment but mark booking as conditional
+
+Step 4 — Initial Payment
+Booking created
+Payment status:
+ - Pending
+ - Failed
+ - Paid
+
+Step 5 — Booking Status Lifecycle
+ - Requested
+ - Awaiting Approval (if no driver)
+ - Confirmed
+ - Active
+ - Completed
+ - Cancelled
+
+
+Vendor Flow (Supply Side)
+
+Step 1 — Profile Completion
+- Business details
+- Documents
+- Bank account for settlement
+
+Step 2 — Vehicle Onboarding
+- Vehicle details
+- Insurance
+- RC documents
+- Upload proofs
+- Status = Pending Approval
+
+Step 3 — Driver Onboarding
+- Driver license
+- Aadhaar
+- Experience
+- Status = Pending Approval
+
+Step 4 — View Booking Requests
+- Booking status
+- Assigned vehicle
+- Assigned driver
+- Rental period
+
+Vendor cannot activate vehicle until Admin approves.
+
+
+Admin Flow (Control Layer)
+
+Admin responsibilities:
+
+1. Vendor Onboarding
+- Create vendor credentials
+- View user details (if needed)
+
+2. Approval Engine
+- Approve:
+    - Vehicle
+    - Driver
+
+3. Read Access
+- Users
+- Vendors
+- Bookings
+- Payments
+
+4. Platform Oversight
+- Revenue metrics
+- Fraud monitoring
+- Manual overrides

@@ -38,7 +38,7 @@ export async function verifyOtpAction(
     };
   }
 
-  redirect("/");
+  redirect("/basic-details");
 }
 
 export async function resendOtpAction(email: string): Promise<AuthActionState> {

@@ -41,8 +41,6 @@ export default async function signupAction(
     },
   });
 
-  console.log(error);
-
   if (error) {
     return {
       success: false,

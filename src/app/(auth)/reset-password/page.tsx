@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import FormInput from "@/components/forms/form-input";
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 import resetPasswordAction from "@/actions/auth/resend-password";
 
 const initialState = {

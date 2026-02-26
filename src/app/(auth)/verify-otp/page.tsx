@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/card";
 import OtpInput from "@/components/forms/otp-input";
 import { verifyOtpAction, resendOtpAction } from "@/actions/auth/verify-otp";
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 
 const initialState = {
   success: false,

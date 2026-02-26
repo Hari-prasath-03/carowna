@@ -1,13 +1,17 @@
 import { Metadata } from "next";
-import { Figtree } from "next/font/google";
 import { cn } from "@/lib/utils";
 import "../globals.css";
+import { Georama, Montserrat } from "next/font/google";
 
-const figtree = Figtree({
-  variable: "--font-figtree",
+const montserrat = Montserrat({
   subsets: ["latin"],
+  variable: "--font-sans",
 });
 
+const georama = Georama({
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
 export const metadata: Metadata = {
   title: "Carvona - Admin",
   description: "Carvona Admin Dashboard",
@@ -20,7 +24,14 @@ export default function ProtectedLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn(figtree.variable, "antialiased")}>
+      <body
+        className={cn(
+          montserrat.className,
+          montserrat.variable,
+          georama.variable,
+          "antialiased",
+        )}
+      >
         <div className="min-h-screen bg-background text-foreground">
           {children}
         </div>

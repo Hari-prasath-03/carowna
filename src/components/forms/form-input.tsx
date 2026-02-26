@@ -12,6 +12,10 @@ interface FormInputProps extends ComponentProps<"input"> {
   name: string;
   error?: string | string[];
   containerClassName?: string;
+  labelClassName?: string;
+  inputContainerClassName?: string;
+  icon?: React.ReactNode;
+  action?: React.ReactNode;
 }
 
 export default function FormInput({
@@ -19,9 +23,13 @@ export default function FormInput({
   name,
   error,
   containerClassName,
+  labelClassName,
+  inputContainerClassName,
   className,
   id,
   type,
+  icon,
+  action,
   ...props
 }: FormInputProps) {
   const [showPassword, setShowPassword] = useState(false);
@@ -30,13 +38,25 @@ export default function FormInput({
 
   return (
     <div className={cn("grid gap-2", containerClassName)}>
-      <Label htmlFor={inputId}>{label}</Label>
-      <div className="relative">
+      <Label htmlFor={inputId} className={labelClassName}>
+        {label}
+      </Label>
+      <div className={cn("relative", inputContainerClassName)}>
+        {icon && (
+          <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors">
+            {icon}
+          </div>
+        )}
         <Input
           id={inputId}
           name={name}
           type={isPassword ? (showPassword ? "text" : "password") : type}
-          className={cn(className, isPassword && "pr-10")}
+          className={cn(
+            className,
+            isPassword && "pr-10",
+            icon && "pl-10",
+            action && "pr-12",
+          )}
           {...props}
         />
         {isPassword && (
@@ -52,6 +72,11 @@ export default function FormInput({
               <Eye className="w-4 h-4" />
             )}
           </button>
+        )}
+        {action && !isPassword && (
+          <div className="absolute right-2 top-1/2 -translate-y-1/2">
+            {action}
+          </div>
         )}
       </div>
       {error && (

@@ -29,7 +29,7 @@ export default async function loginAction(
     password: parsed.data.password,
   });
 
-  if (error?.status === 400) {
+  if (error?.code === "email_not_confirmed") {
     redirect(`/verify-otp?email=${encodeURIComponent(parsed.data.email)}`);
   }
 
@@ -41,5 +41,9 @@ export default async function loginAction(
     };
   }
 
-  redirect("/");
+  return {
+    success: true,
+    error: null,
+    message: "Login successful",
+  };
 }

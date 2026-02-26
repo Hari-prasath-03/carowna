@@ -21,15 +21,14 @@ CREATE TABLE public.users (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
-
-
 CREATE TABLE public.vehicles (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   vendor_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
 
   name TEXT NOT NULL,
   brand TEXT,
-  vehicle_type TEXT CHECK (vehicle_type IN ('2_wheeler', '4_wheeler')),
+  vehicle_type TEXT CHECK (vehicle_type IN ('bike', 'car', 'luxury')),
+  transmission TEXT CHECK (transmission IN ('automatic', 'manual')),
 
   registration_number TEXT UNIQUE NOT NULL,
   images TEXT[],
@@ -50,8 +49,6 @@ CREATE TABLE public.vehicles (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
-
-
 CREATE TABLE public.drivers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   vendor_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
@@ -71,8 +68,6 @@ CREATE TABLE public.drivers (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
-
-
 CREATE TABLE public.bookings (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
 
@@ -88,15 +83,14 @@ CREATE TABLE public.bookings (
   total_amount NUMERIC(10,2) NOT NULL,
   initial_amount NUMERIC(10,2) NOT NULL,
 
-  location TEXT,
+  location_pickup TEXT,
+  location_drop TEXT,
 
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW(),
 
   CHECK (end_date >= start_date)
 );
-
-
 
 CREATE TABLE public.payments (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),

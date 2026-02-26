@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { Montserrat, Georama } from "next/font/google";
 import { cn } from "@/lib/utils";
+import BottomNav from "@/components/layout/bottom-nav-bar";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import "../globals.css";
 
 export const metadata: Metadata = {
@@ -24,13 +26,26 @@ export default function UserLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body
-        className={cn(montserrat.className, georama.className, "antialiased")}
+        className={cn(
+          georama.className,
+          montserrat.variable,
+          georama.variable,
+          "antialiased",
+        )}
       >
-        <div className="min-h-screen bg-background text-foreground">
-          {children}
-        </div>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="min-h-screen max-w-344.5 mx-auto bg-background text-foreground">
+            {children}
+            <BottomNav />
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );

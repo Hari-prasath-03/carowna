@@ -17,7 +17,7 @@ import loginAction from "@/actions/auth/login";
 import FormInput from "@/components/forms/form-input";
 import { isClientAuthenticated } from "@/service/auth-client";
 import { useRouter } from "next/navigation";
-import Logo from "@/components/Logo";
+import Logo from "@/components/logo";
 
 const initialState = {
   success: false,
@@ -34,18 +34,18 @@ export default function LoginPage() {
 
   useEffect(() => {
     async function checkAuth() {
-      if (await isClientAuthenticated()) {
-        router.push("/");
-      }
+      if (await isClientAuthenticated()) router.push("/");
     }
     checkAuth();
   }, [router]);
 
   useEffect(() => {
-    if (state.error) {
-      toast.error(state.error);
+    if (state.error) toast.error(state.error);
+    if (state.success) {
+      const callbackUrl = new URLSearchParams(window.location.search).get("cb");
+      router.push(callbackUrl || "/");
     }
-  }, [state.error]);
+  }, [state.error, state.success, router]);
 
   return (
     <div className="w-full space-y-6">

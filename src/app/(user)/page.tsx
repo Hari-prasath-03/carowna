@@ -1,17 +1,80 @@
-import logoutAction from "@/actions/auth/logout";
-import { getUser } from "@/service/self-user";
+import HomeHeader from "@/components/home/home-header";
+import CategoryFilters from "@/components/home/category-filters";
+import VehicleInfiniteScrollList from "@/components/home/vehicle-infinite-scroll-list";
+import { getVehicles } from "@/service/vehicles";
+import { VehicleType } from "@/types";
+import { Suspense } from "react";
+import { VehicleListSkeleton } from "@/components/home/vehicle-skeleton";
 
-export default async function VehiclesPage() {
-  const user = await getUser();
+type vehicleSearch = {
+  searchParams: Promise<{
+    type?: string;
+    search?: string;
+    transmission?: string;
+    minPrice?: string;
+    maxPrice?: string;
+    fuelType?: string;
+  }>;
+};
+
+async function VehicleList({
+  searchParams,
+}: {
+  searchParams: vehicleSearch["searchParams"];
+}) {
+  const { type, search, transmission, minPrice, maxPrice, fuelType } =
+    await searchParams;
+
+  const [vehicles, err] = await getVehicles({
+    type: (type as VehicleType) || "All",
+    search: search || "",
+    transmission: transmission as "automatic" | "manual",
+    minPrice: minPrice ? parseInt(minPrice) : undefined,
+    maxPrice: maxPrice ? parseInt(maxPrice) : undefined,
+    fuelType: fuelType || "",
+    page: 1,
+    limit: 5,
+  });
+
+  if (err) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-[50vh] p-8 text-center bg-card rounded-2xl mx-4 mt-8">
+        <p className="text-destructive font-bold text-lg mb-2">
+          Error Loading Vehicles
+        </p>
+        <p className="text-muted-foreground text-sm">
+          {err?.reason || "Something went wrong"}
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div>
-      {user?.email}
-      {user?.display_name}
-      {user?.role}
-      {user?.id}
-      <form action={logoutAction}>
-        <button type="submit">Logout</button>
-      </form>
+    <VehicleInfiniteScrollList
+      initialVehicles={vehicles}
+      initialTotal={vehicles.length}
+    />
+  );
+}
+
+export default async function VehiclesPage({ searchParams }: vehicleSearch) {
+  return (
+    <div className="pb-32">
+      <HomeHeader />
+
+      <main className="space-y-6">
+        <Suspense
+          fallback={<div className="h-12 w-full animate-pulse bg-muted/20" />}
+        >
+          <CategoryFilters />
+        </Suspense>
+
+        <div className="px-4 md:px-6">
+          <Suspense fallback={<VehicleListSkeleton />}>
+            <VehicleList searchParams={searchParams} />
+          </Suspense>
+        </div>
+      </main>
     </div>
   );
 }

@@ -17,7 +17,7 @@ import loginAction from "@/actions/auth/login";
 import FormInput from "@/components/forms/form-input";
 import { isClientAuthenticated } from "@/service/auth-client";
 import { useRouter } from "next/navigation";
-import Logo from "@/components/logo";
+import Logo from "@/components/layout/logo";
 
 const initialState = {
   success: false,

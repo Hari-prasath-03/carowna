@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/card";
 import signupAction from "@/actions/auth/sign-up";
 import FormInput from "@/components/forms/form-input";
-import Logo from "@/components/logo";
+import Logo from "@/components/layout/logo";
 import { isClientAuthenticated } from "@/service/auth-client";
 
 const initialState = {

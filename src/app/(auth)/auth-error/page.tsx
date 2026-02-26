@@ -13,7 +13,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import Logo from "@/components/logo";
+import Logo from "@/components/layout/logo";
 
 function AuthErrorContent() {
   const searchParams = useSearchParams();

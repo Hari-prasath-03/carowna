@@ -21,7 +21,7 @@ import { BasicDetailsState } from "@/types";
 import { useRouter } from "next/navigation";
 
 import { useGeolocation } from "@/hooks/use-geolocation";
-import Logo from "@/components/logo";
+import Logo from "@/components/layout/logo";
 
 const initialState: BasicDetailsState = {
   success: false,

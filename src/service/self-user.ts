@@ -1,5 +1,5 @@
 import { err, ok } from "@/lib/error-handler";
-import createClient from "@/lib/supabase/server";
+import createClient from "@/lib/supabase/clients/server";
 import { User } from "@/types";
 
 export async function getUser() {

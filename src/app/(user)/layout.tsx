@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import BottomNav from "@/components/layout/bottom-nav-bar";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import "../globals.css";
+import { Toaster } from "sonner";
 
 export const metadata: Metadata = {
   title: "Carvona",
@@ -42,6 +43,7 @@ export default function UserLayout({
           disableTransitionOnChange
         >
           <div className="min-h-screen max-w-344.5 mx-auto bg-background text-foreground">
+            <Toaster position="top-center" richColors />
             {children}
             <BottomNav />
           </div>

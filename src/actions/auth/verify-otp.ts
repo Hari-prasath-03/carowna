@@ -1,6 +1,6 @@
 "use server";
 
-import createClient from "@/lib/supabase/server";
+import createClient from "@/lib/supabase/clients/server";
 import { verifyOtpSchema } from "@/types/validation-schema";
 import { AuthActionState } from "@/types";
 import { redirect } from "next/navigation";

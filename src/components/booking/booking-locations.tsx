@@ -23,7 +23,7 @@ export function BookingLocations({
       </div>
 
       <div className="bg-card rounded-3xl p-6 border border-border shadow-sm space-y-6 relative overflow-hidden">
-        <div className="absolute left-[2.45rem] top-12 bottom-12 w-px border-l border-dashed border-border pointer-events-none" />
+        <div className="absolute left-[2.45rem] top-26 bottom-12 w-px border-l border-dashed border-border pointer-events-none" />
 
         <FormInput
           label="Pickup Location"

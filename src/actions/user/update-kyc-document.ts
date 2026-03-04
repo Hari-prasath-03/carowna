@@ -1,6 +1,6 @@
 "use server";
 
-import createClient from "@/lib/supabase/server";
+import createClient from "@/lib/supabase/clients/server";
 import { revalidatePath } from "next/cache";
 import { getUser } from "@/service/self-user";
 import { ok, err } from "@/lib/error-handler";

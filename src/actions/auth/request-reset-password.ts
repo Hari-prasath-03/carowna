@@ -1,6 +1,6 @@
 "use server";
 
-import createClient from "@/lib/supabase/server";
+import createClient from "@/lib/supabase/clients/server";
 import { ForgotPasswordState } from "@/types";
 import { forgotPasswordSchema } from "@/types/validation-schema";
 import { headers } from "next/headers";

@@ -1,4 +1,4 @@
-import { publicSupabase } from "@/lib/supabase/public";
+import { publicSupabase } from "@/lib/supabase/clients/public";
 import { err, ok } from "@/lib/error-handler";
 import QueryBuilder from "@/lib/query-builder";
 import { Vehicle, VehicleType } from "@/types";
@@ -43,7 +43,6 @@ export const getVehicles = (params?: {
 
       builder
         .filter(true, "approval_status", "APPROVED")
-        .filter(true, "availability_status", "AVAILABLE")
         .filter(
           !!params?.type && params.type !== "All",
           "vehicle_type",
@@ -77,7 +76,6 @@ export const getVehicles = (params?: {
         images: v.images || [],
         rating: 4.5 + Math.random() * 0.5,
         vendor_id: v.vendor_id,
-        availability_status: v.availability_status,
         approval_status: v.approval_status,
       }));
 
@@ -119,7 +117,6 @@ export const getVehicleById = (id: string) => {
         insurance_doc_url: data.insurance_doc_url,
         rc_doc_url: data.rc_doc_url,
         rto_verification_doc_url: data.rto_verification_doc_url,
-        availability_status: data.availability_status,
         approval_status: data.approval_status,
         vendor_id: data.vendor_id,
       };

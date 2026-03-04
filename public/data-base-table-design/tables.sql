@@ -37,7 +37,6 @@ CREATE TABLE public.vehicles (
   capacity INT,
 
   approval_status public.approval_status DEFAULT 'PENDING',
-  availability_status public.availability_status DEFAULT 'AVAILABLE',
 
   insurance_doc_url TEXT,
   rc_doc_url TEXT,
@@ -60,7 +59,6 @@ CREATE TABLE public.drivers (
   rating NUMERIC(2,1) DEFAULT 0.0,
 
   approval_status public.approval_status DEFAULT 'PENDING',
-  availability_status public.availability_status DEFAULT 'AVAILABLE',
 
   license_doc_url TEXT,
 
@@ -124,6 +122,7 @@ CREATE TYPE public.availability_status AS ENUM ('AVAILABLE', 'UNAVAILABLE');
 
 -- Booking status
 CREATE TYPE public.booking_status AS ENUM (
+  'PENDING_PAYMENT',
   'REQUESTED',
   'COMPLETED',
   'CANCELLED'

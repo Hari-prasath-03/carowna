@@ -1,4 +1,4 @@
-import createClient from "../client";
+import createClient from "../clients/client";
 
 export default function getStorage() {
   const sb = createClient();

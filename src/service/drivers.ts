@@ -1,5 +1,5 @@
 import { err, ok } from "@/lib/error-handler";
-import { publicSupabase } from "@/lib/supabase/public";
+import { publicSupabase } from "@/lib/supabase/clients/public";
 import { Driver } from "@/types";
 import { unstable_cache } from "next/cache";
 
@@ -11,8 +11,7 @@ export const getDriversByVendor = (vendorId: string) => {
         .from("drivers")
         .select("id, vendor_id, name, years_of_exp, rating, price_per_day")
         .eq("vendor_id", vendorId)
-        .eq("approval_status", "APPROVED")
-        .eq("availability_status", "AVAILABLE");
+        .eq("approval_status", "APPROVED");
 
       if (error) {
         return err({ reason: error.message });

@@ -34,9 +34,7 @@ export function BookingFlowDrawer({
 
   const handleBooking = (driverId?: string) => {
     setLoading(true);
-    router.push(
-      `/booking?vehicleId=${vehicleId}${driverId ? `&driverId=${driverId}` : ""}`,
-    );
+    router.push(`/booking/${vehicleId}${driverId ? `/${driverId}` : ""}`);
   };
 
   const handleBack = () => setIsShowDrivers(false);

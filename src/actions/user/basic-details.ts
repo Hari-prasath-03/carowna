@@ -2,7 +2,7 @@
 
 import { BasicDetailsState } from "@/types";
 import { basicDetailsSchema } from "@/types/validation-schema";
-import createClient from "@/lib/supabase/server";
+import createClient from "@/lib/supabase/clients/server";
 import { getUser } from "@/service/self-user";
 import { revalidatePath } from "next/cache";
 

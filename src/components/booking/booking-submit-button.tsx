@@ -2,7 +2,15 @@ import { useFormStatus } from "react-dom";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-export function BookingSubmitButton() {
+interface BookingSubmitButtonProps {
+  disabled?: boolean;
+  label?: string;
+}
+
+export function BookingSubmitButton({
+  disabled,
+  label = "Confirm & Pay",
+}: BookingSubmitButtonProps) {
   const { pending } = useFormStatus();
 
   return (
@@ -10,7 +18,7 @@ export function BookingSubmitButton() {
       <div className="max-w-md mx-auto">
         <Button
           type="submit"
-          disabled={pending}
+          disabled={pending || disabled}
           className="w-full h-12 md:h-14 rounded-2xl bg-primary text-primary-foreground font-black uppercase tracking-[0.2em] shadow-2xl relative group overflow-hidden border border-white/5 transition-all active:scale-[0.98] disabled:opacity-70"
         >
           <span className="relative z-10 flex items-center justify-center gap-3">
@@ -21,7 +29,7 @@ export function BookingSubmitButton() {
               </>
             ) : (
               <>
-                Confirm & Pay
+                {label}
                 <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
               </>
             )}

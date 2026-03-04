@@ -44,7 +44,6 @@ export type Vehicle = {
   insurance_doc_url?: string;
   rc_doc_url?: string;
   rto_verification_doc_url?: string;
-  availability_status: "AVAILABLE" | "UNAVAILABLE";
   approval_status: "PENDING" | "APPROVED" | "REJECTED";
   vendor_id: string;
 };
@@ -62,7 +61,6 @@ export type DriverDetails = {
   date_of_birth?: string;
   gender?: string;
   approval_status: "PENDING" | "APPROVED" | "REJECTED";
-  availability_status: "AVAILABLE" | "UNAVAILABLE";
   license_doc_url?: string;
 } & Driver;
 

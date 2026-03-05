@@ -130,3 +130,40 @@ export const getVehicleById = (id: string) => {
     },
   )();
 };
+
+export const getVehiclePriceRange = () => {
+  return unstable_cache(
+    async () => {
+      const sb = publicSupabase;
+      const { data: minData } = await sb
+        .from("vehicles")
+        .select("price_per_day")
+        .eq("approval_status", "APPROVED")
+        .order("price_per_day", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      const { data: maxData } = await sb
+        .from("vehicles")
+        .select("price_per_day")
+        .eq("approval_status", "APPROVED")
+        .order("price_per_day", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (!minData || !maxData) {
+        return ok({ min: 0, max: 1000 });
+      }
+
+      return ok({
+        min: minData.price_per_day,
+        max: maxData.price_per_day,
+      });
+    },
+    ["vehicle-price-range"],
+    {
+      revalidate: 3600,
+      tags: ["vehicles", "price-range"],
+    },
+  )();
+};

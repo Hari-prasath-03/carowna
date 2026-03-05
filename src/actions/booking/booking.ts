@@ -41,7 +41,6 @@ export async function createBookingAction(formData: FormData) {
     return err({ reason: "You must be logged in to book" });
   }
 
-  // Re-run validation on server for security
   const [, validationErr] = await validateBookingConstraints({
     vehicleId: data.vehicle_id,
     driverId: data.driver_id,

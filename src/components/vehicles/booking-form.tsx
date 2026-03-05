@@ -1,30 +1,29 @@
 "use client";
 
 import { useState, useMemo, useTransition } from "react";
-import { toast } from "sonner";
 import { createBookingAction } from "@/actions/booking/booking";
 import { useBookingValidation } from "@/hooks/use-booking-validation";
 import { useRazorpay } from "@/hooks/use-razorpay";
-import { Driver, UserDetails, Vehicle } from "@/types";
+import { Driver, User, Vehicle } from "@/types";
 import { AlertCircle, ShieldAlert, CheckCircle2 } from "lucide-react";
 import { BookingLocations } from "../booking/booking-locations";
 import { BookingPeriod } from "../booking/booking-period";
 import { BookingDriverToggle } from "../booking/booking-driver-toggle";
 import { BookingCostSummary } from "../booking/booking-cost-summary";
 import { BookingSubmitButton } from "../booking/booking-submit-button";
-import BackButton from "../layout/back-button";
+import { toast } from "sonner";
 import Link from "next/link";
 
 interface BookingFormProps {
   vehicle: Vehicle;
   driver: Driver | null;
-  userDetails: UserDetails;
+  user: User;
 }
 
 export function BookingForm({
   vehicle,
   driver: initialDriver,
-  userDetails,
+  user,
 }: BookingFormProps) {
   const [isPending, startTransition] = useTransition();
 
@@ -75,14 +74,15 @@ export function BookingForm({
   };
 
   async function clientAction(formData: FormData) {
-    const res = await createBookingAction(formData);
+    // validate booking constraints & create booking then create razorpay order and initial payment record
+    const [booking, err] = await createBookingAction(formData);
 
-    if (res[1]) {
-      toast.error(res[1].reason);
+    if (err) {
+      toast.error(err.reason);
       return;
     }
 
-    const { order_id, amount, currency, key_id, booking_id } = res[0] as {
+    const { order_id, amount, currency, key_id, booking_id } = booking as {
       order_id: string;
       amount: number;
       currency: string;
@@ -97,8 +97,8 @@ export function BookingForm({
       currency,
       booking_id,
       vehicle_name: vehicle.name,
-      user_name: userDetails.display_name,
-      user_email: userDetails.email,
+      user_name: user.display_name,
+      user_email: user.email,
     });
   }
 
@@ -115,116 +115,106 @@ export function BookingForm({
   };
 
   return (
-    <div className="min-h-screen bg-background pb-32">
-      <header className="fixed top-0 left-0 right-0 bg-background z-50 border-b border-border px-4 h-16 flex items-center justify-between">
-        <BackButton />
-        <h1 className="text-lg font-black text-foreground uppercase tracking-tight">
-          Confirm Booking
-        </h1>
-        <div className="w-10" />
-      </header>
-
-      <div className="px-5 pt-24 space-y-6 max-w-md mx-auto">
-        {!validationStatus.isValid && !validationStatus.isChecking && (
-          <div
-            className={`p-4 rounded-3xl border flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300 ${
-              kycIncomplete
-                ? "bg-amber-500/10 border-amber-500/20 text-amber-500"
-                : "bg-destructive/10 border-destructive/20 text-destructive"
-            }`}
-          >
-            {kycIncomplete ? (
-              <ShieldAlert className="h-5 w-5 shrink-0 mt-0.5" />
-            ) : (
-              <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+    <div className="px-5 pt-24 space-y-6 max-w-md mx-auto">
+      {!validationStatus.isValid && !validationStatus.isChecking && (
+        <div
+          className={`p-4 rounded-3xl border flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300 ${
+            kycIncomplete
+              ? "bg-amber-500/10 border-amber-500/20 text-amber-500"
+              : "bg-destructive/10 border-destructive/20 text-destructive"
+          }`}
+        >
+          {kycIncomplete ? (
+            <ShieldAlert className="h-5 w-5 shrink-0 mt-0.5" />
+          ) : (
+            <AlertCircle className="h-5 w-5 shrink-0 mt-0.5" />
+          )}
+          <div className="space-y-1">
+            <p className="text-sm font-bold uppercase tracking-tight">
+              {kycIncomplete ? "KYC Verification Needed" : "Booking Conflict"}
+            </p>
+            <p className="text-xs font-medium opacity-90 leading-relaxed">
+              {validationStatus.message}
+            </p>
+            {kycIncomplete && (
+              <Link
+                href="/profile"
+                className="text-xs font-black uppercase tracking-widest underline decoration-2 underline-offset-4 mt-2 inline-block hover:opacity-80 transition-opacity"
+              >
+                Go to Profile →
+              </Link>
             )}
+          </div>
+        </div>
+      )}
+
+      {validationStatus.isValid &&
+        startDate &&
+        endDate &&
+        !validationStatus.isChecking && (
+          <div className="p-4 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
+            <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5" />
             <div className="space-y-1">
               <p className="text-sm font-bold uppercase tracking-tight">
-                {kycIncomplete ? "KYC Verification Needed" : "Booking Conflict"}
+                Available
               </p>
-              <p className="text-xs font-medium opacity-90 leading-relaxed">
-                {validationStatus.message}
+              <p className="text-xs font-medium opacity-90">
+                This vehicle is ready for your selected dates.
               </p>
-              {kycIncomplete && (
-                <Link
-                  href="/profile"
-                  className="text-xs font-black uppercase tracking-widest underline decoration-2 underline-offset-4 mt-2 inline-block hover:opacity-80 transition-opacity"
-                >
-                  Go to Profile →
-                </Link>
-              )}
             </div>
           </div>
         )}
 
-        {validationStatus.isValid &&
-          startDate &&
-          endDate &&
-          !validationStatus.isChecking && (
-            <div className="p-4 rounded-3xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 flex items-start gap-3 animate-in fade-in slide-in-from-top-2 duration-300">
-              <CheckCircle2 className="h-5 w-5 shrink-0 mt-0.5" />
-              <div className="space-y-1">
-                <p className="text-sm font-bold uppercase tracking-tight">
-                  Available
-                </p>
-                <p className="text-xs font-medium opacity-90">
-                  This vehicle is ready for your selected dates.
-                </p>
-              </div>
-            </div>
-          )}
+      <form action={clientAction} className="space-y-6">
+        <input type="hidden" name="vehicle_id" value={vehicle.id} />
+        <input type="hidden" name="driver_id" value={driverState?.id || ""} />
+        <input
+          type="hidden"
+          name="total_amount"
+          value={costSummary.totalAmount}
+        />
+        <input
+          type="hidden"
+          name="initial_amount"
+          value={costSummary.initialDeposit}
+        />
 
-        <form action={clientAction} className="space-y-6">
-          <input type="hidden" name="vehicle_id" value={vehicle.id} />
-          <input type="hidden" name="driver_id" value={driverState?.id || ""} />
-          <input
-            type="hidden"
-            name="total_amount"
-            value={costSummary.totalAmount}
-          />
-          <input
-            type="hidden"
-            name="initial_amount"
-            value={costSummary.initialDeposit}
-          />
+        <BookingLocations
+          pickup={pickup}
+          setPickup={setPickup}
+          dropoff={dropoff}
+          setDropoff={setDropoff}
+        />
 
-          <BookingLocations
-            pickup={pickup}
-            setPickup={setPickup}
-            dropoff={dropoff}
-            setDropoff={setDropoff}
-          />
+        <BookingPeriod
+          startDate={startDate}
+          setStartDate={setStartDate}
+          endDate={endDate}
+          setEndDate={setEndDate}
+        />
 
-          <BookingPeriod
-            startDate={startDate}
-            setStartDate={setStartDate}
-            endDate={endDate}
-            setEndDate={setEndDate}
-          />
+        <BookingDriverToggle
+          driver={initialDriver}
+          isActive={!!driverState}
+          onToggle={toggleDriver}
+        />
 
-          <BookingDriverToggle
-            driver={initialDriver}
-            isActive={!!driverState}
-            onToggle={toggleDriver}
-          />
+        <BookingCostSummary
+          summary={costSummary}
+          includeDriver={!!driverState}
+        />
 
-          <BookingCostSummary
-            summary={costSummary}
-            includeDriver={!!driverState}
-          />
-
-          <BookingSubmitButton
-            disabled={
-              !validationStatus.isValid ||
-              validationStatus.isChecking ||
-              !startDate ||
-              !endDate ||
-              startDate > endDate
-            }
-            label={getButtonLabel()}
-          />
-        </form>
-      </div>
+        <BookingSubmitButton
+          disabled={
+            !validationStatus.isValid ||
+            validationStatus.isChecking ||
+            !startDate ||
+            !endDate ||
+            startDate > endDate
+          }
+          label={getButtonLabel()}
+        />
+      </form>
     </div>
   );
 }

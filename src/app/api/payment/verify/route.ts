@@ -31,7 +31,6 @@ export async function POST(req: Request) {
     // 2. Update Database
     const sb = await createClient();
 
-    // Update Booking Status
     const { error: bookingError } = await sb
       .from("bookings")
       .update({ booking_status: "REQUESTED" })
@@ -39,7 +38,6 @@ export async function POST(req: Request) {
 
     if (bookingError) throw bookingError;
 
-    // Update Payment Record
     const { error: paymentError } = await sb
       .from("payments")
       .update({

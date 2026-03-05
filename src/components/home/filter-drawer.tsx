@@ -26,8 +26,12 @@ const fuelTypes = ["Petrol", "Diesel", "Electric", "Hybrid"];
 
 export default function FilterDrawer({
   children,
+  minPriceBound = 0,
+  maxPriceBound = 1000,
 }: {
   children: React.ReactNode;
+  minPriceBound?: number;
+  maxPriceBound?: number;
 }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -38,8 +42,8 @@ export default function FilterDrawer({
     searchParams.get("transmission") || "",
   );
   const [priceRange, setPriceRange] = useState<number[]>([
-    parseInt(searchParams.get("minPrice") || "0"),
-    parseInt(searchParams.get("maxPrice") || "500"),
+    parseInt(searchParams.get("minPrice") || minPriceBound.toString()),
+    parseInt(searchParams.get("maxPrice") || maxPriceBound.toString()),
   ]);
   const [fuelType, setFuelType] = useState<string>(
     searchParams.get("fuelType") || "",
@@ -54,10 +58,12 @@ export default function FilterDrawer({
     if (transmission) params.set("transmission", transmission);
     else params.delete("transmission");
 
-    if (priceRange[0] !== 0) params.set("minPrice", priceRange[0].toString());
+    if (priceRange[0] !== minPriceBound)
+      params.set("minPrice", priceRange[0].toString());
     else params.delete("minPrice");
 
-    if (priceRange[1] !== 500) params.set("maxPrice", priceRange[1].toString());
+    if (priceRange[1] !== maxPriceBound)
+      params.set("maxPrice", priceRange[1].toString());
     else params.delete("maxPrice");
 
     if (fuelType) params.set("fuelType", fuelType);
@@ -70,7 +76,7 @@ export default function FilterDrawer({
   const handleReset = () => {
     setType("All");
     setTransmission("");
-    setPriceRange([0, 500]);
+    setPriceRange([minPriceBound, maxPriceBound]);
     setFuelType("");
     router.push("/?", { scroll: false });
     setOpen(false);
@@ -166,25 +172,39 @@ export default function FilterDrawer({
             <div className="flex items-center justify-between">
               <h3 className="text-[15px] font-bold">Price / Day</h3>
               <div className="bg-accent/40 px-3 py-1 rounded-full text-xs font-bold">
-                ${priceRange[0]} - ${priceRange[1]}
+                ₹{priceRange[0]} - ₹{priceRange[1]}
               </div>
             </div>
             <div className="px-2 pt-4">
               <Slider
                 value={priceRange}
-                min={0}
-                max={500}
-                step={10}
+                min={minPriceBound}
+                max={maxPriceBound}
+                step={1}
                 onValueChange={setPriceRange}
                 className="py-4"
               />
               <div className="flex justify-between mt-2 text-[10px] font-bold text-muted-foreground/60">
-                <span>₹0</span>
-                <span>₹100</span>
-                <span>₹200</span>
-                <span>₹300</span>
-                <span>₹400</span>
-                <span>₹500+</span>
+                <span>₹{minPriceBound}</span>
+                <span>
+                  ₹
+                  {Math.floor(
+                    minPriceBound + (maxPriceBound - minPriceBound) / 4,
+                  )}
+                </span>
+                <span>
+                  ₹
+                  {Math.floor(
+                    minPriceBound + (maxPriceBound - minPriceBound) / 2,
+                  )}
+                </span>
+                <span>
+                  ₹
+                  {Math.floor(
+                    minPriceBound + (3 * (maxPriceBound - minPriceBound)) / 4,
+                  )}
+                </span>
+                <span>₹{maxPriceBound}+</span>
               </div>
             </div>
           </section>

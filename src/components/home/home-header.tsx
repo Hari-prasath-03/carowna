@@ -4,9 +4,11 @@ import Logo from "../layout/logo";
 import FilterDrawer from "./filter-drawer";
 import DesktopNavbar from "../layout/desktop-navbar";
 import { getUserLocation } from "@/service/user";
+import { getVehiclePriceRange } from "@/service/vehicles";
 
 export default async function HomeHeader() {
   const [location] = await getUserLocation();
+  const [priceRange] = await getVehiclePriceRange();
 
   return (
     <header className="flex items-center justify-between px-4 py-4 md:px-6">
@@ -21,7 +23,10 @@ export default async function HomeHeader() {
         <DesktopNavbar />
       </div>
 
-      <FilterDrawer>
+      <FilterDrawer
+        minPriceBound={priceRange?.min || 0}
+        maxPriceBound={priceRange?.max || 1000}
+      >
         <Button
           variant="outline"
           size="icon"

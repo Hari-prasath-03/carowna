@@ -4,7 +4,7 @@ import QueryBuilder from "@/lib/query-builder";
 import { Vehicle, VehicleType } from "@/types";
 import { unstable_cache } from "next/cache";
 
-export const getVehicles = (params?: {
+type VehicleParams = {
   type?: VehicleType | "All";
   search?: string;
   transmission?: "automatic" | "manual";
@@ -14,156 +14,151 @@ export const getVehicles = (params?: {
   page?: number;
   offset?: number;
   limit?: number;
-}) => {
-  const cacheKey = [
-    "vehicles-list",
-    params?.type || "All",
-    params?.search || "",
-    params?.transmission || "any",
-    params?.minPrice?.toString() || "0",
-    params?.maxPrice?.toString() || "inf",
-    params?.fuelType || "any",
-    params?.page?.toString() || "1",
-    params?.offset?.toString() || "0",
-    params?.limit?.toString() || "5",
-  ];
-
-  return unstable_cache(
-    async () => {
-      const sb = publicSupabase;
-      const limit = params?.limit || 5;
-      const start =
-        params?.offset !== undefined
-          ? params.offset
-          : ((params?.page || 1) - 1) * limit;
-      const end = start + limit - 1;
-
-      const query = sb.from("vehicles").select("*", { count: "exact" });
-      const builder = new QueryBuilder(query);
-
-      builder
-        .filter(true, "approval_status", "APPROVED")
-        .filter(
-          !!params?.type && params.type !== "All",
-          "vehicle_type",
-          params?.type?.toLowerCase(),
-        )
-        .filter(!!params?.transmission, "transmission", params?.transmission)
-        .filter(!!params?.fuelType, "fuel_type", params?.fuelType)
-        .filter(!!params?.minPrice, "price_per_day", params?.minPrice, "gte")
-        .filter(!!params?.maxPrice, "price_per_day", params?.maxPrice, "lte")
-        .search(["name", "brand"], params?.search || "")
-        .sort("created_at", false)
-        .range(start, end);
-
-      const { data, error, success } = await builder.build();
-
-      if (!success || error) {
-        console.error("Error fetching vehicles:", error);
-        return err({ reason: "Failed to fetch vehicles" });
-      }
-
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const vehicles: Vehicle[] = (data || []).map((v: any) => ({
-        id: v.id,
-        name: v.name,
-        brand: v.brand,
-        vehicle_type: v.vehicle_type,
-        transmission: v.transmission,
-        price_per_day: v.price_per_day,
-        capacity: v.capacity,
-        fuel_type: v.fuel_type,
-        images: v.images || [],
-        rating: 4.5 + Math.random() * 0.5,
-        vendor_id: v.vendor_id,
-        approval_status: v.approval_status,
-      }));
-
-      return ok(vehicles);
-    },
-    cacheKey,
-    {
-      revalidate: 60,
-      tags: ["vehicles"],
-    },
-  )();
 };
 
-export const getVehicleById = (id: string) => {
-  return unstable_cache(
-    async () => {
-      const sb = publicSupabase;
-      const { data, error } = await sb
-        .from("vehicles")
-        .select("*")
-        .eq("id", id)
-        .single();
+const _getVehicles = unstable_cache(
+  async (params: VehicleParams = {}) => {
+    const limit = params.limit ?? 5;
 
-      if (error || !data) {
-        return err({ reason: "Vehicle not found" });
-      }
+    const start =
+      params.offset !== undefined
+        ? params.offset
+        : ((params.page ?? 1) - 1) * limit;
 
-      const vehicle: Vehicle = {
-        id: data.id,
-        name: data.name,
-        brand: data.brand,
-        vehicle_type: data.vehicle_type,
-        transmission: data.transmission,
-        price_per_day: data.price_per_day,
-        capacity: data.capacity,
-        fuel_type: data.fuel_type,
-        images: data.images || [],
-        rating: 4.5 + Math.random() * 0.5,
-        insurance_doc_url: data.insurance_doc_url,
-        rc_doc_url: data.rc_doc_url,
-        rto_verification_doc_url: data.rto_verification_doc_url,
-        approval_status: data.approval_status,
-        vendor_id: data.vendor_id,
-      };
+    const end = start + limit - 1;
 
-      return ok(vehicle);
-    },
-    ["vehicle-by-id", id],
-    {
-      revalidate: 3600,
-      tags: ["vehicle", id],
-    },
-  )();
-};
+    const query = publicSupabase.from("vehicles").select(
+      `
+      id,
+      name,
+      brand,
+      vehicle_type,
+      transmission,
+      price_per_day,
+      capacity,
+      fuel_type,
+      images,
+      vendor_id,
+      approval_status,
+      created_at
+      `,
+      { count: "exact" },
+    );
 
-export const getVehiclePriceRange = () => {
-  return unstable_cache(
-    async () => {
-      const sb = publicSupabase;
-      const { data: minData } = await sb
-        .from("vehicles")
-        .select("price_per_day")
-        .eq("approval_status", "APPROVED")
-        .order("price_per_day", { ascending: true })
-        .limit(1)
-        .maybeSingle();
+    const builder = new QueryBuilder(query);
 
-      const { data: maxData } = await sb
-        .from("vehicles")
-        .select("price_per_day")
-        .eq("approval_status", "APPROVED")
-        .order("price_per_day", { ascending: false })
-        .limit(1)
-        .maybeSingle();
+    builder
+      .filter(true, "approval_status", "APPROVED")
+      .filter(
+        !!params.type && params.type !== "All",
+        "vehicle_type",
+        params.type?.toLowerCase(),
+      )
+      .filter(!!params.transmission, "transmission", params.transmission)
+      .filter(!!params.fuelType, "fuel_type", params.fuelType)
+      .filter(!!params.minPrice, "price_per_day", params.minPrice, "gte")
+      .filter(!!params.maxPrice, "price_per_day", params.maxPrice, "lte")
+      .search(["name", "brand"], params.search ?? "")
+      .sort("created_at", false)
+      .range(start, end);
 
-      if (!minData || !maxData) {
-        return ok({ min: 0, max: 1000 });
-      }
+    const { data, error, success } = await builder.build();
 
-      return ok({
-        min: minData.price_per_day,
-        max: maxData.price_per_day,
-      });
-    },
-    ["vehicle-price-range"],
-    {
-      revalidate: 3600,
-      tags: ["vehicles", "price-range"],
-    },
-  )();
-};
+    if (!success || error) {
+      console.error("Error fetching vehicles:", error);
+      return err({ reason: "Failed to fetch vehicles" });
+    }
+
+    const vehicleData = data.map((v) => ({
+      ...v,
+      rating: 4.5 + Math.random() * 0.5,
+    }));
+
+    return ok(vehicleData as Vehicle[]);
+  },
+  ["vehicles-list"],
+  {
+    revalidate: 3600,
+    tags: ["vehicles"],
+  },
+);
+
+export function getVehicles(params?: VehicleParams) {
+  return _getVehicles(params ?? {});
+}
+
+const _getVehicleById = unstable_cache(
+  async (id: string) => {
+    const { data, error } = await publicSupabase
+      .from("vehicles")
+      .select(
+        `
+        id,
+        name,
+        brand,
+        vehicle_type,
+        transmission,
+        price_per_day,
+        capacity,
+        fuel_type,
+        images,
+        insurance_doc_url,
+        rc_doc_url,
+        rto_verification_doc_url,
+        approval_status,
+        vendor_id
+      `,
+      )
+      .eq("id", id)
+      .single();
+
+    if (error || !data) {
+      return err({ reason: "Vehicle not found" });
+    }
+
+    const vehicle: Vehicle = {
+      ...data,
+      rating: 4.5 + Math.random() * 0.5,
+    };
+
+    return ok(vehicle);
+  },
+  ["vehicle-by-id"],
+  {
+    revalidate: 3600,
+    tags: ["vehicle"],
+  },
+);
+
+export function getVehicleById(id: string) {
+  return _getVehicleById(id);
+}
+
+const _getVehiclePriceRange = unstable_cache(
+  async () => {
+    const { data, error } = await publicSupabase
+      .from("vehicles")
+      .select("price_per_day")
+      .eq("approval_status", "APPROVED");
+
+    if (error || !data?.length) {
+      return ok({ min: 0, max: 1000 });
+    }
+
+    const prices = data.map((v) => v.price_per_day);
+
+    return ok({
+      min: Math.min(...prices),
+      max: Math.max(...prices),
+    });
+  },
+  ["vehicle-price-range"],
+  {
+    revalidate: 3600,
+    tags: ["vehicles", "price-range"],
+  },
+);
+
+export function getVehiclePriceRange() {
+  return _getVehiclePriceRange();
+}

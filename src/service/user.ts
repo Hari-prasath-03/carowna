@@ -1,35 +1,63 @@
 import { err, ok } from "@/lib/error-handler";
 import { UserDetails, UserRole } from "@/types";
 import { getUser } from "./self-user";
-import createClient from "@/lib/supabase/clients/server";
+import { unstable_cache } from "next/cache";
+import { publicSupabase } from "@/lib/supabase/clients/public";
 
-export const getUserDetails = async (userId: string) => {
-  const sb = await createClient();
-  const { data, error } = await sb
-    .from("users")
-    .select("*")
-    .eq("id", userId)
-    .single();
+const _getUserDetails = unstable_cache(
+  async (userId: string) => {
+    const { data, error } = await publicSupabase
+      .from("users")
+      .select(
+        `
+        id,
+        email,
+        name,
+        role,
+        mobile_no,
+        date_of_birth,
+        native_location,
+        gender,
+        profile_url,
+        license_doc_url,
+        aadhaar_doc_url,
+        license_verified,
+        aadhaar_verified,
+        created_at
+      `,
+      )
+      .eq("id", userId)
+      .single();
 
-  if (error || !data) return err({ reason: "User not found" });
+    if (error || !data) return err({ reason: "User not found" });
 
-  return ok({
-    id: data.id,
-    email: data.email ?? "",
-    display_name: data.name ?? "",
-    role: (data.role as UserRole) ?? "USER",
-    mobile_no: data.mobile_no,
-    date_of_birth: data.date_of_birth,
-    native_location: data.native_location,
-    gender: data.gender,
-    profile_url: data.profile_url,
-    license_doc_url: data.license_doc_url,
-    aadhaar_doc_url: data.aadhaar_doc_url,
-    license_verified: data.license_verified,
-    aadhaar_verified: data.aadhaar_verified,
-    created_at: data.created_at,
-  } as UserDetails);
-};
+    return ok({
+      id: data.id,
+      email: data.email ?? "",
+      display_name: data.name ?? "",
+      role: (data.role as UserRole) ?? "USER",
+      mobile_no: data.mobile_no,
+      date_of_birth: data.date_of_birth,
+      native_location: data.native_location,
+      gender: data.gender,
+      profile_url: data.profile_url,
+      license_doc_url: data.license_doc_url,
+      aadhaar_doc_url: data.aadhaar_doc_url,
+      license_verified: data.license_verified,
+      aadhaar_verified: data.aadhaar_verified,
+      created_at: data.created_at,
+    } as UserDetails);
+  },
+  ["user-profile"],
+  {
+    revalidate: 3600,
+    tags: ["user-profile"],
+  },
+);
+
+export function getUserDetails(userId: string) {
+  return _getUserDetails(userId);
+}
 
 export async function getUserLocation() {
   const [user, userErr] = await getUser();

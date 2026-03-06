@@ -1,11 +1,10 @@
 "use server";
 
-import { err, ok } from "@/lib/error-handler";
 import createClient from "@/lib/supabase/clients/server";
 import { validateBookingConstraints } from "@/service/bookings";
 import { getUser } from "@/service/self-user";
 import { bookingSchema } from "@/types/validation-schema";
-
+import { err, ok } from "@/lib/error-handler";
 import Razorpay from "razorpay";
 
 const razorpay = new Razorpay({
@@ -14,7 +13,7 @@ const razorpay = new Razorpay({
     process.env.RAZORPAY_SECRET_KEY || process.env.RAZORPAY_SECERT_KEY!,
 });
 
-export async function createBookingAction(formData: FormData) {
+export default async function createBookingAction(formData: FormData) {
   const sb = await createClient();
 
   const data = {
@@ -118,26 +117,4 @@ export async function createBookingAction(formData: FormData) {
     await sb.from("bookings").delete().eq("id", booking.id);
     return err({ reason: errorMessage });
   }
-}
-
-export async function cancelBookingAction(bookingId: string) {
-  const sb = await createClient();
-  const [user, userErr] = await getUser();
-
-  if (userErr || !user) {
-    return err({ reason: "Unauthorized" });
-  }
-
-  const { error } = await sb
-    .from("bookings")
-    .update({ booking_status: "CANCELLED" })
-    .eq("id", bookingId)
-    .eq("user_id", user.id);
-
-  if (error) {
-    console.error("Cancellation failed:", error);
-    return err({ reason: error.message });
-  }
-
-  return ok("Booking cancelled successfully");
 }

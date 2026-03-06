@@ -1,7 +1,7 @@
+import { Georama, Montserrat } from "next/font/google";
 import { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import "../globals.css";
-import { Georama, Montserrat } from "next/font/google";
 
 const montserrat = Montserrat({
   subsets: ["latin"],

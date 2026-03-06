@@ -6,7 +6,7 @@ import { Phone, Mail, Edit2, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { uploadFile } from "@/lib/supabase/storage/upload-file";
-import { updateProfileImageAction } from "@/actions/user/update-profile-image";
+import updateProfileImageAction from "@/actions/user/update-profile-image";
 import { convertBlobUrlToFile } from "@/lib/utils";
 import { ContactItem, DetailItem } from "./items";
 import { Button } from "@/components/ui/button";
@@ -14,7 +14,7 @@ import {
   deleteFileByUrl,
   isInStorageBucket,
 } from "@/lib/supabase/storage/delete-file";
-import { EditProfileDrawer } from "./edit-profile-drawer";
+import EditProfileDrawer from "./edit-profile-drawer";
 
 interface UserInfoCardProps {
   userId: string;

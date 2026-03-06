@@ -1,14 +1,14 @@
 import { redirect } from "next/navigation";
 import { Settings } from "lucide-react";
-import { getUser } from "@/service/self-user";
 
 import KYCSection from "@/components/profile/kyc-section";
 import UserInfoCard from "@/components/profile/user-info-card";
 import SupportSection from "@/components/profile/support-section";
 import AccountActions from "@/components/profile/account-actions";
-import { getUserDetails } from "@/service/user";
-import { SettingsDrawer } from "@/components/profile/settings-drawer";
+import SettingsDrawer from "@/components/profile/settings-drawer";
 import BackButton from "@/components/layout/back-button";
+import { getUserDetails } from "@/service/user";
+import { getUser } from "@/service/self-user";
 
 export default async function ProfilePage() {
   const [user, err] = await getUser();

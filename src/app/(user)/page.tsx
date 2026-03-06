@@ -1,10 +1,11 @@
+import { Suspense } from "react";
 import HomeHeader from "@/components/home/home-header";
 import CategoryFilters from "@/components/home/category-filters";
 import VehicleInfiniteScrollList from "@/components/home/vehicle-infinite-scroll-list";
+import VehicleListSkeleton from "@/components/home/vehicle-skeleton";
+
 import { getVehicles } from "@/service/vehicles";
 import { VehicleType } from "@/types";
-import { Suspense } from "react";
-import { VehicleListSkeleton } from "@/components/home/vehicle-skeleton";
 
 type vehicleSearch = {
   searchParams: Promise<{

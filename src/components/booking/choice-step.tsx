@@ -6,7 +6,7 @@ interface ChoiceStepProps {
   loading: boolean;
 }
 
-export function ChoiceStep({
+export default function ChoiceStep({
   onSelfDrive,
   onNeedDriver,
   loading,

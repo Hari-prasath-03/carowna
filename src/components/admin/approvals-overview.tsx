@@ -1,32 +1,29 @@
 "use client";
 
-import { CheckCircle2, AlertCircle, ArrowRight } from "lucide-react";
+import { CheckCircle2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 interface ApprovalsOverviewProps {
   pendingCount: number;
 }
 
-export function ApprovalsOverview({ pendingCount }: ApprovalsOverviewProps) {
+export default function ApprovalsOverview({
+  pendingCount,
+}: ApprovalsOverviewProps) {
   return (
     <div className="bg-card p-8 rounded-2xl border border-border/40 shadow-sm h-full flex flex-col justify-between overflow-hidden relative group">
       <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity duration-500">
         <CheckCircle2 className="h-32 w-32" />
       </div>
 
-      <div className="space-y-6 relative z-10">
-        <div className="inline-flex items-center gap-2 bg-destructive/10 text-destructive text-[10px] font-black uppercase tracking-widest px-3 py-1.5 rounded-full border border-destructive/10">
-          <AlertCircle className="h-3 w-3" />
-          Urgent Action
-        </div>
-
+      <div className="relative z-10">
         <div className="space-y-3">
           <h2 className="text-2xl font-black tracking-tighter leading-tight text-foreground">
             Vehicle Approvals
           </h2>
           <p className="text-sm font-medium text-muted-foreground leading-relaxed">
             There are{" "}
-            <span className="text-foreground font-black underline decoration-primary/30 decoration-2 underline-offset-8">
+            <span className="text-foreground underline underline-offset-2">
               {pendingCount} vehicle listings
             </span>{" "}
             awaiting verification. Timely approvals ensure a smooth vendor

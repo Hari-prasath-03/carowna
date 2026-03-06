@@ -25,7 +25,7 @@ const menuItems = [
   },
 ];
 
-export function Sidebar() {
+export default function Sidebar() {
   const pathname = usePathname();
 
   return (

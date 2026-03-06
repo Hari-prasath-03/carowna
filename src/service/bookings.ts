@@ -170,8 +170,7 @@ export async function getUserBookings(userId: string) {
   if (error) {
     console.error("Failed to fetch user bookings:", error);
     return err({
-      reason: "FETCH_FAILED",
-      message: "Could not retrieve booking history.",
+      reason: "Could not retrieve booking history.",
     });
   }
 

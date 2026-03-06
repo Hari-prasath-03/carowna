@@ -1,7 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
-import { toast } from "sonner";
 import {
   Loader2,
   MapPin,
@@ -14,13 +14,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { toast } from "sonner";
+
+import updateBasicDetailsAction from "@/actions/user/basic-details";
+import { useGeolocation } from "@/hooks/use-geolocation";
+import { BasicDetailsState } from "@/types";
 import FormInput from "@/components/forms/form-input";
 import FormSelect from "@/components/forms/form-select";
-import { updateBasicDetailsAction } from "@/actions/user/basic-details";
-import { BasicDetailsState } from "@/types";
-import { useRouter } from "next/navigation";
-
-import { useGeolocation } from "@/hooks/use-geolocation";
 import Logo from "@/components/layout/logo";
 
 const initialState: BasicDetailsState = {

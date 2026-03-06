@@ -9,7 +9,7 @@ import {
   isInStorageBucket,
 } from "@/lib/supabase/storage/delete-file";
 
-export async function updateKYCDocumentAction(
+export default async function updateKYCDocumentAction(
   type: "aadhaar" | "license",
   docUrl: string,
   oldDocUrl?: string,

@@ -8,7 +8,7 @@ interface BookingDriverToggleProps {
   onToggle: () => void;
 }
 
-export function BookingDriverToggle({
+export default function BookingDriverToggle({
   driver,
   isActive,
   onToggle,

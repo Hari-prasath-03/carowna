@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { BookingFlowDrawer } from "./booking-flow-drawer";
+import BookingFlowDrawer from "./booking-flow-drawer";
 import { Driver } from "@/types";
 
 interface BookNowButtonProps {
@@ -11,7 +11,10 @@ interface BookNowButtonProps {
   drivers: Driver[];
 }
 
-export function BookNowButton({ vehicleId, drivers }: BookNowButtonProps) {
+export default function BookNowButton({
+  vehicleId,
+  drivers,
+}: BookNowButtonProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   return (

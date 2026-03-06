@@ -5,7 +5,7 @@ import { revalidatePath } from "next/cache";
 import { getUser } from "@/service/self-user";
 import { ok, err } from "@/lib/error-handler";
 
-export async function updateProfileImageAction(profileUrl: string) {
+export default async function updateProfileImageAction(profileUrl: string) {
   const [user, userErr] = await getUser();
   if (userErr) return err({ reason: "Unauthorized" });
 

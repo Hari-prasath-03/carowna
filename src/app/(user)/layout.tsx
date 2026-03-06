@@ -1,10 +1,11 @@
 import { Metadata } from "next";
 import { Montserrat, Georama } from "next/font/google";
-import { cn } from "@/lib/utils";
+
 import BottomNav from "@/components/layout/bottom-nav-bar";
-import { ThemeProvider } from "@/components/providers/theme-provider";
-import "../globals.css";
+import ThemeProvider from "@/providers/theme-provider";
+import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
+import "../globals.css";
 
 export const metadata: Metadata = {
   title: "Carvona",

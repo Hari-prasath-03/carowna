@@ -1,10 +1,11 @@
 import { notFound, redirect } from "next/navigation";
-import { getVehicleById } from "@/service/vehicles";
-import { BookingForm } from "@/components/vehicles/booking-form";
 import { getDriverById } from "@/service/drivers";
-import { Driver } from "@/types";
 import { getUser } from "@/service/self-user";
+import { getVehicleById } from "@/service/vehicles";
+
+import BookingForm from "@/components/vehicles/booking-form";
 import BackButton from "@/components/layout/back-button";
+import { Driver } from "@/types";
 
 interface BookingPageProps {
   params: Promise<{

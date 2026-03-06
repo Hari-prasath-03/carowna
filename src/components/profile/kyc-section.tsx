@@ -14,7 +14,7 @@ import {
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { uploadFile } from "@/lib/supabase/storage/upload-file";
-import { updateKYCDocumentAction } from "@/actions/user/update-kyc-document";
+import updateKYCDocumentAction from "@/actions/user/update-kyc-document";
 import { Button } from "@/components/ui/button";
 
 interface KYCItemProps {

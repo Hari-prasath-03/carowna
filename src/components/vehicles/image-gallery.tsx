@@ -8,7 +8,7 @@ interface ImageGalleryProps {
   name: string;
 }
 
-export function ImageGallery({ images, name }: ImageGalleryProps) {
+export default function ImageGallery({ images, name }: ImageGalleryProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const scrollRef = useRef<HTMLDivElement>(null);
 

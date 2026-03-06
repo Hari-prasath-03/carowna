@@ -4,7 +4,7 @@ import * as React from "react";
 import { useActionState } from "react";
 import { X, Loader2, User, Phone, MapPin, Calendar, Users } from "lucide-react";
 import { toast } from "sonner";
-import { updateBasicDetailsAction } from "@/actions/user/basic-details";
+import updateBasicDetailsAction from "@/actions/user/basic-details";
 import { BasicDetailsState } from "@/types";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,7 +35,7 @@ const initialState: BasicDetailsState = {
   success: false,
 };
 
-export function EditProfileDrawer({
+export default function EditProfileDrawer({
   children,
   initialData,
 }: EditProfileDrawerProps) {

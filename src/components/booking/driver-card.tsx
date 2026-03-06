@@ -7,7 +7,11 @@ interface DriverCardProps {
   disabled?: boolean;
 }
 
-export function DriverCard({ driver, onClick, disabled }: DriverCardProps) {
+export default function DriverCard({
+  driver,
+  onClick,
+  disabled,
+}: DriverCardProps) {
   return (
     <button
       onClick={() => onClick(driver.id)}

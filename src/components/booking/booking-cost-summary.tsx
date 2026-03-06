@@ -15,7 +15,7 @@ interface BookingCostSummaryProps {
   includeDriver: boolean;
 }
 
-export function BookingCostSummary({
+export default function BookingCostSummary({
   summary,
   includeDriver,
 }: BookingCostSummaryProps) {

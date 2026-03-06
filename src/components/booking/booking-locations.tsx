@@ -8,7 +8,7 @@ interface BookingLocationsProps {
   setDropoff: (val: string) => void;
 }
 
-export function BookingLocations({
+export default function BookingLocations({
   pickup,
   setPickup,
   dropoff,

@@ -14,7 +14,7 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import { format, isAfter, isBefore, isWithinInterval } from "date-fns";
-import { cancelBookingAction } from "@/actions/booking/booking";
+import cancelBookingAction from "@/actions/booking/cancel-booking";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 

@@ -1,8 +1,7 @@
-import { Sidebar } from "@/components/admin/sidebar";
-import "@/app/globals.css";
-import { getUser } from "@/service/self-user";
 import { redirect } from "next/navigation";
+import { getUser } from "@/service/self-user";
 import hasPermission from "@/permissions";
+import Sidebar from "@/components/layout/sidebar";
 
 export default async function VendorLayout({
   children,

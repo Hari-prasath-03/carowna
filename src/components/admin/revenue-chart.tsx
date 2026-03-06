@@ -6,7 +6,7 @@ interface RevenueTrendsProps {
   data: { name: string; value: number }[];
 }
 
-export function RevenueChart({ data }: RevenueTrendsProps) {
+export default function RevenueChart({ data }: RevenueTrendsProps) {
   const maxValue = useMemo(
     () => Math.max(...data.map((d) => d.value), 1000),
     [data],

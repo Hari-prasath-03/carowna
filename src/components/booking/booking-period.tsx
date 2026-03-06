@@ -7,7 +7,7 @@ interface BookingPeriodProps {
   setEndDate: (val: string) => void;
 }
 
-export function BookingPeriod({
+export default function BookingPeriod({
   startDate,
   setStartDate,
   endDate,

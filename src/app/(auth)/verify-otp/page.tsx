@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import OtpInput from "@/components/forms/otp-input";
-import { verifyOtpAction, resendOtpAction } from "@/actions/auth/verify-otp";
+import { verifyOtpAction, resendOtpAction } from "@/actions/auth/otp-actions";
 import Logo from "@/components/layout/logo";
 
 const initialState = {

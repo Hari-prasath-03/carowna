@@ -17,7 +17,7 @@ interface StatsCardsProps {
   };
 }
 
-export function StatsCards({ stats }: StatsCardsProps) {
+export default function StatsCards({ stats }: StatsCardsProps) {
   const items = [
     {
       label: "Total Users",

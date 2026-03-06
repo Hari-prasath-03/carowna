@@ -23,7 +23,7 @@ interface VerificationCardProps {
   docUrl?: string;
 }
 
-export function VerificationCard({
+export default function VerificationCard({
   label,
   subtitle,
   icon,

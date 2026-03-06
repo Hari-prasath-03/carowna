@@ -9,7 +9,7 @@ interface SettingsDrawerProps {
   children: React.ReactNode;
 }
 
-export function SettingsDrawer({ children }: SettingsDrawerProps) {
+export default function SettingsDrawer({ children }: SettingsDrawerProps) {
   const { theme, setTheme } = useTheme();
 
   const themeOptions = [

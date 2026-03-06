@@ -25,7 +25,7 @@ interface RecentBookingsProps {
   }[];
 }
 
-export function RecentBookingsTable({ bookings }: RecentBookingsProps) {
+export default function RecentBookingsTable({ bookings }: RecentBookingsProps) {
   return (
     <div className="bg-card rounded-2xl border border-border/40 shadow-sm overflow-hidden">
       <div className="p-8 flex justify-between items-center border-b border-border/10 bg-muted/5">

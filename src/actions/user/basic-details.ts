@@ -6,7 +6,7 @@ import createClient from "@/lib/supabase/clients/server";
 import { getUser } from "@/service/self-user";
 import { revalidatePath } from "next/cache";
 
-export async function updateBasicDetailsAction(
+export default async function updateBasicDetailsAction(
   _prevState: BasicDetailsState,
   formData: FormData,
 ): Promise<BasicDetailsState> {

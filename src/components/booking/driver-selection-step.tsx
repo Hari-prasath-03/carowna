@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Driver } from "@/types";
-import { DriverCard } from "./driver-card";
+import DriverCard from "./driver-card";
 
 interface DriverSelectionStepProps {
   drivers: Driver[];
@@ -9,7 +9,7 @@ interface DriverSelectionStepProps {
   loading: boolean;
 }
 
-export function DriverSelectionStep({
+export default function DriverSelectionStep({
   drivers,
   onSelect,
   onBack,

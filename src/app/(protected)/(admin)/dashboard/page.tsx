@@ -1,3 +1,7 @@
+import StatsCards from "@/components/admin/stats-cards";
+import RevenueChart from "@/components/admin/revenue-chart";
+import ApprovalsOverview from "@/components/admin/approvals-overview";
+import RecentBookingsTable from "@/components/admin/recent-bookings";
 import { Calendar, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -6,10 +10,6 @@ import {
   getRevenueTrends,
   getPendingApprovalsCount,
 } from "@/service/admin";
-import { StatsCards } from "@/components/admin/stats-cards";
-import { RevenueChart } from "@/components/admin/revenue-chart";
-import { ApprovalsOverview } from "@/components/admin/approvals-overview";
-import { RecentBookingsTable } from "@/components/admin/recent-bookings";
 
 export default async function AdminDashboardPage() {
   const [statsRes, bookingsRes, revenueRes, pendingCount] = await Promise.all([
@@ -31,7 +31,6 @@ export default async function AdminDashboardPage() {
 
   return (
     <div className="space-y-10">
-      {/* Header Section */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-border/10">
         <div className="space-y-1.5">
           <h1 className="text-4xl font-black tracking-tighter text-foreground">
@@ -57,10 +56,8 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Stats Overview */}
       <StatsCards stats={stats} />
 
-      {/* Middle Section: Chart and Approvals */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2">
           <RevenueChart data={revenueTrends} />
@@ -70,7 +67,6 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Recent Activity */}
       <div className="pb-10">
         <RecentBookingsTable bookings={bookings} />
       </div>

@@ -11,8 +11,8 @@ import {
   DrawerClose,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import { ChoiceStep } from "../booking/choice-step";
-import { DriverSelectionStep } from "../booking/driver-selection-step";
+import ChoiceStep from "../booking/choice-step";
+import DriverSelectionStep from "../booking/driver-selection-step";
 import { Driver } from "@/types";
 
 interface BookingFlowDrawerProps {
@@ -22,7 +22,7 @@ interface BookingFlowDrawerProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function BookingFlowDrawer({
+export default function BookingFlowDrawer({
   vehicleId,
   drivers,
   isOpen,

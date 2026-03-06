@@ -6,7 +6,7 @@ interface SpecCardProps {
   icon: LucideIcon;
 }
 
-export function SpecCard({ label, value, icon: Icon }: SpecCardProps) {
+export default function SpecCard({ label, value, icon: Icon }: SpecCardProps) {
   return (
     <div className="flex flex-col items-center justify-center py-6 px-2 rounded-2xl bg-primary-foreground border border-border/40 shadow-sm gap-2 min-w-0">
       <div className="h-10 w-10 rounded-full bg-muted/40 flex items-center justify-center mb-1">

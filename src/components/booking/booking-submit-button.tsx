@@ -7,7 +7,7 @@ interface BookingSubmitButtonProps {
   label?: string;
 }
 
-export function BookingSubmitButton({
+export default function BookingSubmitButton({
   disabled,
   label = "Confirm & Pay",
 }: BookingSubmitButtonProps) {

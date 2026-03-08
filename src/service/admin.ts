@@ -1,56 +1,47 @@
 "use server";
 
-import publicSupabase from "@/lib/supabase/clients/public";
-import createClient from "@/lib/supabase/clients/server";
 import { unstable_cache } from "next/cache";
+import createAdminClient from "@/lib/supabase/clients/admin";
+import { months } from "@/constants";
+import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 
-export async function getRevenueTrends() {
-  const sb = await createClient();
+export const getRevenueTrends = unstable_cache(
+  async () => {
+    const sixMonthsAgo = new Date();
+    sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
 
-  const sixMonthsAgo = new Date();
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6);
+    const { data, error } = await createAdminClient()
+      .from("payments")
+      .select("amount, created_at")
+      .eq("status", "SUCCESS")
+      .gte("created_at", sixMonthsAgo.toISOString())
+      .order("created_at", { ascending: true });
 
-  const { data, error } = await sb
-    .from("payments")
-    .select("amount, created_at")
-    .eq("status", "SUCCESS")
-    .gte("created_at", sixMonthsAgo.toISOString())
-    .order("created_at", { ascending: true });
+    if (error) return [];
 
-  if (error) return [];
+    const monthlyData: Record<string, number> = {};
 
-  const monthlyData: Record<string, number> = {};
-  const months = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
+    data.forEach((p) => {
+      const date = new Date(p.created_at);
+      const month = months[date.getMonth()];
+      monthlyData[month] = (monthlyData[month] || 0) + p.amount;
+    });
 
-  data.forEach((p) => {
-    const date = new Date(p.created_at);
-    const month = months[date.getMonth()];
-    monthlyData[month] = (monthlyData[month] || 0) + p.amount;
-  });
+    return Object.entries(monthlyData).map(([name, value]) => ({
+      name,
+      value,
+    }));
+  },
+  [CACHE_TAGS.REVENUE],
+  { tags: [CACHE_TAGS.REVENUE], revalidate: CACHE_TIME.ADMIN },
+);
 
-  return Object.entries(monthlyData).map(([name, value]) => ({ name, value }));
-}
-
-export async function getRecentBookings(limit = 5) {
-  const sb = await createClient();
-
-  const { data, error } = await sb
-    .from("bookings")
-    .select(
-      `
+export const getRecentBookings = unstable_cache(
+  async (limit = 5) => {
+    const { data, error } = await createAdminClient()
+      .from("bookings")
+      .select(
+        `
       id,
       created_at,
       booking_status,
@@ -62,29 +53,32 @@ export async function getRecentBookings(limit = 5) {
         vendor:users(name)
       )
     `,
-    )
-    .order("created_at", { ascending: false })
-    .limit(limit);
+      )
+      .order("created_at", { ascending: false })
+      .limit(limit);
 
-  if (error) return [];
+    if (error) return [];
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const bookings = (data || []).map((b: any) => ({
-    ...b,
-    user: b.user,
-    vehicle: {
-      name: b.vehicle?.name,
-      brand: b.vehicle?.brand,
-    },
-    vendor: b.vehicle?.vendor,
-  }));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const bookings = (data || []).map((b: any) => ({
+      ...b,
+      user: b.user,
+      vehicle: {
+        name: b.vehicle?.name,
+        brand: b.vehicle?.brand,
+      },
+      vendor: b.vehicle?.vendor,
+    }));
 
-  return bookings;
-}
+    return bookings;
+  },
+  [CACHE_TAGS.BOOKINGS],
+  { tags: [CACHE_TAGS.BOOKINGS], revalidate: CACHE_TIME.ADMIN },
+);
 
 export const getDashboardStats = unstable_cache(
   async () => {
-    const sb = publicSupabase;
+    const sb = createAdminClient();
 
     const [
       { count: users },
@@ -114,13 +108,13 @@ export const getDashboardStats = unstable_cache(
       revenue: (revenueRow ?? []).reduce((sum, r) => sum + (r.amount ?? 0), 0),
     };
   },
-  ["dashboard-stats"],
-  { revalidate: 300 },
+  [CACHE_TAGS.STATS],
+  { tags: [CACHE_TAGS.STATS], revalidate: CACHE_TIME.ADMIN },
 );
 
 export const getPendingApprovalsCount = unstable_cache(
   async () => {
-    const { count, error } = await publicSupabase
+    const { count, error } = await createAdminClient()
       .from("vehicles")
       .select("id", { count: "exact", head: true })
       .eq("approval_status", "PENDING");
@@ -128,6 +122,6 @@ export const getPendingApprovalsCount = unstable_cache(
     if (error) return 0;
     return count ?? 0;
   },
-  ["pending-approvals-count"],
-  { revalidate: 300 },
+  [CACHE_TAGS.APPROVAL_COUNT],
+  { tags: [CACHE_TAGS.APPROVAL_COUNT], revalidate: CACHE_TIME.ADMIN },
 );

@@ -3,7 +3,6 @@
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
 import GenericTable from "@/components/layout/generic-table";
-import useGetRecentBookings from "@/hooks/queries/useGetRecentBookings";
 
 const STATUS_MAP = {
   COMPLETED:
@@ -33,12 +32,11 @@ export type Booking = {
   };
 };
 
-export default function RecentBookingsTable() {
-  const { data: bookings, isLoading, isError } = useGetRecentBookings();
-
-  if (isLoading) return <div>Loading...</div>;
-  if (isError || !bookings) return <div>Error loading bookings</div>;
-
+export default function RecentBookingsTable({
+  bookings,
+}: {
+  bookings: Booking[];
+}) {
   return (
     <GenericTable
       header={{

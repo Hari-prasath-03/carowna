@@ -3,6 +3,7 @@ import { UserDetails, UserRole } from "@/types";
 import { getUser } from "./self-user";
 import { unstable_cache } from "next/cache";
 import publicSupabase from "@/lib/supabase/clients/public";
+import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 
 const _getUserDetails = unstable_cache(
   async (userId: string) => {
@@ -48,10 +49,10 @@ const _getUserDetails = unstable_cache(
       created_at: data.created_at,
     } as UserDetails);
   },
-  ["user-profile"],
+  [CACHE_TAGS.USER_PROFILE],
   {
-    revalidate: 3600,
-    tags: ["user-profile"],
+    revalidate: CACHE_TIME.RARE,
+    tags: [CACHE_TAGS.USER_PROFILE],
   },
 );
 

@@ -4,6 +4,7 @@ import publicSupabase from "@/lib/supabase/clients/public";
 import { User } from "@/types";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
+import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 
 const _getVerifiedUser = unstable_cache(
   async (accessToken: string) => {
@@ -20,13 +21,13 @@ const _getVerifiedUser = unstable_cache(
       role: user.user_metadata.role,
     } as User;
   },
-  ["user-auth-verification"],
-  { revalidate: 300, tags: ["auth"] },
+  [CACHE_TAGS.AUTH],
+  { revalidate: CACHE_TIME.FREQUENT, tags: [CACHE_TAGS.AUTH] },
 );
 
 export const getUser = cache(async () => {
-  const [accessToken, error] = await getAccessToken();
-  if (error) return err({ reason: error.reason });
+  const accessToken = await getAccessToken();
+  if (!accessToken) return err({ reason: "Unauthorized" });
 
   const user = await _getVerifiedUser(accessToken);
   if (!user) return err({ reason: "Unauthorized" });
@@ -42,8 +43,6 @@ export async function getAccessToken() {
     error: sessionError,
   } = await sb.auth.getSession();
 
-  if (sessionError || !session?.access_token)
-    return err({ reason: "Unauthorized" });
-
-  return ok(session.access_token);
+  if (sessionError || !session?.access_token) return null;
+  return session.access_token;
 }

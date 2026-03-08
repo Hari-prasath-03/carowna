@@ -1,6 +1,5 @@
 "use client";
 
-import useGetRevenueTrends from "@/hooks/queries/useGetRevenueTrends";
 import { useMemo } from "react";
 import {
   BarChart,
@@ -35,8 +34,11 @@ const CustomTooltip = ({
   return null;
 };
 
-export default function RevenueChart() {
-  const { data } = useGetRevenueTrends();
+export default function RevenueChart({
+  data,
+}: {
+  data: { name: string; value: number }[];
+}) {
   const chartData = useMemo(() => data, [data]);
 
   if (!chartData) return null;

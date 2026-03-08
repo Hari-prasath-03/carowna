@@ -1,6 +1,5 @@
 "use client";
 
-import QueryProvider from "@/providers/query-provider";
 import ThemeProvider from "@/providers/theme-provider";
 
 export default function Provider({ children }: { children: React.ReactNode }) {
@@ -11,7 +10,7 @@ export default function Provider({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <QueryProvider>{children}</QueryProvider>
+      {children}
     </ThemeProvider>
   );
 }

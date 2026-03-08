@@ -2,7 +2,6 @@ import { redirect } from "next/navigation";
 import { getUser } from "@/service/self-user";
 import hasPermission from "@/permissions";
 import Sidebar from "@/components/layout/sidebar";
-import Provider from "./provider";
 
 export default async function VendorLayout({
   children,
@@ -55,9 +54,7 @@ export default async function VendorLayout({
         }}
       />
       <main className="flex-1 pl-72">
-        <div className="p-8 max-w-400 mx-auto">
-          <Provider>{children}</Provider>
-        </div>
+        <div className="p-8 max-w-400 mx-auto">{children}</div>
       </main>
     </div>
   );

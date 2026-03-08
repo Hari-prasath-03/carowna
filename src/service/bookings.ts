@@ -3,6 +3,7 @@ import { getUserDetails } from "./user";
 import { getAccessToken, getUser } from "./self-user";
 import { err, ok } from "@/lib/error-handler";
 import { unstable_cache } from "next/cache";
+import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 import createTokenClient from "@/lib/supabase/clients/token";
 
 export async function isVehicleAvailable(
@@ -177,13 +178,13 @@ const _getCachedUserBookings = unstable_cache(
 
     return data;
   },
-  ["user-bookings-history"],
-  { revalidate: 60, tags: ["bookings"] },
+  [CACHE_TAGS.USER_BOOKINGS],
+  { revalidate: CACHE_TIME.FREQUENT, tags: [CACHE_TAGS.USER_BOOKINGS] },
 );
 
 export async function getUserBookings(userId: string) {
-  const [accessToken, error] = await getAccessToken();
-  if (error) return err({ reason: error.reason });
+  const accessToken = await getAccessToken();
+  if (!accessToken) return err({ reason: "Unauthorized" });
 
   const data = await _getCachedUserBookings(userId, accessToken);
 

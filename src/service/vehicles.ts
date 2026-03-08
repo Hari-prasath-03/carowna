@@ -3,6 +3,7 @@ import { err, ok } from "@/lib/error-handler";
 import QueryBuilder from "@/lib/query-builder";
 import { Vehicle, VehicleType } from "@/types";
 import { unstable_cache } from "next/cache";
+import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 
 type VehicleParams = {
   type?: VehicleType | "All";
@@ -76,10 +77,10 @@ const _getVehicles = unstable_cache(
 
     return ok(vehicleData as Vehicle[]);
   },
-  ["vehicles-list"],
+  [CACHE_TAGS.VEHICLES],
   {
-    revalidate: 3600,
-    tags: ["vehicles"],
+    revalidate: CACHE_TIME.RARE,
+    tags: [CACHE_TAGS.VEHICLES],
   },
 );
 
@@ -123,10 +124,10 @@ const _getVehicleById = unstable_cache(
 
     return ok(vehicle);
   },
-  ["vehicle-by-id"],
+  [CACHE_TAGS.VEHICLES, "vehicle-by-id"],
   {
-    revalidate: 3600,
-    tags: ["vehicle"],
+    revalidate: CACHE_TIME.RARE,
+    tags: [CACHE_TAGS.VEHICLES, "vehicle-by-id"],
   },
 );
 
@@ -152,10 +153,10 @@ const _getVehiclePriceRange = unstable_cache(
       max: Math.max(...prices),
     });
   },
-  ["vehicle-price-range"],
+  [CACHE_TAGS.PRICE_RANGE],
   {
-    revalidate: 3600,
-    tags: ["vehicles", "price-range"],
+    revalidate: CACHE_TIME.RARE,
+    tags: [CACHE_TAGS.PRICE_RANGE],
   },
 );
 

@@ -2,10 +2,10 @@ import { Metadata } from "next";
 import { Montserrat, Georama } from "next/font/google";
 
 import BottomNav from "@/components/layout/bottom-nav-bar";
-import ThemeProvider from "@/providers/theme-provider";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
 import "../globals.css";
+import Provider from "./provider";
 
 export const metadata: Metadata = {
   title: "Carvona",
@@ -37,18 +37,11 @@ export default function UserLayout({
           "antialiased",
         )}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="min-h-screen max-w-344.5 mx-auto bg-background text-foreground">
-            <Toaster position="top-center" richColors />
-            {children}
-            <BottomNav />
-          </div>
-        </ThemeProvider>
+        <div className="min-h-screen max-w-344.5 mx-auto bg-background text-foreground">
+          <Toaster position="top-center" richColors />
+          <Provider>{children}</Provider>
+          <BottomNav />
+        </div>
       </body>
     </html>
   );

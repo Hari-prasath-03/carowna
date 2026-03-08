@@ -1,15 +1,10 @@
-"use client";
-
+import { getPendingApprovalsCount } from "@/service/admin";
 import { CheckCircle2, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
-interface ApprovalsOverviewProps {
-  pendingCount: number;
-}
+export default async function ApprovalsOverview() {
+  const pendingCount = await getPendingApprovalsCount();
 
-export default function ApprovalsOverview({
-  pendingCount,
-}: ApprovalsOverviewProps) {
   return (
     <div className="bg-card p-8 rounded-2xl border border-border/40 shadow-sm h-full flex flex-col justify-between overflow-hidden relative group">
       <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity duration-500">

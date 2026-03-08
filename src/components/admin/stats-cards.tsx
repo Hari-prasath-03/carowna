@@ -1,3 +1,4 @@
+import { getDashboardStats } from "@/service/admin";
 import {
   Users,
   Store,
@@ -7,17 +8,9 @@ import {
   IndianRupee,
 } from "lucide-react";
 
-interface StatsCardsProps {
-  stats: {
-    users: number;
-    vendors: number;
-    vehicles: number;
-    bookings: number;
-    revenue: number;
-  };
-}
+export default async function StatsCards() {
+  const stats = await getDashboardStats();
 
-export default function StatsCards({ stats }: StatsCardsProps) {
   const items = [
     {
       label: "Total Users",

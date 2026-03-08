@@ -1,7 +1,9 @@
 import createClient from "@/lib/supabase/clients/server";
 import { getUserDetails } from "./user";
-import { getUser } from "./self-user";
+import { getAccessToken, getUser } from "./self-user";
 import { err, ok } from "@/lib/error-handler";
+import { unstable_cache } from "next/cache";
+import createTokenClient from "@/lib/supabase/clients/token";
 
 export async function isVehicleAvailable(
   vehicleId: string,
@@ -153,26 +155,42 @@ export async function getBookingDetails(bookingId: string) {
   return ok(data);
 }
 
+const _getCachedUserBookings = unstable_cache(
+  async (userId: string, accessToken: string) => {
+    const sb = createTokenClient(accessToken);
+
+    const { data, error } = await sb
+      .from("bookings")
+      .select(
+        `
+        *,
+        vehicle:vehicles(*)
+      `,
+      )
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      console.error("Failed to fetch user bookings:", error);
+      return null;
+    }
+
+    return data;
+  },
+  ["user-bookings-history"],
+  { revalidate: 60, tags: ["bookings"] },
+);
+
 export async function getUserBookings(userId: string) {
-  const sb = await createClient();
+  const [accessToken, error] = await getAccessToken();
+  if (error) return err({ reason: error.reason });
 
-  const { data, error } = await sb
-    .from("bookings")
-    .select(
-      `
-      *,
-      vehicle:vehicles(*)
-    `,
-    )
-    .eq("user_id", userId)
-    .order("created_at", { ascending: false });
+  const data = await _getCachedUserBookings(userId, accessToken);
 
-  if (error) {
-    console.error("Failed to fetch user bookings:", error);
+  if (!data)
     return err({
       reason: "Could not retrieve booking history.",
     });
-  }
 
   return ok(data);
 }

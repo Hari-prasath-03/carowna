@@ -1,39 +1,8 @@
+"use server";
+
+import publicSupabase from "@/lib/supabase/clients/public";
 import createClient from "@/lib/supabase/clients/server";
-import { ok, err } from "@/lib/error-handler";
-
-export async function getDashboardStats() {
-  const sb = await createClient();
-
-  const [
-    { count: usersCount },
-    { count: vendorsCount },
-    { count: vehiclesCount },
-    { count: bookingsCount },
-    { data: revenueData },
-  ] = await Promise.all([
-    sb.from("user_details").select("*", { count: "exact", head: true }),
-    sb
-      .from("user_details")
-      .select("*", { count: "exact", head: true })
-      .eq("role", "VENDOR"),
-    sb.from("vehicles").select("*", { count: "exact", head: true }),
-    sb.from("bookings").select("*", { count: "exact", head: true }),
-    sb.from("payments").select("amount").eq("payment_status", "SUCCESS"),
-  ]);
-
-  const totalRevenue = (revenueData || []).reduce(
-    (sum, p) => sum + (p.amount || 0),
-    0,
-  );
-
-  return ok({
-    users: usersCount || 0,
-    vendors: vendorsCount || 0,
-    vehicles: vehiclesCount || 0,
-    bookings: bookingsCount || 0,
-    revenue: totalRevenue,
-  });
-}
+import { unstable_cache } from "next/cache";
 
 export async function getRevenueTrends() {
   const sb = await createClient();
@@ -44,13 +13,12 @@ export async function getRevenueTrends() {
   const { data, error } = await sb
     .from("payments")
     .select("amount, created_at")
-    .eq("payment_status", "SUCCESS")
+    .eq("status", "SUCCESS")
     .gte("created_at", sixMonthsAgo.toISOString())
     .order("created_at", { ascending: true });
 
-  if (error) return err({ reason: "FETCH_FAILED", message: error.message });
+  if (error) return [];
 
-  // Group by month
   const monthlyData: Record<string, number> = {};
   const months = [
     "Jan",
@@ -73,9 +41,7 @@ export async function getRevenueTrends() {
     monthlyData[month] = (monthlyData[month] || 0) + p.amount;
   });
 
-  return ok(
-    Object.entries(monthlyData).map(([name, value]) => ({ name, value })),
-  );
+  return Object.entries(monthlyData).map(([name, value]) => ({ name, value }));
 }
 
 export async function getRecentBookings(limit = 5) {
@@ -89,35 +55,79 @@ export async function getRecentBookings(limit = 5) {
       created_at,
       booking_status,
       total_amount,
-      user:user_details(display_name, avatar_url),
-      vehicle:vehicles(name, brand),
-      vendor:user_details!vendor_id(display_name)
+      user:users(name),
+      vehicle:vehicles(
+        name,
+        brand,
+        vendor:users(name)
+      )
     `,
     )
     .order("created_at", { ascending: false })
     .limit(limit);
 
-  if (error) return err({ reason: "FETCH_FAILED", message: error.message });
+  if (error) return [];
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const bookings = (data || []).map((b: any) => ({
     ...b,
-    user: Array.isArray(b.user) ? b.user[0] : b.user,
-    vehicle: Array.isArray(b.vehicle) ? b.vehicle[0] : b.vehicle,
-    vendor: Array.isArray(b.vendor) ? b.vendor[0] : b.vendor,
+    user: b.user,
+    vehicle: {
+      name: b.vehicle?.name,
+      brand: b.vehicle?.brand,
+    },
+    vendor: b.vehicle?.vendor,
   }));
 
-  return ok(bookings);
+  return bookings;
 }
 
-export async function getPendingApprovalsCount() {
-  const sb = await createClient();
+export const getDashboardStats = unstable_cache(
+  async () => {
+    const sb = publicSupabase;
 
-  const { count, error } = await sb
-    .from("vehicles")
-    .select("*", { count: "exact", head: true })
-    .eq("approval_status", "PENDING");
+    const [
+      { count: users },
+      { count: vendors },
+      { count: vehicles },
+      { count: bookings },
+      { data: revenueRow },
+    ] = await Promise.all([
+      sb
+        .from("users")
+        .select("id", { count: "exact", head: true })
+        .eq("role", "USER"),
+      sb
+        .from("users")
+        .select("id", { count: "exact", head: true })
+        .eq("role", "VENDOR"),
+      sb.from("vehicles").select("id", { count: "exact", head: true }),
+      sb.from("bookings").select("id", { count: "exact", head: true }),
+      sb.from("payments").select("amount").eq("status", "SUCCESS"),
+    ]);
 
-  if (error) return 0;
-  return count || 0;
-}
+    return {
+      users: users ?? 0,
+      vendors: vendors ?? 0,
+      vehicles: vehicles ?? 0,
+      bookings: bookings ?? 0,
+      revenue: (revenueRow ?? []).reduce((sum, r) => sum + (r.amount ?? 0), 0),
+    };
+  },
+  ["dashboard-stats"],
+  { revalidate: 300 },
+);
+
+export const getPendingApprovalsCount = unstable_cache(
+  async () => {
+    const { count, error } = await publicSupabase
+      .from("vehicles")
+      .select("id", { count: "exact", head: true })
+      .eq("approval_status", "PENDING");
+
+    if (error) return 0;
+    return count ?? 0;
+  },
+  ["pending-approvals-count"],
+  { revalidate: 300 },
+);

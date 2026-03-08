@@ -14,7 +14,6 @@ export default function hasPermission(
   requiredPermission: Permission,
 ) {
   const userRole = user.role.toLowerCase() as Role;
-  console.log(userRole);
   return (ROLES[userRole] as readonly Permission[]).includes(
     requiredPermission,
   );

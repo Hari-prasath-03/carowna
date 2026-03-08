@@ -12,5 +12,5 @@ export async function getClientSession() {
 
 export async function isClientAuthenticated() {
   const session = await getClientSession();
-  return !!session;
+  return !!session?.access_token;
 }

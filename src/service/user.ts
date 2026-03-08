@@ -2,7 +2,7 @@ import { err, ok } from "@/lib/error-handler";
 import { UserDetails, UserRole } from "@/types";
 import { getUser } from "./self-user";
 import { unstable_cache } from "next/cache";
-import { publicSupabase } from "@/lib/supabase/clients/public";
+import publicSupabase from "@/lib/supabase/clients/public";
 
 const _getUserDetails = unstable_cache(
   async (userId: string) => {

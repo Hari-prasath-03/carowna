@@ -1,19 +1,48 @@
 "use client";
 
+import useGetRevenueTrends from "@/hooks/queries/useGetRevenueTrends";
 import { useMemo } from "react";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  Cell,
+  TooltipContentProps,
+} from "recharts";
+import {
+  NameType,
+  ValueType,
+} from "recharts/types/component/DefaultTooltipContent";
 
-interface RevenueTrendsProps {
-  data: { name: string; value: number }[];
-}
+const CustomTooltip = ({
+  active,
+  payload,
+}: Partial<TooltipContentProps<ValueType, NameType>>) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-foreground text-background text-[10px] font-black px-3 py-2 rounded-xl shadow-2xl border border-border/20 backdrop-blur-md">
+        <p className="uppercase tracking-widest opacity-70 mb-1">
+          {payload[0].payload.name}
+        </p>
+        <p className="text-sm">₹{payload[0].value?.toLocaleString()}</p>
+      </div>
+    );
+  }
+  return null;
+};
 
-export default function RevenueChart({ data }: RevenueTrendsProps) {
-  const maxValue = useMemo(
-    () => Math.max(...data.map((d) => d.value), 1000),
-    [data],
-  );
+export default function RevenueChart() {
+  const { data } = useGetRevenueTrends();
+  const chartData = useMemo(() => data, [data]);
+
+  if (!chartData) return null;
 
   return (
-    <div className="bg-card p-8 rounded-2xl border border-border/40 shadow-sm">
+    <div className="bg-card p-8 rounded-2xl border border-border/40 shadow-sm flex flex-col h-full">
       <div className="flex justify-between items-center mb-10">
         <div>
           <h2 className="text-xl font-black tracking-tight">Revenue Trends</h2>
@@ -37,45 +66,75 @@ export default function RevenueChart({ data }: RevenueTrendsProps) {
         </div>
       </div>
 
-      <div className="relative h-75 flex items-end justify-between gap-4 px-2">
-        {/* Y-Axis Lines */}
-        <div className="absolute inset-0 flex flex-col justify-between pointer-events-none">
-          {[1, 2, 3, 4].map((i) => (
-            <div
-              key={i}
-              className="w-full border-t border-dashed border-border/40"
-            />
-          ))}
-          <div className="w-full border-t border-border/10" />
-        </div>
-
-        {/* Bars */}
-        {data.map((d) => (
-          <div
-            key={d.name}
-            className="flex-1 flex flex-col items-center gap-4 group relative"
+      <div className="flex-1 min-h-75 w-full mt-auto">
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={chartData}
+            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            barGap={8}
           >
-            <div className="w-full flex items-end justify-center gap-1.5 h-62.5">
-              {/* Previous Month Placeholder (Light) */}
-              <div
-                className="w-full max-w-10 bg-muted/20 rounded-t-lg transition-all duration-500"
-                style={{ height: `${(d.value / maxValue) * 70}%` }}
-              />
-              {/* Current Month (Primary) */}
-              <div
-                className="w-full max-w-10 bg-primary rounded-t-lg transition-all duration-700 relative hover:bg-primary/90 cursor-pointer"
-                style={{ height: `${(d.value / maxValue) * 90}%` }}
-              >
-                <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-foreground text-background text-[10px] font-black px-2.5 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 whitespace-nowrap z-20 shadow-xl border border-border/20 translate-y-2 group-hover:translate-y-0">
-                  ₹{d.value.toLocaleString()}
-                </div>
-              </div>
-            </div>
-            <span className="text-[11px] font-bold uppercase tracking-tighter text-muted-foreground opacity-80">
-              {d.name}
-            </span>
-          </div>
-        ))}
+            <defs>
+              <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="var(--primary)" stopOpacity={1} />
+                <stop
+                  offset="100%"
+                  stopColor="var(--primary)"
+                  stopOpacity={0.8}
+                />
+              </linearGradient>
+            </defs>
+            <CartesianGrid
+              strokeDasharray="4 4"
+              vertical={false}
+              stroke="currentColor"
+              className="text-border/40"
+            />
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+              tick={{
+                fill: "currentColor",
+                fontSize: 10,
+                fontWeight: 800,
+                className: "text-muted-foreground uppercase tracking-tighter",
+              }}
+              dy={15}
+            />
+            <YAxis
+              axisLine={false}
+              tickLine={false}
+              tick={{
+                fill: "currentColor",
+                fontSize: 10,
+                fontWeight: 700,
+                className: "text-muted-foreground/60",
+              }}
+              tickFormatter={(value) => `₹${value / 1000}k`}
+            />
+            <Tooltip
+              content={<CustomTooltip />}
+              cursor={{ fill: "var(--muted)", opacity: 0.1 }}
+              animationDuration={300}
+            />
+            <Bar
+              dataKey="value"
+              fill="url(#barGradient)"
+              radius={[6, 6, 0, 0]}
+              barSize={32}
+              animationBegin={200}
+              animationDuration={1500}
+              animationEasing="ease-out"
+            >
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  className="hover:opacity-80 transition-opacity duration-300 cursor-pointer"
+                />
+              ))}
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
       </div>
     </div>
   );

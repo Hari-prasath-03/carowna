@@ -1,5 +1,5 @@
 import { err, ok } from "@/lib/error-handler";
-import { publicSupabase } from "@/lib/supabase/clients/public";
+import publicSupabase from "@/lib/supabase/clients/public";
 import { Driver } from "@/types";
 import { unstable_cache } from "next/cache";
 

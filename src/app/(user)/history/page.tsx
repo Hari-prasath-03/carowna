@@ -6,9 +6,7 @@ import BackButton from "@/components/layout/back-button";
 
 export default async function HistoryPage() {
   const [user, userErr] = await getUser();
-  if (userErr || !user) {
-    return redirect("/login");
-  }
+  if (userErr || !user) redirect("/login");
 
   const [bookings, bookingsErr] = await getUserBookings(user.id);
 

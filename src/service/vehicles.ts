@@ -1,4 +1,4 @@
-import { publicSupabase } from "@/lib/supabase/clients/public";
+import publicSupabase from "@/lib/supabase/clients/public";
 import { err, ok } from "@/lib/error-handler";
 import QueryBuilder from "@/lib/query-builder";
 import { Vehicle, VehicleType } from "@/types";

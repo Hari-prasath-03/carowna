@@ -2,9 +2,9 @@ import createClient from "@/lib/supabase/clients/server";
 import { getUserDetails } from "./user";
 import { getAccessToken, getUser } from "./self-user";
 import { err, ok } from "@/lib/error-handler";
-import { unstable_cache } from "next/cache";
 import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 import createTokenClient from "@/lib/supabase/clients/token";
+import { unstable_cache } from "next/cache";
 
 export async function isVehicleAvailable(
   vehicleId: string,
@@ -156,42 +156,43 @@ export async function getBookingDetails(bookingId: string) {
   return ok(data);
 }
 
-const _getCachedUserBookings = unstable_cache(
-  async (userId: string, accessToken: string) => {
-    const sb = createTokenClient(accessToken);
-
-    const { data, error } = await sb
-      .from("bookings")
-      .select(
-        `
-        *,
-        vehicle:vehicles(*)
-      `,
-      )
-      .eq("user_id", userId)
-      .order("created_at", { ascending: false });
-
-    if (error) {
-      console.error("Failed to fetch user bookings:", error);
-      return null;
-    }
-
-    return data;
-  },
-  [CACHE_TAGS.USER_BOOKINGS],
-  { revalidate: CACHE_TIME.FREQUENT, tags: [CACHE_TAGS.USER_BOOKINGS] },
-);
-
 export async function getUserBookings(userId: string) {
-  const accessToken = await getAccessToken();
-  if (!accessToken) return err({ reason: "Unauthorized" });
+  const token = await getAccessToken();
+  if (!token) return err({ reason: "Unauthorized" });
 
-  const data = await _getCachedUserBookings(userId, accessToken);
+  const cachedFetch = unstable_cache(
+    async () => {
+      const client = createTokenClient(token);
+      const { data, error } = await client
+        .from("bookings")
+        .select(
+          `
+        id,
+        created_at,
+        start_date,
+        end_date,
+        booking_status,
+        total_amount,
+        vehicle:vehicles(name, images, vehicle_type)
+      `,
+        )
+        .eq("user_id", userId)
+        .order("created_at", { ascending: false });
 
-  if (!data)
-    return err({
-      reason: "Could not retrieve booking history.",
-    });
+      if (error) {
+        console.error("Failed to fetch user bookings:", error);
+        return null;
+      }
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (data as any[]).map((b) => ({
+        ...b,
+        vehicle: Array.isArray(b.vehicle) ? b.vehicle[0] : b.vehicle,
+      }));
+    },
+    [CACHE_TAGS.USER_BOOKINGS, userId],
+    { revalidate: CACHE_TIME.RARE, tags: [CACHE_TAGS.USER_BOOKINGS] },
+  );
 
+  const data = await cachedFetch();
   return ok(data);
 }

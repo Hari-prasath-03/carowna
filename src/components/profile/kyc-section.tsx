@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   LucideIcon,
   CreditCard,
@@ -8,7 +9,6 @@ import {
   CheckCircle2,
   UploadCloud,
   Edit2,
-  Loader2,
   ExternalLinkIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -112,15 +112,15 @@ function KYCItem({
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center">
         {isUploading ? (
-          <Loader2 className="h-5 w-5 text-primary animate-spin" />
+          <Skeleton className="h-5 w-5 rounded-full" />
         ) : docUrl ? (
           <>
             <Button
               size="icon"
               variant="ghost"
-              className="h-9 w-9 rounded-full hover:bg-muted text-foreground"
+              className="rounded-full hover:bg-muted text-foreground"
               onClick={handleDownload}
               title="Download Document"
             >
@@ -129,7 +129,7 @@ function KYCItem({
             <Button
               size="icon"
               variant="ghost"
-              className="h-9 w-9 rounded-full hover:bg-muted text-foreground"
+              className="rounded-full hover:bg-muted text-foreground"
               onClick={handleUploadClick}
               title="Edit Document"
             >
@@ -155,7 +155,7 @@ function KYCItem({
           className="hidden"
         />
         {verified && !isUploading && (
-          <CheckCircle2 className="h-6 w-6 text-foreground ml-1" />
+          <CheckCircle2 className="h-6 w-6 text-foreground ml-2" />
         )}
       </div>
     </div>

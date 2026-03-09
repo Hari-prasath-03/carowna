@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { Montserrat, Georama } from "next/font/google";
 
+import NextTopLoader from "nextjs-toploader";
 import BottomNav from "@/components/layout/bottom-nav-bar";
 import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
@@ -37,6 +38,12 @@ export default function UserLayout({
           "antialiased",
         )}
       >
+        <NextTopLoader
+          color="hsl(var(--primary))"
+          shadow="0 0 10px hsl(var(--primary)), 0 0 5px hsl(var(--primary))"
+          height={3}
+          showSpinner={false}
+        />
         <div className="min-h-screen max-w-344.5 mx-auto bg-background text-foreground">
           <Toaster position="top-center" richColors />
           <Provider>{children}</Provider>

@@ -25,7 +25,7 @@ const _getDriversByVendor = unstable_cache(
   },
   [CACHE_TAGS.DRIVERS, "by-vendor"],
   {
-    revalidate: 3600,
+    revalidate: CACHE_TIME.RARE,
     tags: [CACHE_TAGS.DRIVERS],
   },
 );

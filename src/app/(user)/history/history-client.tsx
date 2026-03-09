@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import { useState, useTransition } from "react";
@@ -17,6 +16,7 @@ import { format, isAfter, isBefore, isWithinInterval } from "date-fns";
 import cancelBookingAction from "@/actions/booking/cancel-booking";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 export type BookingStatus = "Active" | "Upcoming" | "Completed" | "Cancelled";
 
@@ -161,9 +161,10 @@ function BookingCard({ booking }: { booking: HistoryBooking }) {
       <div className="p-5 flex gap-5">
         <div className="relative h-24 w-24 rounded-3xl overflow-hidden bg-muted shrink-0 border border-border">
           {vehicle.images?.[0] ? (
-            <img
+            <Image
               src={vehicle.images[0]}
               alt={vehicle.name}
+              fill
               className="object-cover group-hover:scale-110 transition-transform duration-500"
             />
           ) : (

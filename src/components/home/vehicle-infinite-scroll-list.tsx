@@ -4,7 +4,7 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import { useSearchParams } from "next/navigation";
 import VehicleCard from "./vehicle-card";
 import { Vehicle } from "@/types";
-import { Loader2 } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface VehicleInfiniteListProps {
   initialVehicles: Vehicle[];
@@ -96,11 +96,24 @@ export default function VehicleInfiniteScrollList({
       {hasMore && (
         <div ref={observerTarget} className="flex justify-center py-8">
           {loading && (
-            <div className="flex items-center gap-2 text-muted-foreground animate-pulse">
-              <Loader2 className="h-5 w-5 animate-spin" />
-              <span className="text-sm font-bold">
-                Loading more vehicles...
-              </span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full">
+              {[1, 2, 3].map((i) => (
+                <div
+                  key={i}
+                  className="bg-card border border-border rounded-[2.5rem] overflow-hidden p-5 space-y-4 opacity-50"
+                >
+                  <Skeleton className="aspect-video w-full rounded-4xl" />
+                  <div className="space-y-2">
+                    <Skeleton className="h-6 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 pt-2">
+                    <Skeleton className="h-12 w-full rounded-2xl" />
+                    <Skeleton className="h-12 w-full rounded-2xl" />
+                    <Skeleton className="h-12 w-full rounded-2xl" />
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>

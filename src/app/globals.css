@@ -179,3 +179,22 @@
     @apply bg-background text-foreground;
   }
 }
+
+@keyframes progress-bar {
+  0% {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  50% {
+    transform: scaleX(0.7);
+    transform-origin: left;
+  }
+  100% {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+@theme inline {
+  --animate-progress-bar: progress-bar 2s ease-in-out forwards;
+}

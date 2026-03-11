@@ -1,18 +1,19 @@
 "use client";
 
+import Link from "next/link";
+import { toast } from "sonner";
 import { useState, useMemo, useTransition } from "react";
 import { useBookingValidation } from "@/hooks/use-booking-validation";
 import { useRazorpay } from "@/hooks/use-razorpay";
 import { Driver, User, Vehicle } from "@/types";
 import { AlertCircle, ShieldAlert, CheckCircle2 } from "lucide-react";
-import BookingLocations from "../user/booking/booking-locations";
-import BookingPeriod from "../user/booking/booking-period";
-import BookingDriverToggle from "../user/booking/booking-driver-toggle";
-import BookingCostSummary from "../user/booking/booking-cost-summary";
-import BookingSubmitButton from "../user/booking/booking-submit-button";
-import { toast } from "sonner";
-import Link from "next/link";
+
 import createBookingAction from "@/actions/booking/create-booking";
+import BookingLocations from "../booking/booking-locations";
+import BookingPeriod from "../booking/booking-period";
+import BookingDriverToggle from "../booking/booking-driver-toggle";
+import BookingCostSummary from "../booking/booking-cost-summary";
+import BookingSubmitButton from "../booking/booking-submit-button";
 
 interface BookingFormProps {
   vehicle: Vehicle;

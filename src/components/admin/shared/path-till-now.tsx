@@ -4,17 +4,15 @@ import { ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 
 interface PathTillNowProps {
-  now?: string;
   replace?: {
     this: string;
     with: string;
   };
 }
 
-const PathTillNow = ({ now, replace }: PathTillNowProps) => {
+const PathTillNow = ({ replace }: PathTillNowProps) => {
   const path = usePathname();
   const segments = path.split("/").slice(1);
-  if (now) segments.splice(-1, 1, now);
   if (replace) segments.splice(segments.indexOf(replace.this), 1, replace.with);
 
   return (

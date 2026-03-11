@@ -42,7 +42,12 @@ export default function VendorProfileHeader({
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <BackButton />
-        <PathTillNow now={vendor.name} />
+        <PathTillNow
+          replace={{
+            with: vendor.id,
+            this: vendor.name,
+          }}
+        />
       </div>
 
       <div className="bg-card rounded-2xl border border-border/40 shadow-sm p-8 flex flex-col md:flex-row gap-6 items-start justify-between relative overflow-hidden">
@@ -103,7 +108,11 @@ export default function VendorProfileHeader({
         </div>
 
         <div className="flex items-center gap-3 shrink-0 w-full justify-between md:justify-end md:w-auto mt-4 md:mt-0">
-          <Button variant="outline" className="rounded-xl font-bold px-6 py-5" asChild>
+          <Button
+            variant="outline"
+            className="rounded-xl font-bold px-6 py-5"
+            asChild
+          >
             <Link href={`/dashboard/vendors/${vendor.id}/edit`}>
               <Pencil className="size-3.5" /> Edit Profile
             </Link>

@@ -106,8 +106,8 @@ export const getDashboardStats = unstable_cache(
       revenue: (revenueRow ?? []).reduce((sum, r) => sum + (r.amount ?? 0), 0),
     };
   },
-  [CACHE_TAGS.STATS],
-  { tags: [CACHE_TAGS.STATS], revalidate: CACHE_TIME.ADMIN },
+  [CACHE_TAGS.DASHBOARD_STATS],
+  { tags: [CACHE_TAGS.DASHBOARD_STATS], revalidate: CACHE_TIME.ADMIN },
 );
 
 export const getPendingApprovalsCount = unstable_cache(

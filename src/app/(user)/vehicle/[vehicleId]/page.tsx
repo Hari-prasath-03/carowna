@@ -1,14 +1,14 @@
 import { notFound, redirect } from "next/navigation";
 import { Fuel, Users, LocateFixed, BadgeCheck, Star } from "lucide-react";
 
-import SpecCard from "@/components/vehicles/spec-card";
-import VerificationCard from "@/components/vehicles/verification-card";
-import ImageGallery from "@/components/vehicles/image-gallery";
-import BookNowButton from "@/components/vehicles/book-now-button";
 import BackButton from "@/components/layout/back-button";
 import { getVehicleById } from "@/service/vehicles";
 import { getDriversByVendor } from "@/service/drivers";
 import { getUser } from "@/service/self-user";
+import ImageGallery from "@/components/user/vehicles/image-gallery";
+import SpecCard from "@/components/user/vehicles/spec-card";
+import VerificationCard from "@/components/user/vehicles/verification-card";
+import BookNowButton from "@/components/user/vehicles/book-now-button";
 
 interface VehicleDetailsPageProps {
   params: Promise<{

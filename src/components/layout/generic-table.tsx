@@ -1,8 +1,6 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
   Table,
@@ -24,11 +22,12 @@ interface GenericTableProps<T> {
   header?: {
     title: string;
     subtitle?: string;
-    viewAllHref?: string;
+    renderRightSection?: () => React.ReactNode;
   };
   data: T[];
   columns: Column<T>[];
   getRowKey: (item: T) => string;
+  footer?: () => React.ReactNode;
 }
 
 export default function GenericTable<T>({
@@ -36,10 +35,11 @@ export default function GenericTable<T>({
   data,
   columns,
   getRowKey,
+  footer,
 }: GenericTableProps<T>) {
   return (
     <div className="bg-card rounded-2xl border border-border/40 shadow-sm overflow-hidden">
-      <div className="p-8 flex justify-between items-center border-b border-border/10 bg-muted/5">
+      <div className="px-8 py-6 flex justify-between items-center border-b border-border/10 bg-muted/5">
         <div>
           <h2 className="text-xl font-black tracking-tighter text-foreground">
             {header?.title}
@@ -50,15 +50,7 @@ export default function GenericTable<T>({
             </p>
           )}
         </div>
-        {header?.viewAllHref && (
-          <Link
-            href={header.viewAllHref}
-            className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors group"
-          >
-            View All{" "}
-            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-          </Link>
-        )}
+        {header?.renderRightSection && header.renderRightSection()}
       </div>
 
       <Table>
@@ -95,6 +87,7 @@ export default function GenericTable<T>({
           ))}
         </TableBody>
       </Table>
+      {footer && footer()}
     </div>
   );
 }

@@ -1,46 +1,41 @@
-import { getDashboardStats } from "@/service/admin";
-import {
-  Users,
-  Store,
-  Car,
-  CalendarCheck,
-  TrendingUp,
-  IndianRupee,
-} from "lucide-react";
+import { Users, Store, Car, CalendarCheck, IndianRupee } from "lucide-react";
 
-export default async function StatsCards() {
-  const stats = await getDashboardStats();
+interface StatsCardsProps {
+  stats: {
+    users: number;
+    vendors: number;
+    vehicles: number;
+    bookings: number;
+    revenue: number;
+  };
+}
 
+export default function StatsCards({ stats }: StatsCardsProps) {
   const items = [
     {
       label: "Total Users",
-      value: stats.users.toLocaleString(),
+      value: stats.users,
       icon: Users,
-      trend: "+12%",
     },
     {
       label: "Total Vendors",
-      value: stats.vendors.toLocaleString(),
+      value: stats.vendors,
       icon: Store,
-      trend: "+5%",
     },
     {
       label: "Total Vehicles",
-      value: stats.vehicles.toLocaleString(),
+      value: stats.vehicles,
       icon: Car,
-      trend: "+8%",
     },
     {
       label: "Bookings",
-      value: stats.bookings.toLocaleString(),
+      value: stats.bookings,
       icon: CalendarCheck,
-      trend: "+15%",
     },
     {
       label: "Revenue",
-      value: `₹${stats.revenue.toLocaleString()}`,
+      value: `₹${stats.revenue}`,
       icon: IndianRupee,
-      trend: "+20%",
     },
   ];
 
@@ -51,13 +46,9 @@ export default async function StatsCards() {
           key={item.label}
           className="bg-card p-6 rounded-2xl border border-border/40 shadow-sm hover:shadow-md transition-all duration-300 group"
         >
-          <div className="flex justify-between items-start mb-6">
+          <div className="flex items-center gap-2 mb-6">
             <div className="p-2.5 rounded-xl bg-muted/50 border border-border/20 group-hover:bg-primary group-hover:text-primary-foreground transition-colors duration-300">
               <item.icon className="h-5 w-5" />
-            </div>
-            <div className="flex items-center gap-1 text-[10px] font-black text-emerald-500 bg-emerald-500/10 px-2 py-1 rounded-full border border-emerald-500/10">
-              <TrendingUp className="h-3 w-3" />
-              {item.trend}
             </div>
           </div>
           <div className="space-y-1">

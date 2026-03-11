@@ -101,6 +101,56 @@ export type BasicDetailsState = {
   };
 };
 
+export type Vendor = {
+  id: string;
+  name: string;
+  email: string;
+  profile_url: string | null;
+  created_at: string;
+  total: number;
+  bikes: number;
+  cars: number;
+  luxury: number;
+};
+
+export type VendorStats = {
+  total: number;
+  bikes: number;
+  cars: number;
+  luxury: number;
+};
+
+export type VendorProfile = {
+  id: string;
+  name: string;
+  email: string;
+  profile_url: string | null;
+  native_location: string | null;
+  mobile_no?: string | null;
+  date_of_birth?: string | null;
+  gender?: "MALE" | "FEMALE" | "OTHER" | null;
+  created_at: string;
+};
+
+export type VendorDetailStats = {
+  totalVehicles: number;
+  totalBookings: number;
+  totalEarnings: number;
+};
+
+export type VendorVehicle = {
+  id: string;
+  name: string;
+  brand: string | null;
+  vehicle_type: string;
+  registration_number: string;
+  price_per_day: number;
+  approval_status: "PENDING" | "APPROVED" | "REJECTED";
+  images: string[] | null;
+  last_rented: string | null;
+  is_available: boolean;
+};
+
 // Inputs
 
 export type SignupInput = z.infer<typeof signupSchema>;

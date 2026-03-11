@@ -1,8 +1,8 @@
 import { Suspense } from "react";
-import HomeHeader from "@/components/home/home-header";
-import CategoryFilters from "@/components/home/category-filters";
-import VehicleInfiniteScrollList from "@/components/home/vehicle-infinite-scroll-list";
-import VehicleListSkeleton from "@/components/home/vehicle-skeleton";
+import HomeHeader from "@/components/user/home/home-header";
+import CategoryFilters from "@/components/user/home/category-filters";
+import VehicleInfiniteScrollList from "@/components/user/home/vehicle-infinite-scroll-list";
+import VehicleListSkeleton from "@/components/user/home/vehicle-skeleton";
 
 import { getVehicles } from "@/service/vehicles";
 import { VehicleType } from "@/types";

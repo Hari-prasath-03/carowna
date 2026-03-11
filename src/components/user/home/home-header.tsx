@@ -1,8 +1,8 @@
 import { MapPin, SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import Logo from "../layout/logo";
+import Logo from "../../layout/logo";
 import FilterDrawer from "./filter-drawer";
-import DesktopNavbar from "../layout/desktop-navbar";
+import DesktopNavbar from "../../layout/desktop-navbar";
 import { getUserLocation } from "@/service/user";
 import { getVehiclePriceRange } from "@/service/vehicles";
 

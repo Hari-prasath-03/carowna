@@ -11,8 +11,8 @@ import {
   DrawerClose,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import ChoiceStep from "../booking/choice-step";
-import DriverSelectionStep from "../booking/driver-selection-step";
+import ChoiceStep from "../user/booking/choice-step";
+import DriverSelectionStep from "../user/booking/driver-selection-step";
 import { Driver } from "@/types";
 
 interface BookingFlowDrawerProps {

@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
 import { Settings } from "lucide-react";
 
-import KYCSection from "@/components/profile/kyc-section";
-import UserInfoCard from "@/components/profile/user-info-card";
-import SupportSection from "@/components/profile/support-section";
-import AccountActions from "@/components/profile/account-actions";
-import SettingsDrawer from "@/components/profile/settings-drawer";
+import KYCSection from "@/components/user/profile/kyc-section";
+import UserInfoCard from "@/components/user/profile/user-info-card";
+import SupportSection from "@/components/user/profile/support-section";
+import AccountActions from "@/components/user/profile/account-actions";
+import SettingsDrawer from "@/components/user/profile/settings-drawer";
 import BackButton from "@/components/layout/back-button";
 import { getUserDetails } from "@/service/user";
 import { getUser } from "@/service/self-user";

@@ -60,3 +60,40 @@ export const bookingSchema = z.object({
   total_amount: z.number().positive(),
   initial_amount: z.number().positive(),
 });
+
+export const addVendorSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+  mobile_no: z
+    .string()
+    .regex(/^[0-9]{10,15}$/, "Enter a valid mobile number")
+    .optional(),
+  date_of_birth: z.string().optional(),
+  native_location: z.string().optional(),
+  gender: z
+    .enum(["MALE", "FEMALE", "OTHER"], {
+      message: "Please select a gender",
+    })
+    .optional(),
+});
+
+export const editVendorSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters"),
+  email: z.string().email("Enter a valid email address"),
+  password: z.string().min(6, "Password must be at least 6 characters").optional(),
+  mobile_no: z
+    .string()
+    .regex(/^[0-9]{10,15}$/, "Enter a valid mobile number")
+    .optional(),
+  date_of_birth: z.string().optional(),
+  native_location: z.string().optional(),
+  gender: z
+    .enum(["MALE", "FEMALE", "OTHER"], {
+      message: "Please select a gender",
+    })
+    .optional(),
+});
+
+export type AddVendorInput = z.infer<typeof addVendorSchema>;
+export type EditVendorInput = z.infer<typeof editVendorSchema>;

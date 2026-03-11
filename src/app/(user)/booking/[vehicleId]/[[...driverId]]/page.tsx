@@ -3,7 +3,7 @@ import { getDriverById } from "@/service/drivers";
 import { getUser } from "@/service/self-user";
 import { getVehicleById } from "@/service/vehicles";
 
-import BookingForm from "@/components/vehicles/booking-form";
+import BookingForm from "@/components/user/vehicles/booking-form";
 import BackButton from "@/components/layout/back-button";
 import { Driver } from "@/types";
 

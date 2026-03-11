@@ -2,6 +2,7 @@ import { Georama, Montserrat } from "next/font/google";
 import { Metadata } from "next";
 import { cn } from "@/lib/utils";
 import "../globals.css";
+import { Toaster } from "sonner";
 
 const montserrat = Montserrat({
   subsets: ["latin"],
@@ -33,6 +34,7 @@ export default function ProtectedLayout({
         )}
       >
         <div className="min-h-screen bg-background text-foreground">
+          <Toaster position="top-right" richColors />
           {children}
         </div>
       </body>

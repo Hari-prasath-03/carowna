@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import GenericTable from "@/components/layout/generic-table";
 
@@ -42,7 +44,15 @@ export default function RecentBookingsTable({
       header={{
         title: "Recent Bookings",
         subtitle: "Monitor platform-wide booking activity",
-        viewAllHref: "/dashboard/bookings",
+        renderRightSection: () => (
+          <Link
+            href="/dashboard/bookings"
+            className="flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-muted-foreground hover:text-primary transition-colors group"
+          >
+            View All{" "}
+            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
+        ),
       }}
       data={bookings}
       columns={[

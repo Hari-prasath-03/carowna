@@ -60,7 +60,7 @@ export const getRecentBookings = unstable_cache(
     if (error) return [];
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const bookings = (data || []).map((b: any) => ({
+    return (data || []).map((b: any) => ({
       ...b,
       user: b.user,
       vehicle: {
@@ -69,8 +69,6 @@ export const getRecentBookings = unstable_cache(
       },
       vendor: b.vehicle?.vendor,
     }));
-
-    return bookings;
   },
   [CACHE_TAGS.BOOKINGS],
   { tags: [CACHE_TAGS.BOOKINGS], revalidate: CACHE_TIME.ADMIN },

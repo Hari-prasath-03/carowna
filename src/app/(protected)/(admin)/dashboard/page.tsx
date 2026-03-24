@@ -24,7 +24,7 @@ export default async function AdminDashboardPage() {
   return (
     <div className="space-y-10">
       <Header
-        title="Dashboard Overview"
+        title="Dashboard"
         disc="Real-time platform performance and statistics"
         actionRender={() => (
           <div className="flex items-center gap-3">

@@ -43,7 +43,6 @@ export default function HistoryClient({
   const [activeTab, setActiveTab] = useState<BookingStatus>("Active");
   const now = new Date();
 
-  // Client-side filtering
   const filteredBookings = initialBookings.filter((b) => {
     const start = new Date(b.start_date);
     const end = new Date(b.end_date);
@@ -134,7 +133,6 @@ function BookingCard({ booking }: { booking: HistoryBooking }) {
   const now = new Date();
   const end = new Date(booking.end_date);
 
-  // Logic to determine if booking is "initial" (can be cancelled)
   const isCancellable =
     booking.booking_status === "REQUESTED" && isAfter(end, now);
   const isCompleted =

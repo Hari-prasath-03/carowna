@@ -17,6 +17,7 @@ CREATE TABLE public.users (
   license_verified BOOLEAN DEFAULT FALSE,
   aadhaar_verified BOOLEAN DEFAULT FALSE,
 
+  last_active_at TIMESTAMP,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -37,6 +38,7 @@ CREATE TABLE public.vehicles (
   capacity INT,
 
   approval_status public.approval_status DEFAULT 'PENDING',
+  approval_remarks TEXT,
 
   insurance_doc_url TEXT,
   rc_doc_url TEXT,
@@ -59,6 +61,7 @@ CREATE TABLE public.drivers (
   rating NUMERIC(2,1) DEFAULT 0.0,
 
   approval_status public.approval_status DEFAULT 'PENDING',
+  approval_remarks TEXT,
 
   license_doc_url TEXT,
 

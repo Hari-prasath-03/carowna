@@ -44,8 +44,8 @@ export default function VendorProfileHeader({
         <BackButton />
         <PathTillNow
           replace={{
-            with: vendor.id,
-            this: vendor.name,
+            this: vendor.id,
+            with: vendor.name,
           }}
         />
       </div>

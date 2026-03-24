@@ -10,6 +10,7 @@ import {
   VendorStats,
   VendorVehicle,
 } from "@/types";
+import { ADMIN_PAGE_SIZE } from "@/constants";
 
 export const getVendorStats = unstable_cache(
   async (): Promise<VendorStats> => {
@@ -51,7 +52,7 @@ export const getVendorStats = unstable_cache(
 );
 
 export const getVendors = unstable_cache(
-  async (page: number = 1, size: number = 5) => {
+  async (page: number = 1, size: number = ADMIN_PAGE_SIZE) => {
     const from = (page - 1) * size;
     const to = from + size - 1;
 
@@ -162,7 +163,7 @@ export const getVendorDetailStats = unstable_cache(
 );
 
 export const getVendorVehicles = unstable_cache(
-  async (vendorId: string, page = 1, size = 5) => {
+  async (vendorId: string, page = 1, size = ADMIN_PAGE_SIZE) => {
     const sb = createAdminClient();
     const from = (page - 1) * size;
     const to = from + size - 1;

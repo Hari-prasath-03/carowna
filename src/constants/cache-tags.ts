@@ -4,9 +4,23 @@ export const CACHE_TAGS = {
   BOOKINGS: "admin:recent-bookings",
   DASHBOARD_STATS: "admin:dashboard-stats",
   APPROVAL_COUNT: "admin:pending-approvals-count",
+
+  // Bookings list page
+  ADMIN_BOOKINGS: "admin:bookings-list",
+  ADMIN_BOOKING_STATS: "admin:booking-stats",
+
+  // Approvals list page
+  APPROVALS: "admin:approvals-list",
+  APPROVAL_STATS: "admin:approvals-stats",
+
   // Vendor list page
   VENDORS: "admin:vendors-list",
   VENDOR_STATS: "admin:vendors-stats",
+
+  // Users list page
+  USERS: "admin:users-list",
+  USERS_STATS: "admin:users-stats",
+
   // Vendor detail page
   VENDOR_PROFILE: "admin:vendor-profile",
   VENDOR_DETAIL_STATS: "admin:vendor-detail-stats",

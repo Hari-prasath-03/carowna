@@ -109,7 +109,6 @@ export default async function createBookingAction(formData: FormData) {
     });
   } catch (error: unknown) {
     console.error("Razorpay order creation failed:", error);
-    // Cleanup booking if order creation fails
     const errorMessage =
       error instanceof Error
         ? error.message

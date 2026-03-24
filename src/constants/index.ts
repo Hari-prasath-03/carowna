@@ -12,3 +12,5 @@ export const months = [
   "Nov",
   "Dec",
 ];
+
+export const ADMIN_PAGE_SIZE = 5;

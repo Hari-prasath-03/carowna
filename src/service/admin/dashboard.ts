@@ -12,8 +12,9 @@ export const getRevenueTrends = unstable_cache(
 
     const { data, error } = await createAdminClient()
       .from("payments")
-      .select("amount, created_at")
+      .select("amount, created_at, bookings!inner(booking_status)")
       .eq("status", "SUCCESS")
+      .neq("bookings.booking_status", "CANCELLED")
       .gte("created_at", sixMonthsAgo.toISOString())
       .order("created_at", { ascending: true });
 
@@ -95,7 +96,11 @@ export const getDashboardStats = unstable_cache(
         .eq("role", "VENDOR"),
       sb.from("vehicles").select("id", { count: "exact", head: true }),
       sb.from("bookings").select("id", { count: "exact", head: true }),
-      sb.from("payments").select("amount").eq("status", "SUCCESS"),
+      sb
+        .from("payments")
+        .select("amount, bookings!inner(booking_status)")
+        .neq("bookings.booking_status", "CANCELLED")
+        .eq("status", "SUCCESS"),
     ]);
 
     return {

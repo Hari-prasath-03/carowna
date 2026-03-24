@@ -6,21 +6,15 @@ import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import GenericTable from "@/components/layout/generic-table";
 
-const STATUS_MAP = {
-  COMPLETED:
-    "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 hover:bg-emerald-500/10",
-  REQUESTED:
-    "bg-amber-500/10 text-amber-600 border-amber-500/20 hover:bg-amber-500/10",
-  PENDING_PAYMENT:
-    "bg-sky-500/10 text-sky-600 border-sky-500/20 hover:bg-sky-500/10",
-  CANCELLED:
-    "bg-destructive/10 text-destructive border-destructive/20 hover:bg-destructive/10",
-};
+import {
+  BOOKING_STATUS_BADGE_STYLES,
+  BOOKING_STATUS_STYLES,
+} from "@/constants/shared-styles";
 
 export type Booking = {
   id: string;
   created_at: string;
-  booking_status: keyof typeof STATUS_MAP;
+  booking_status: string;
   total_amount: number;
   user?: {
     name: string;
@@ -56,14 +50,6 @@ export default function RecentBookingsTable({
       }}
       data={bookings}
       columns={[
-        {
-          header: "Booking ID",
-          render: (b) => (
-            <span className="text-xs font-semibold tracking-tighter text-muted-foreground group-hover:text-foreground transition-colors">
-              #{b.id.slice(0, 8).toUpperCase()}
-            </span>
-          ),
-        },
         {
           header: "Customer",
           render: (b) => (
@@ -111,8 +97,8 @@ export default function RecentBookingsTable({
             <Badge
               variant="outline"
               className={cn(
-                "text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-md",
-                STATUS_MAP[b.booking_status],
+                BOOKING_STATUS_BADGE_STYLES,
+                BOOKING_STATUS_STYLES[b.booking_status],
               )}
             >
               {b.booking_status}

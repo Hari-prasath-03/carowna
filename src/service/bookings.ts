@@ -156,17 +156,13 @@ export async function getBookingDetails(bookingId: string) {
   return ok(data);
 }
 
-export async function getUserBookings(userId: string) {
-  const token = await getAccessToken();
-  if (!token) return err({ reason: "Unauthorized" });
-
-  const cachedFetch = unstable_cache(
-    async () => {
-      const client = createTokenClient(token);
-      const { data, error } = await client
-        .from("bookings")
-        .select(
-          `
+const fetchUserBookingsCache = unstable_cache(
+  async (userId: string, token: string) => {
+    const client = createTokenClient(token);
+    const { data, error } = await client
+      .from("bookings")
+      .select(
+        `
         id,
         created_at,
         start_date,
@@ -175,24 +171,28 @@ export async function getUserBookings(userId: string) {
         total_amount,
         vehicle:vehicles(name, images, vehicle_type)
       `,
-        )
-        .eq("user_id", userId)
-        .order("created_at", { ascending: false });
+      )
+      .eq("user_id", userId)
+      .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Failed to fetch user bookings:", error);
-        return null;
-      }
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return (data as any[]).map((b) => ({
-        ...b,
-        vehicle: Array.isArray(b.vehicle) ? b.vehicle[0] : b.vehicle,
-      }));
-    },
-    [CACHE_TAGS.USER_BOOKINGS, userId],
-    { revalidate: CACHE_TIME.RARE, tags: [CACHE_TAGS.USER_BOOKINGS] },
-  );
+    if (error) {
+      console.error("Failed to fetch user bookings:", error);
+      return null;
+    }
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (data as any[]).map((b) => ({
+      ...b,
+      vehicle: Array.isArray(b.vehicle) ? b.vehicle[0] : b.vehicle,
+    }));
+  },
+  [CACHE_TAGS.USER_BOOKINGS],
+  { revalidate: CACHE_TIME.RARE, tags: [CACHE_TAGS.USER_BOOKINGS] },
+);
 
-  const data = await cachedFetch();
+export async function getUserBookings(userId: string) {
+  const token = await getAccessToken();
+  if (!token) return err({ reason: "Unauthorized" });
+
+  const data = await fetchUserBookingsCache(userId, token);
   return ok(data);
 }

@@ -151,6 +151,125 @@ export type VendorVehicle = {
   is_available: boolean;
 };
 
+export type UserStats = {
+  totalUsers: number;
+  activeUsers: number;
+  newUsersThisMonth: number;
+};
+
+export type UserListItem = {
+  id: string;
+  name: string;
+  email: string;
+  profile_url: string | null;
+  total_bookings: number;
+  created_at: string;
+  last_active_at: string | null;
+};
+
+export type AdminUserProfile = {
+  id: string;
+  name: string;
+  email: string;
+  profile_url: string | null;
+  mobile_no: string | null;
+  date_of_birth: string | null;
+  native_location: string | null;
+  gender: "MALE" | "FEMALE" | "OTHER" | null;
+  created_at: string;
+  total_bookings: number;
+  total_cancelled: number;
+  total_spent: number;
+};
+
+export type UserBookingHistoryItem = {
+  id: string;
+  vehicle_name: string;
+  vehicle_brand: string | null;
+  vehicle_images: string[] | null;
+  start_date: string;
+  end_date: string;
+  location_pickup: string;
+  location_drop: string;
+  booking_status: "PENDING_PAYMENT" | "REQUESTED" | "COMPLETED" | "CANCELLED";
+  total_amount: number;
+  created_at: string;
+};
+
+export type AdminBookingStats = {
+  totalBookings: number;
+  activeTrips: number;
+  pendingConfirmations: number;
+  cancelled: number;
+};
+
+export type AdminBookingListItem = {
+  id: string;
+  user_name: string;
+  vehicle: {
+    name: string;
+    brand: string;
+  };
+  vendor_name: string;
+  start_date: string;
+  end_date: string;
+  booking_status: string;
+};
+
+export type AdminBookingDetails = {
+  id: string;
+  start_date: string;
+  end_date: string;
+  location_pickup: string;
+  location_drop: string;
+  booking_status: string;
+  total_amount: number;
+  initial_amount: number;
+  user: {
+    id: string;
+    profile_url: string | null;
+  };
+  vehicle_id: string;
+  driver_id: string | null;
+};
+
+export type ApprovalStats = {
+  totalPending: number;
+  approvedToday: number;
+  rejectedToday: number;
+};
+
+export type ApprovalListItem = {
+  id: string;
+  name: string;
+  vehicle_type: string | null;
+  approval_status: string;
+  created_at: string;
+  vendor_name: string;
+  vendor_profile_url: string | null;
+};
+
+export type VehicleApprovalDetails = {
+  id: string;
+  name: string;
+  brand: string | null;
+  vehicle_type: string | null;
+  transmission: string | null;
+  fuel_type: string | null;
+  capacity: number | null;
+  price_per_day: number;
+  images: string[] | null;
+  registration_number: string;
+  approval_status: string;
+  created_at: string;
+  rc_doc_url: string | null;
+  insurance_doc_url: string | null;
+  approval_remarks: string | null;
+  vendor: {
+    name: string;
+  };
+};
+
 // Inputs
 
 export type SignupInput = z.infer<typeof signupSchema>;

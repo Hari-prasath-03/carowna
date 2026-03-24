@@ -73,7 +73,7 @@ export default function CustomAlert({
                 <div className="space-y-2">
                   <p className="text-sm font-medium text-foreground">
                     Please type{" "}
-                    <strong className="font-bold select-none">
+                    <strong className="font-bold">
                       {requireInputToConfirm}
                     </strong>{" "}
                     to confirm.

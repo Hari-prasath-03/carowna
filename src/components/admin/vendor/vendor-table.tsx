@@ -2,13 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Vendor } from "@/types";
 import GenericTable from "@/components/layout/generic-table";
 import { Button } from "@/components/ui/button";
-import { Store, ChevronLeft, ChevronRight } from "lucide-react";
-import { cn } from "@/lib/utils";
-import { Activity } from "react";
+import { Store } from "lucide-react";
 
 interface VendorTableProps {
   vendors: Vendor[];
@@ -23,25 +20,6 @@ export default function VendorTable({
   totalPages,
   total,
 }: VendorTableProps) {
-  const pathname = usePathname();
-  const showPagination = totalPages > 1;
-
-  const pageStart = (currentPage - 1) * 10 + 1;
-  const pageEnd = Math.min(currentPage * 10, total);
-
-  if (vendors.length === 0) {
-    return (
-      <div className="bg-card rounded-2xl border border-border/40 shadow-sm p-16 flex flex-col items-center justify-center gap-4 text-center">
-        <Store className="h-10 w-10 text-muted-foreground/40" />
-        <div>
-          <p className="font-semibold text-foreground">No vendors found</p>
-          <p className="text-sm text-muted-foreground mt-1">
-            Add vendors to see them here.
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <GenericTable
@@ -136,53 +114,12 @@ export default function VendorTable({
           ),
         },
       ]}
-      footer={() => (
-        <Activity mode={showPagination ? "visible" : "hidden"}>
-          <div className="flex items-center justify-between px-8 py-4 border-t border-border/10 bg-muted/5">
-            <p className="text-[11px] font-semibold text-muted-foreground">
-              Showing {pageStart} to {pageEnd} of {total} vendors
-            </p>
-            <div className="flex items-center gap-1.5">
-              <Link
-                href={`${pathname}?page=${currentPage - 1}`}
-                aria-disabled={currentPage <= 1}
-                className={cn(
-                  "w-8 h-8 flex items-center justify-center rounded-lg border border-border/40 text-muted-foreground hover:bg-muted/50 transition-colors",
-                  currentPage <= 1 && "pointer-events-none opacity-30",
-                )}
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </Link>
-
-              {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-                <Link
-                  key={p}
-                  href={`${pathname}?page=${p}`}
-                  className={cn(
-                    "w-8 h-8 flex items-center justify-center rounded-lg border text-xs font-bold transition-colors",
-                    p === currentPage
-                      ? "bg-primary text-primary-foreground border-primary"
-                      : "border-border/40 text-muted-foreground hover:bg-muted/50",
-                  )}
-                >
-                  {p}
-                </Link>
-              ))}
-
-              <Link
-                href={`${pathname}?page=${currentPage + 1}`}
-                aria-disabled={currentPage >= totalPages}
-                className={cn(
-                  "w-8 h-8 flex items-center justify-center rounded-lg border border-border/40 text-muted-foreground hover:bg-muted/50 transition-colors",
-                  currentPage >= totalPages && "pointer-events-none opacity-30",
-                )}
-              >
-                <ChevronRight className="h-4 w-4" />
-              </Link>
-            </div>
-          </div>
-        </Activity>
-      )}
+      pagination={{
+        currentPage,
+        totalPages,
+        total,
+        label: "vendors",
+      }}
     />
   );
 }

@@ -2,7 +2,11 @@
 
 import createAdminClient from "@/lib/supabase/clients/admin";
 import { revalidatePath, updateTag } from "next/cache";
-import { CACHE_TAGS } from "@/constants/cache-tags";
+import {
+  ADMIN_CACHE_TAGS,
+  VENDOR_CACHE_TAGS,
+  USER_CACHE_TAGS,
+} from "@/constants/cache-tags";
 import authoriseAdmin from "@/service/admin/authorise";
 
 export type DeleteVendorState = {
@@ -28,9 +32,14 @@ export default async function deleteVendorAction(
     };
   }
 
-  updateTag(CACHE_TAGS.DASHBOARD_STATS);
-  updateTag(CACHE_TAGS.VENDORS);
-  updateTag(CACHE_TAGS.VENDOR_STATS);
+  updateTag(ADMIN_CACHE_TAGS.DASHBOARD_STATS);
+  updateTag(ADMIN_CACHE_TAGS.VENDORS_LIST);
+  updateTag(ADMIN_CACHE_TAGS.VENDORS_STATS);
+  updateTag(USER_CACHE_TAGS.VEHICLES_LIST);
+  updateTag(USER_CACHE_TAGS.PRICE_RANGE);
+  updateTag(USER_CACHE_TAGS.PROFILE);
+  updateTag(VENDOR_CACHE_TAGS.VEHICLES_LIST);
+  updateTag(VENDOR_CACHE_TAGS.VEHICLE_STATS);
   revalidatePath("/dashboard/vendors");
 
   return {

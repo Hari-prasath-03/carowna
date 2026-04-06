@@ -4,7 +4,7 @@ import CategoryFilters from "@/components/user/home/category-filters";
 import VehicleInfiniteScrollList from "@/components/user/home/vehicle-infinite-scroll-list";
 import VehicleListSkeleton from "@/components/user/home/vehicle-skeleton";
 
-import { getVehicles } from "@/service/vehicles";
+import { getVehicles } from "@/service/user/vehicles";
 import { VehicleType } from "@/types";
 
 type vehicleSearch = {

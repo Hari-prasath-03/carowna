@@ -3,7 +3,11 @@
 import createAdminClient from "@/lib/supabase/clients/admin";
 import { editVendorSchema } from "@/types/validation-schema";
 import { revalidatePath, updateTag } from "next/cache";
-import { CACHE_TAGS } from "@/constants/cache-tags";
+import {
+  ADMIN_CACHE_TAGS,
+  VENDOR_CACHE_TAGS,
+  USER_CACHE_TAGS,
+} from "@/constants/cache-tags";
 import authoriseAdmin from "@/service/admin/authorise";
 
 export type EditVendorState = {
@@ -91,8 +95,10 @@ export default async function editVendorAction(
     };
   }
 
-  updateTag(CACHE_TAGS.VENDORS);
-  updateTag(CACHE_TAGS.VENDOR_STATS);
+  updateTag(ADMIN_CACHE_TAGS.VENDORS_LIST);
+  updateTag(ADMIN_CACHE_TAGS.VENDORS_STATS);
+  updateTag(VENDOR_CACHE_TAGS.DASHBOARD_STATS);
+  updateTag(USER_CACHE_TAGS.PROFILE);
   revalidatePath(`/dashboard/vendors/${vendorId}`);
   revalidatePath("/dashboard/vendors");
 

@@ -1,7 +1,7 @@
 import { notFound, redirect } from "next/navigation";
-import { getDriverById } from "@/service/drivers";
+import { getDriverById } from "@/service/user/drivers";
 import { getUser } from "@/service/self-user";
-import { getVehicleById } from "@/service/vehicles";
+import { getVehicleById } from "@/service/user/vehicles";
 
 import BookingForm from "@/components/user/vehicles/booking-form";
 import BackButton from "@/components/layout/back-button";

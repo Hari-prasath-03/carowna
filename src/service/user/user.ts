@@ -1,9 +1,9 @@
 import { err, ok } from "@/lib/error-handler";
 import { UserDetails, UserRole } from "@/types";
-import { getUser } from "./self-user";
+import { getUser } from "../self-user";
 import { unstable_cache } from "next/cache";
 import publicSupabase from "@/lib/supabase/clients/public";
-import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
+import { USER_CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 
 const _getUserDetails = unstable_cache(
   async (userId: string) => {
@@ -49,10 +49,10 @@ const _getUserDetails = unstable_cache(
       created_at: data.created_at,
     } as UserDetails);
   },
-  [CACHE_TAGS.USER_PROFILE],
+  [USER_CACHE_TAGS.PROFILE],
   {
     revalidate: CACHE_TIME.RARE,
-    tags: [CACHE_TAGS.USER_PROFILE],
+    tags: [USER_CACHE_TAGS.PROFILE],
   },
 );
 

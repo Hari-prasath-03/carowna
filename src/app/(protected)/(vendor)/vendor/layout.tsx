@@ -1,30 +1,55 @@
-import { Metadata } from "next";
-import { Figtree } from "next/font/google";
-import { cn } from "@/lib/utils";
-import "@/app/globals.css";
+import { redirect } from "next/navigation";
+import { getUser } from "@/service/self-user";
+import hasPermission from "@/permissions";
+import Sidebar from "@/components/layout/sidebar";
 
-const figtree = Figtree({
-  variable: "--font-figtree",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
-  title: "Carvona - Vendor",
-  description: "Carvona Vendor Dashboard",
-};
-
-export default function VendorLayout({
+export default async function VendorLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [user, userErr] = await getUser();
+  if (!user || userErr) redirect("/login");
+
+  if (!hasPermission(user, "provider:resources")) redirect("/");
+
   return (
-    <html lang="en">
-      <body className={cn(figtree.variable, "antialiased")}>
-        <div className="min-h-screen bg-background text-foreground">
-          {children}
-        </div>
-      </body>
-    </html>
+    <div className="flex min-h-screen">
+      <Sidebar
+        parentPath="/vendor"
+        header={{
+          title: "Vendor Panel",
+          subtitle: "Manage resources",
+        }}
+        menuItems={[
+          {
+            icon: "LayoutDashboard",
+            label: "Dashboard",
+            href: "/vendor",
+          },
+          {
+            icon: "Car",
+            label: "Vehicles",
+            href: "/vendor/vehicles",
+          },
+          {
+            icon: "User",
+            label: "Drivers",
+            href: "/vendor/drivers",
+          },
+          {
+            icon: "CalendarCheck",
+            label: "Bookings",
+            href: "/vendor/bookings",
+          },
+        ]}
+        user={{
+          details: user,
+        }}
+      />
+      <main className="flex-1 pl-72">
+        <div className="p-8 max-w-400 mx-auto">{children}</div>
+      </main>
+    </div>
   );
 }

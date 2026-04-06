@@ -15,9 +15,10 @@ import {
 import { Loader2 } from "lucide-react";
 import loginAction from "@/actions/auth/login";
 import FormInput from "@/components/forms/form-input";
-import { isClientAuthenticated } from "@/service/auth-client";
+import { getClientSession } from "@/service/auth-client";
 import { useRouter } from "next/navigation";
 import Logo from "@/components/layout/logo";
+import { User } from "@/types";
 
 const initialState = {
   success: false,
@@ -32,11 +33,20 @@ export default function LoginPage() {
     initialState,
   );
 
+  const userSpecificRoute = (role?: User["role"]) => {
+    if (!role) return "/";
+    return {
+      ADMIN: "/dashboard",
+      VENDOR: "/vendor",
+      USER: "/",
+    }[role];
+  };
+
   useEffect(() => {
     async function checkAuth() {
-      const isAuthinticated = await isClientAuthenticated();
-      console.log(isAuthinticated);
-      if (isAuthinticated) router.push("/");
+      const session = await getClientSession();
+      if (session)
+        router.push(userSpecificRoute(session.user.user_metadata.role));
     }
     checkAuth();
   }, [router]);
@@ -45,9 +55,10 @@ export default function LoginPage() {
     if (state.error) toast.error(state.error);
     if (state.success) {
       const callbackUrl = new URLSearchParams(window.location.search).get("cb");
-      router.push(callbackUrl || "/");
+      if (callbackUrl) router.push(callbackUrl);
+      else router.push(userSpecificRoute(state.role as User["role"]));
     }
-  }, [state.error, state.success, router]);
+  }, [state.error, state.success, state.role, router]);
 
   return (
     <div className="w-full space-y-6">

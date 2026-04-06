@@ -3,7 +3,7 @@ import { err, ok } from "@/lib/error-handler";
 import QueryBuilder from "@/lib/query-builder";
 import { Vehicle, VehicleType } from "@/types";
 import { unstable_cache } from "next/cache";
-import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
+import { USER_CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 
 type VehicleParams = {
   type?: VehicleType | "All";
@@ -50,6 +50,7 @@ const _getVehicles = unstable_cache(
 
     builder
       .filter(true, "approval_status", "APPROVED")
+      .filter(true, "is_available", true)
       .filter(
         !!params.type && params.type !== "All",
         "vehicle_type",
@@ -77,10 +78,10 @@ const _getVehicles = unstable_cache(
 
     return ok(vehicleData as Vehicle[]);
   },
-  [CACHE_TAGS.VEHICLES],
+  [USER_CACHE_TAGS.VEHICLES_LIST, "getVehicles"],
   {
     revalidate: CACHE_TIME.RARE,
-    tags: [CACHE_TAGS.VEHICLES],
+    tags: [USER_CACHE_TAGS.VEHICLES_LIST],
   },
 );
 
@@ -111,6 +112,8 @@ const _getVehicleById = unstable_cache(
       `,
       )
       .eq("id", id)
+      .eq("approval_status", "APPROVED")
+      .eq("is_available", true)
       .single();
 
     if (error || !data) {
@@ -124,10 +127,10 @@ const _getVehicleById = unstable_cache(
 
     return ok(vehicle);
   },
-  [CACHE_TAGS.VEHICLES, "vehicle-by-id"],
+  [USER_CACHE_TAGS.VEHICLE_DETAILS, "getVehicleById"],
   {
     revalidate: CACHE_TIME.RARE,
-    tags: [CACHE_TAGS.VEHICLES, "vehicle-by-id"],
+    tags: [USER_CACHE_TAGS.VEHICLE_DETAILS],
   },
 );
 
@@ -140,7 +143,8 @@ const _getVehiclePriceRange = unstable_cache(
     const { data, error } = await publicSupabase
       .from("vehicles")
       .select("price_per_day")
-      .eq("approval_status", "APPROVED");
+      .eq("approval_status", "APPROVED")
+      .eq("is_available", true);
 
     if (error || !data?.length) {
       return ok({ min: 0, max: 1000 });
@@ -153,10 +157,10 @@ const _getVehiclePriceRange = unstable_cache(
       max: Math.max(...prices),
     });
   },
-  [CACHE_TAGS.PRICE_RANGE],
+  [USER_CACHE_TAGS.PRICE_RANGE, "getVehiclePriceRange"],
   {
     revalidate: CACHE_TIME.RARE,
-    tags: [CACHE_TAGS.PRICE_RANGE],
+    tags: [USER_CACHE_TAGS.PRICE_RANGE],
   },
 );
 

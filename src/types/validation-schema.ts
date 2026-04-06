@@ -81,7 +81,10 @@ export const addVendorSchema = z.object({
 export const editVendorSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters"),
   email: z.string().email("Enter a valid email address"),
-  password: z.string().min(6, "Password must be at least 6 characters").optional(),
+  password: z
+    .string()
+    .min(6, "Password must be at least 6 characters")
+    .optional(),
   mobile_no: z
     .string()
     .regex(/^[0-9]{10,15}$/, "Enter a valid mobile number")
@@ -95,5 +98,26 @@ export const editVendorSchema = z.object({
     .optional(),
 });
 
+export const VehicleSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  brand: z.string().min(2, "Brand is required"),
+  vehicle_type: z.string().min(1, "Type is required"),
+  registration_number: z.string().min(5, "Valid registration is required"),
+  fuel_type: z.string().min(1, "Fuel type is required"),
+  capacity: z.coerce.number().min(1, "Capacity must be at least 1"),
+  price_per_day: z.coerce.number().min(1, "Price must be at least 1"),
+  transmission: z.string().optional().nullable(),
+  is_available: z.coerce.boolean().default(false),
+});
+
+export const DriverSchema = z.object({
+  name: z.string().min(2, "Name is required"),
+  years_of_exp: z.coerce.number().min(0, "Experience cannot be negative"),
+  date_of_birth: z.string().optional().nullable(),
+  gender: z.enum(["MALE", "FEMALE", "OTHER"]).optional().nullable(),
+  availability_status: z.coerce.boolean().default(false),
+});
+
 export type AddVendorInput = z.infer<typeof addVendorSchema>;
 export type EditVendorInput = z.infer<typeof editVendorSchema>;
+export type DriverInput = z.infer<typeof DriverSchema>;

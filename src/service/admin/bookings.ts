@@ -2,7 +2,7 @@
 
 import { unstable_cache } from "next/cache";
 import createAdminClient from "@/lib/supabase/clients/admin";
-import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
+import { ADMIN_CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 import {
   AdminBookingListItem,
   AdminBookingStats,
@@ -44,8 +44,8 @@ export const getAdminBookingStats = unstable_cache(
       cancelled: cancelled,
     };
   },
-  [CACHE_TAGS.ADMIN_BOOKING_STATS],
-  { tags: [CACHE_TAGS.ADMIN_BOOKING_STATS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.BOOKING_STATS],
+  { tags: [ADMIN_CACHE_TAGS.BOOKING_STATS], revalidate: CACHE_TIME.FREQUENT },
 );
 
 export const getAdminBookings = unstable_cache(
@@ -101,8 +101,8 @@ export const getAdminBookings = unstable_cache(
       totalPages: Math.ceil(total / size),
     };
   },
-  [CACHE_TAGS.ADMIN_BOOKINGS],
-  { tags: [CACHE_TAGS.ADMIN_BOOKINGS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.BOOKINGS_LIST],
+  { tags: [ADMIN_CACHE_TAGS.BOOKINGS_LIST], revalidate: CACHE_TIME.FREQUENT },
 );
 
 export const getAdminBookingDetails = unstable_cache(
@@ -142,6 +142,6 @@ export const getAdminBookingDetails = unstable_cache(
       driver_id: b.driver?.id ?? null,
     };
   },
-  [CACHE_TAGS.ADMIN_BOOKINGS, "admin-booking-details"],
-  { tags: [CACHE_TAGS.ADMIN_BOOKINGS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.BOOKING_DETAILS],
+  { tags: [ADMIN_CACHE_TAGS.BOOKING_DETAILS], revalidate: CACHE_TIME.FREQUENT },
 );

@@ -20,7 +20,6 @@ interface SidebarProps {
   }[];
   user: {
     details: User;
-    profilePath: string;
   };
 }
 
@@ -89,10 +88,7 @@ export default function Sidebar({
       </nav>
 
       <div className="p-6 border-t border-border/40">
-        <Link
-          href={user.profilePath}
-          className="bg-muted/30 rounded-2xl p-4 flex items-center justify-between group cursor-pointer hover:bg-muted/50 transition-all duration-300 border border-transparent hover:border-border/50"
-        >
+        <div className="bg-muted/30 rounded-2xl p-4 flex items-center justify-between group relative overflow-hidden transition-all duration-300 border border-transparent hover:border-border/50">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-sm font-black text-primary-foreground shadow-md ring-4 ring-primary/5">
               {user.details.display_name
@@ -110,8 +106,28 @@ export default function Sidebar({
               </span>
             </div>
           </div>
-          <icons.Settings className="h-4 w-4 text-muted-foreground group-hover:rotate-90 transition-transform duration-500" />
-        </Link>
+
+          <div className="relative h-8 w-8 flex items-center justify-center">
+            <icons.Settings className="h-4 w-4 text-muted-foreground group-hover:opacity-0 group-hover:rotate-90 transition-all duration-500 absolute" />
+            <form
+              action={async () => {
+                const { default: logoutAction } = await import(
+                  "@/actions/auth/logout"
+                );
+                await logoutAction();
+              }}
+              className="opacity-0 group-hover:opacity-100 transition-opacity duration-300 absolute inset-0 flex items-center justify-center"
+            >
+              <button
+                type="submit"
+                className="h-8 w-8 flex items-center justify-center rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors group/btn"
+                title="Logout"
+              >
+                <icons.LogOut className="h-4 w-4 group-hover/btn:scale-110 transition-transform" />
+              </button>
+            </form>
+          </div>
+        </div>
       </div>
     </aside>
   );

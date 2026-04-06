@@ -1,7 +1,7 @@
 "use server";
 
 import createClient from "@/lib/supabase/clients/server";
-import { validateBookingConstraints } from "@/service/bookings";
+import { validateBookingConstraints } from "@/service/user/bookings";
 import { getUser } from "@/service/self-user";
 import { bookingSchema } from "@/types/validation-schema";
 import { err, ok } from "@/lib/error-handler";

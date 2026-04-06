@@ -7,7 +7,7 @@ import SupportSection from "@/components/user/profile/support-section";
 import AccountActions from "@/components/user/profile/account-actions";
 import SettingsDrawer from "@/components/user/profile/settings-drawer";
 import BackButton from "@/components/layout/back-button";
-import { getUserDetails } from "@/service/user";
+import { getUserDetails } from "@/service/user/user";
 import { getUser } from "@/service/self-user";
 
 export default async function ProfilePage() {

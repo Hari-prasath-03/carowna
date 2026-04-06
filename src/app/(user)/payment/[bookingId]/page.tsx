@@ -1,4 +1,4 @@
-import { getBookingDetails } from "@/service/bookings";
+import { getBookingDetails } from "@/service/user/bookings";
 import { notFound } from "next/navigation";
 import {
   CheckCircle2,

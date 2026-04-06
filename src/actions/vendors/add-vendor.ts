@@ -3,7 +3,7 @@
 import createAdminClient from "@/lib/supabase/clients/admin";
 import { addVendorSchema } from "@/types/validation-schema";
 import { updateTag } from "next/cache";
-import { CACHE_TAGS } from "@/constants/cache-tags";
+import { ADMIN_CACHE_TAGS } from "@/constants/cache-tags";
 import authoriseAdmin from "@/service/admin/authorise";
 
 export type AddVendorState = {
@@ -90,9 +90,9 @@ export default async function addVendorAction(
     };
   }
 
-  updateTag(CACHE_TAGS.DASHBOARD_STATS);
-  updateTag(CACHE_TAGS.VENDORS);
-  updateTag(CACHE_TAGS.VENDOR_STATS);
+  updateTag(ADMIN_CACHE_TAGS.DASHBOARD_STATS);
+  updateTag(ADMIN_CACHE_TAGS.VENDORS_LIST);
+  updateTag(ADMIN_CACHE_TAGS.VENDORS_STATS);
 
   return {
     success: true,

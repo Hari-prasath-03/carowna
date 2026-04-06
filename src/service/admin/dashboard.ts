@@ -2,7 +2,7 @@
 
 import { unstable_cache } from "next/cache";
 import createAdminClient from "@/lib/supabase/clients/admin";
-import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
+import { ADMIN_CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 import { months } from "@/constants";
 
 export const getRevenueTrends = unstable_cache(
@@ -33,8 +33,8 @@ export const getRevenueTrends = unstable_cache(
       value,
     }));
   },
-  [CACHE_TAGS.REVENUE],
-  { tags: [CACHE_TAGS.REVENUE], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.REVENUE],
+  { tags: [ADMIN_CACHE_TAGS.REVENUE], revalidate: CACHE_TIME.FREQUENT },
 );
 
 export const getRecentBookings = unstable_cache(
@@ -71,8 +71,8 @@ export const getRecentBookings = unstable_cache(
       vendor: b.vehicle?.vendor,
     }));
   },
-  [CACHE_TAGS.BOOKINGS],
-  { tags: [CACHE_TAGS.BOOKINGS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.BOOKINGS],
+  { tags: [ADMIN_CACHE_TAGS.BOOKINGS], revalidate: CACHE_TIME.FREQUENT },
 );
 
 export const getDashboardStats = unstable_cache(
@@ -111,8 +111,8 @@ export const getDashboardStats = unstable_cache(
       revenue: (revenueRow ?? []).reduce((sum, r) => sum + (r.amount ?? 0), 0),
     };
   },
-  [CACHE_TAGS.DASHBOARD_STATS],
-  { tags: [CACHE_TAGS.DASHBOARD_STATS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.DASHBOARD_STATS],
+  { tags: [ADMIN_CACHE_TAGS.DASHBOARD_STATS], revalidate: CACHE_TIME.FREQUENT },
 );
 
 export const getPendingApprovalsCount = unstable_cache(
@@ -125,6 +125,9 @@ export const getPendingApprovalsCount = unstable_cache(
     if (error) return 0;
     return count ?? 0;
   },
-  [CACHE_TAGS.APPROVAL_COUNT],
-  { tags: [CACHE_TAGS.APPROVAL_COUNT], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.PENDING_APPROVALS_COUNT],
+  {
+    tags: [ADMIN_CACHE_TAGS.PENDING_APPROVALS_COUNT],
+    revalidate: CACHE_TIME.FREQUENT,
+  },
 );

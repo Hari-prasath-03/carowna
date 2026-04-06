@@ -3,8 +3,8 @@ import { Button } from "@/components/ui/button";
 import Logo from "../../layout/logo";
 import FilterDrawer from "./filter-drawer";
 import DesktopNavbar from "../../layout/desktop-navbar";
-import { getUserLocation } from "@/service/user";
-import { getVehiclePriceRange } from "@/service/vehicles";
+import { getUserLocation } from "@/service/user/user";
+import { getVehiclePriceRange } from "@/service/user/vehicles";
 
 export default async function HomeHeader() {
   const [location] = await getUserLocation();

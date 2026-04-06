@@ -25,10 +25,12 @@ export async function uploadFile({
   const finalFileName = `${fileName}.${fileExtension}`;
   const path = `${folder}/${finalFileName}`;
 
-  try {
-    file = await imageCompression(file, { maxSizeMB: 1 });
-  } catch {
-    //
+  if (file.type.startsWith("image/")) {
+    try {
+      file = await imageCompression(file, { maxSizeMB: 1 });
+    } catch {
+      // ignore
+    }
   }
 
   const storage = getStorage();

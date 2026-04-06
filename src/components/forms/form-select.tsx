@@ -37,9 +37,11 @@ export default function FormSelect({
 }: FormSelectProps) {
   return (
     <div className={cn("grid gap-2", containerClassName)}>
-      <Label htmlFor={name} className="ml-1 font-semibold">
-        {label}
-      </Label>
+      {label && (
+        <Label htmlFor={name} className="ml-1 font-semibold">
+          {label}
+        </Label>
+      )}
       <div className="relative">
         {icon && (
           <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground z-10 pointer-events-none">

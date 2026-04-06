@@ -50,7 +50,6 @@ export default async function VendorLayout({
         ]}
         user={{
           details: user,
-          profilePath: "/dashboard/profile",
         }}
       />
       <main className="flex-1 pl-72">

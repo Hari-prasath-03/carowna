@@ -1,45 +1,69 @@
-export const CACHE_TAGS = {
-  // Admin Dashboard
+export const ADMIN_CACHE_TAGS = {
   REVENUE: "admin:revenue-trends",
   BOOKINGS: "admin:recent-bookings",
   DASHBOARD_STATS: "admin:dashboard-stats",
-  APPROVAL_COUNT: "admin:pending-approvals-count",
+  PENDING_APPROVALS_COUNT: "admin:pending-approvals-count",
 
   // Bookings list page
-  ADMIN_BOOKINGS: "admin:bookings-list",
-  ADMIN_BOOKING_STATS: "admin:booking-stats",
+  BOOKINGS_LIST: "admin:bookings-list",
+  BOOKING_STATS: "admin:booking-stats",
 
   // Approvals list page
-  APPROVALS: "admin:approvals-list",
-  APPROVAL_STATS: "admin:approvals-stats",
+  APPROVALS_LIST: "admin:approvals-list",
+  APPROVALS_STATS: "admin:approvals-stats",
 
   // Vendor list page
-  VENDORS: "admin:vendors-list",
-  VENDOR_STATS: "admin:vendors-stats",
+  VENDORS_LIST: "admin:vendors-list",
+  VENDORS_STATS: "admin:vendors-stats",
 
   // Users list page
-  USERS: "admin:users-list",
+  USERS_LIST: "admin:users-list",
   USERS_STATS: "admin:users-stats",
+  USER_DETAILS: "admin:user-details",
+  USER_BOOKINGS: "admin:user-bookings",
 
   // Vendor detail page
   VENDOR_PROFILE: "admin:vendor-profile",
   VENDOR_DETAIL_STATS: "admin:vendor-detail-stats",
   VENDOR_VEHICLES: "admin:vendor-vehicles",
+  APPROVAL_DETAILS: "admin:approval-details",
+  BOOKING_DETAILS: "admin:booking-details",
+} as const;
 
-  // User specific
-  AUTH: "all:user-auth-verification",
+export const VENDOR_CACHE_TAGS = {
+  // Vendor Dashboard
+  DASHBOARD_STATS: "vendor:dashboard-stats",
+  RECENT_BOOKINGS: "vendor:recent-bookings",
 
-  // Global / Shared
-  VEHICLES: "vehicles",
-  VEHICLE_DETAILS: "vehicle-details",
-  PRICE_RANGE: "price-range",
-  DRIVERS: "drivers",
-  USER_PROFILE: "user-profile",
-  USER_BOOKINGS: "user-bookings-history",
+  // Vehicle Management
+  VEHICLES_LIST: "vendor:vehicles-list",
+  VEHICLE_STATS: "vendor:vehicle-stats",
+  VEHICLE_DETAILS: "vendor:vehicle-details",
+
+  // Driver Management
+  DRIVERS_LIST: "vendor:drivers-list",
+  DRIVER_STATS: "vendor:driver-stats",
+  DRIVER_DETAILS: "vendor:driver-details",
+
+  // Booking Management
+  BOOKINGS_LIST: "vendor:bookings-list",
+  BOOKING_STATS: "vendor:booking-stats",
+  BOOKING_DETAILS: "vendor:booking-details",
+} as const;
+
+export const USER_CACHE_TAGS = {
+  AUTH_VERIFICATION: "all:user-auth-verification",
+  PROFILE: "user:profile",
+  BOOKINGS_HISTORY: "user:bookings-history",
+
+  // Public Listing
+  VEHICLES_LIST: "user:vehicles-list",
+  VEHICLE_DETAILS: "user:vehicle-details",
+  PRICE_RANGE: "user:price-range",
+  DRIVERS: "user:drivers",
 } as const;
 
 export const CACHE_TIME = {
-  ADMIN: 300,
   FREQUENT: 300,
   RARE: 3600,
 } as const;

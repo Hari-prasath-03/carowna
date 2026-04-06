@@ -2,7 +2,7 @@
 
 import { unstable_cache } from "next/cache";
 import createAdminClient from "@/lib/supabase/clients/admin";
-import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
+import { ADMIN_CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 import {
   Vendor,
   VendorDetailStats,
@@ -47,8 +47,8 @@ export const getVendorStats = unstable_cache(
       luxury: luxury ?? 0,
     };
   },
-  [CACHE_TAGS.VENDOR_STATS],
-  { tags: [CACHE_TAGS.VENDOR_STATS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.VENDORS_STATS],
+  { tags: [ADMIN_CACHE_TAGS.VENDORS_STATS], revalidate: CACHE_TIME.FREQUENT },
 );
 
 export const getVendors = unstable_cache(
@@ -87,8 +87,8 @@ export const getVendors = unstable_cache(
     const total = count ?? 0;
     return { vendors, total, totalPages: Math.ceil(total / size) };
   },
-  [CACHE_TAGS.VENDORS],
-  { tags: [CACHE_TAGS.VENDORS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.VENDORS_LIST],
+  { tags: [ADMIN_CACHE_TAGS.VENDORS_LIST], revalidate: CACHE_TIME.FREQUENT },
 );
 
 export const getVendorProfile = unstable_cache(
@@ -115,8 +115,8 @@ export const getVendorProfile = unstable_cache(
       created_at: data.created_at,
     };
   },
-  [CACHE_TAGS.VENDOR_PROFILE],
-  { tags: [CACHE_TAGS.VENDOR_PROFILE], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.VENDOR_PROFILE],
+  { tags: [ADMIN_CACHE_TAGS.VENDOR_PROFILE], revalidate: CACHE_TIME.FREQUENT },
 );
 
 export const getVendorDetailStats = unstable_cache(
@@ -158,8 +158,11 @@ export const getVendorDetailStats = unstable_cache(
       totalEarnings,
     };
   },
-  [CACHE_TAGS.VENDOR_DETAIL_STATS],
-  { tags: [CACHE_TAGS.VENDOR_DETAIL_STATS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.VENDOR_DETAIL_STATS],
+  {
+    tags: [ADMIN_CACHE_TAGS.VENDOR_DETAIL_STATS],
+    revalidate: CACHE_TIME.FREQUENT,
+  },
 );
 
 export const getVendorVehicles = unstable_cache(
@@ -224,6 +227,6 @@ export const getVendorVehicles = unstable_cache(
       totalPages: Math.ceil(total / size),
     };
   },
-  [CACHE_TAGS.VENDOR_VEHICLES],
-  { tags: [CACHE_TAGS.VENDOR_VEHICLES], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.VENDOR_VEHICLES],
+  { tags: [ADMIN_CACHE_TAGS.VENDOR_VEHICLES], revalidate: CACHE_TIME.FREQUENT },
 );

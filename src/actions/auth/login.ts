@@ -23,8 +23,7 @@ export default async function loginAction(
   }
 
   const supabase = await createClient();
-
-  const { error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email: parsed.data.email,
     password: parsed.data.password,
   });
@@ -45,5 +44,6 @@ export default async function loginAction(
     success: true,
     error: null,
     message: "Login successful",
+    role: data.user?.user_metadata.role,
   };
 }

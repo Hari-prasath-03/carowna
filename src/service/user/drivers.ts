@@ -2,7 +2,7 @@ import { err, ok } from "@/lib/error-handler";
 import publicSupabase from "@/lib/supabase/clients/public";
 import { Driver } from "@/types";
 import { unstable_cache } from "next/cache";
-import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
+import { USER_CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 
 const _getDriversByVendor = unstable_cache(
   async (vendorId: string) => {
@@ -23,10 +23,10 @@ const _getDriversByVendor = unstable_cache(
 
     return ok(drivers);
   },
-  [CACHE_TAGS.DRIVERS, "by-vendor"],
+  [USER_CACHE_TAGS.DRIVERS, "getDriversByVendor"],
   {
     revalidate: CACHE_TIME.RARE,
-    tags: [CACHE_TAGS.DRIVERS],
+    tags: [USER_CACHE_TAGS.DRIVERS],
   },
 );
 
@@ -53,10 +53,10 @@ const _getDriverById = unstable_cache(
 
     return ok(driver);
   },
-  [CACHE_TAGS.DRIVERS, "by-id"],
+  [USER_CACHE_TAGS.DRIVERS, "getDriverById"],
   {
     revalidate: CACHE_TIME.RARE,
-    tags: [CACHE_TAGS.DRIVERS],
+    tags: [USER_CACHE_TAGS.DRIVERS],
   },
 );
 

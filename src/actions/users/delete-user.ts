@@ -2,7 +2,7 @@
 
 import createAdminClient from "@/lib/supabase/clients/admin";
 import { updateTag } from "next/cache";
-import { CACHE_TAGS } from "@/constants/cache-tags";
+import { ADMIN_CACHE_TAGS, USER_CACHE_TAGS } from "@/constants/cache-tags";
 
 export async function terminateUserAction(userId: string) {
   const sb = createAdminClient();
@@ -15,9 +15,10 @@ export async function terminateUserAction(userId: string) {
     };
   }
 
-  updateTag(CACHE_TAGS.USERS);
-  updateTag(CACHE_TAGS.USERS_STATS);
-  updateTag(CACHE_TAGS.DASHBOARD_STATS);
+  updateTag(ADMIN_CACHE_TAGS.USERS_LIST);
+  updateTag(ADMIN_CACHE_TAGS.USERS_STATS);
+  updateTag(ADMIN_CACHE_TAGS.DASHBOARD_STATS);
+  updateTag(USER_CACHE_TAGS.PROFILE);
 
   return {
     success: true,

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { validateBookingConstraints } from "@/service/bookings";
+import { validateBookingConstraints } from "@/service/user/bookings";
 
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);

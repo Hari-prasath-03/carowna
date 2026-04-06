@@ -2,7 +2,7 @@
 
 import { unstable_cache } from "next/cache";
 import createAdminClient from "@/lib/supabase/clients/admin";
-import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
+import { ADMIN_CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 import {
   UserStats,
   UserListItem,
@@ -33,8 +33,8 @@ export const getUserStats = unstable_cache(
       newUsersThisMonth: newUsersThisMonth ?? 0,
     };
   },
-  [CACHE_TAGS.USERS_STATS],
-  { tags: [CACHE_TAGS.USERS_STATS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.USERS_STATS],
+  { tags: [ADMIN_CACHE_TAGS.USERS_STATS], revalidate: CACHE_TIME.FREQUENT },
 );
 
 export const getUsers = unstable_cache(
@@ -78,8 +78,8 @@ export const getUsers = unstable_cache(
       totalPages: Math.ceil(total / ADMIN_PAGE_SIZE),
     };
   },
-  [CACHE_TAGS.USERS],
-  { tags: [CACHE_TAGS.USERS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.USERS_LIST],
+  { tags: [ADMIN_CACHE_TAGS.USERS_LIST], revalidate: CACHE_TIME.FREQUENT },
 );
 
 export const getUserDetails = unstable_cache(
@@ -142,8 +142,8 @@ export const getUserDetails = unstable_cache(
       total_spent: totalSpent,
     };
   },
-  [CACHE_TAGS.USERS, "admin-user-details"],
-  { tags: [CACHE_TAGS.USERS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.USER_DETAILS],
+  { tags: [ADMIN_CACHE_TAGS.USER_DETAILS], revalidate: CACHE_TIME.FREQUENT },
 );
 
 export const getUserBookings = unstable_cache(
@@ -189,6 +189,6 @@ export const getUserBookings = unstable_cache(
       totalPages: Math.ceil(total / ADMIN_PAGE_SIZE),
     };
   },
-  [CACHE_TAGS.USERS, "admin-user-bookings"],
-  { tags: [CACHE_TAGS.USERS], revalidate: CACHE_TIME.ADMIN },
+  [ADMIN_CACHE_TAGS.USER_BOOKINGS],
+  { tags: [ADMIN_CACHE_TAGS.USER_BOOKINGS], revalidate: CACHE_TIME.FREQUENT },
 );

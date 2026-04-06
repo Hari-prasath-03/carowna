@@ -39,6 +39,7 @@ CREATE TABLE public.vehicles (
 
   approval_status public.approval_status DEFAULT 'PENDING',
   approval_remarks TEXT,
+  is_available BOOLEAN DEFAULT FALSE,
 
   insurance_doc_url TEXT,
   rc_doc_url TEXT,

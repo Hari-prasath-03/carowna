@@ -4,43 +4,47 @@ import publicSupabase from "@/lib/supabase/clients/public";
 import { User } from "@/types";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
-import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
+import { CACHE_TIME, USER_CACHE_TAGS } from "@/constants/cache-tags";
 
-const verifyToken = unstable_cache(
+const _verifyTokenSecurely = unstable_cache(
   async (token: string) => {
     const {
       data: { user },
       error,
     } = await publicSupabase.auth.getUser(token);
+
     if (error || !user) return null;
+
     return {
       id: user.id,
       email: user.email,
-      display_name: user.user_metadata.name,
-      role: user.user_metadata.role,
+      display_name: user.user_metadata?.name,
+      role: user.user_metadata?.role,
     } as User;
   },
-  [CACHE_TAGS.AUTH],
-  { revalidate: CACHE_TIME.FREQUENT, tags: [CACHE_TAGS.AUTH] },
+  [USER_CACHE_TAGS.AUTH_VERIFICATION],
+  {
+    revalidate: CACHE_TIME.FREQUENT,
+    tags: [USER_CACHE_TAGS.AUTH_VERIFICATION],
+  },
 );
 
 export const getUser = cache(async () => {
+  const s = Date.now();
   const accessToken = await getAccessToken();
   if (!accessToken) return err({ reason: "Unauthorized" });
 
-  const user = await verifyToken(accessToken);
+  const user = await _verifyTokenSecurely(accessToken);
+
   if (!user) return err({ reason: "Unauthorized" });
+  console.log(`[AUTH] User: ${Date.now() - s}ms`);
   return ok(user);
 });
 
 export const getAccessToken = cache(async () => {
   const sb = await createClient();
-
   const {
     data: { session },
-    error,
   } = await sb.auth.getSession();
-
-  if (error || !session?.access_token) return null;
-  return session.access_token;
+  return session?.access_token || null;
 });

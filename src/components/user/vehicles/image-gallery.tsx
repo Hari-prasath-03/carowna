@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 interface ImageGalleryProps {
   images: string[];
@@ -37,11 +38,11 @@ export default function ImageGallery({ images, name }: ImageGalleryProps) {
       >
         {images.map((img, i) => (
           <div key={i} className="min-w-full h-full snap-center relative">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={img}
               alt={`${name} - Image ${i + 1}`}
-              className="w-full h-full object-cover"
+              fill
+              className="object-cover"
             />
           </div>
         ))}

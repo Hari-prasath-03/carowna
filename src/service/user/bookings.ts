@@ -1,10 +1,10 @@
 import createClient from "@/lib/supabase/clients/server";
-import { getUserDetails } from "./user";
-import { getAccessToken, getUser } from "./self-user";
+import { getAccessToken, getUser } from "../self-user";
 import { err, ok } from "@/lib/error-handler";
-import { CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
+import { USER_CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 import createTokenClient from "@/lib/supabase/clients/token";
 import { unstable_cache } from "next/cache";
+import { getUserDetails } from "./user";
 
 export async function isVehicleAvailable(
   vehicleId: string,
@@ -79,9 +79,7 @@ export async function validateBookingConstraints({
     });
   }
 
-  // Conditional KYC
   if (driverId) {
-    // With Driver: Require Aadhaar
     if (!userDetails.aadhaar_verified) {
       return err({
         reason: "KYC_INCOMPLETE_AADHAAR",
@@ -89,7 +87,6 @@ export async function validateBookingConstraints({
       });
     }
   } else {
-    // Self-Drive: Require License + Aadhaar
     if (!userDetails.license_verified || !userDetails.aadhaar_verified) {
       return err({
         reason: "KYC_INCOMPLETE_SELF_DRIVE",
@@ -98,7 +95,6 @@ export async function validateBookingConstraints({
     }
   }
 
-  // 2. Availability Check - Vehicle
   const vehicleAvailable = await isVehicleAvailable(
     vehicleId,
     startDate,
@@ -111,7 +107,6 @@ export async function validateBookingConstraints({
     });
   }
 
-  // 3. Availability Check - Driver
   if (driverId) {
     const driverAvailable = await isDriverAvailable(
       driverId,
@@ -185,8 +180,8 @@ const fetchUserBookingsCache = unstable_cache(
       vehicle: Array.isArray(b.vehicle) ? b.vehicle[0] : b.vehicle,
     }));
   },
-  [CACHE_TAGS.USER_BOOKINGS],
-  { revalidate: CACHE_TIME.RARE, tags: [CACHE_TAGS.USER_BOOKINGS] },
+  [USER_CACHE_TAGS.BOOKINGS_HISTORY],
+  { revalidate: CACHE_TIME.RARE, tags: [USER_CACHE_TAGS.BOOKINGS_HISTORY] },
 );
 
 export async function getUserBookings(userId: string) {

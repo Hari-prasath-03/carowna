@@ -1,14 +1,10 @@
-interface AdminHeaderProps {
+interface HeaderProps {
   title: string;
   disc: string;
   actionRender?: () => React.ReactNode;
 }
 
-export default function AdminHeader({
-  title,
-  disc,
-  actionRender,
-}: AdminHeaderProps) {
+export default function Header({ title, disc, actionRender }: HeaderProps) {
   return (
     <div className="ml-2 flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-border/10">
       <div className="space-y-1.5">

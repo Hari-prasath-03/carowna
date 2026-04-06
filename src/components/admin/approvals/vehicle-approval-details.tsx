@@ -69,6 +69,7 @@ export default function VehicleApprovalDetailsView({ vehicle }: Props) {
   const docs = [
     { label: "RC Document", url: vehicle.rc_doc_url },
     { label: "Insurance Certificate", url: vehicle.insurance_doc_url },
+    { label: "RTO Document", url: vehicle.rto_doc_url },
   ];
 
   return (

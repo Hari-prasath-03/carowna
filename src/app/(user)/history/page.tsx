@@ -1,4 +1,4 @@
-import { getUserBookings } from "@/service/bookings";
+import { getUserBookings } from "@/service/user/bookings";
 import { getUser } from "@/service/self-user";
 import { redirect } from "next/navigation";
 import HistoryClient from "./history-client";

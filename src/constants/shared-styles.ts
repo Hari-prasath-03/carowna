@@ -37,6 +37,13 @@ export const VEHICLE_TYPE_STYLES_ALT: Record<string, string> = {
 export const VEHICLE_AVAILABILITY_STYLES: Record<string, string> = {
   available:
     "bg-emerald-500/10 text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/10",
-  rented:
-    "bg-rose-500/10 text-rose-600 border-rose-500/30 hover:bg-rose-500/10",
+  rented: "bg-rose-500/10 text-rose-600 border-rose-500/30 hover:bg-rose-500/10",
+};
+
+export const PAYMENT_STATUS_STYLES: Record<string, string> = {
+  SUCCESS:
+    "bg-emerald-500/10 text-emerald-600 border-emerald-500/30 hover:bg-emerald-500/20",
+  FAILED: "bg-rose-500/10 text-rose-600 border-rose-500/30 hover:bg-rose-500/20",
+  CREATED:
+    "bg-blue-500/10 text-blue-600 border-blue-500/30 hover:bg-blue-500/20",
 };

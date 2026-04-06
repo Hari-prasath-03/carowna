@@ -64,12 +64,29 @@ export type DriverDetails = {
   license_doc_url?: string;
 } & Driver;
 
+export type VendorDriver = {
+  id: string;
+  name: string;
+  avatar_url: string | null;
+  years_of_exp: number;
+  rating: number;
+  availability_status: boolean;
+  approval_status: "PENDING" | "APPROVED" | "REJECTED";
+};
+
+export type VendorDriverStats = {
+  totalDrivers: number;
+  onlineDrivers: number;
+  pendingApprovals: number;
+};
+
 // States
 
 export type AuthActionState = {
   success: boolean;
   error: string | null;
   message: string | null;
+  role?: UserRole;
 };
 
 export type ResetPasswordState = {
@@ -97,6 +114,26 @@ export type BasicDetailsState = {
     mobile_no?: string[];
     date_of_birth?: string[];
     native_location?: string[];
+    gender?: string[];
+  };
+};
+
+export type AddVehicleState = {
+  success: boolean;
+  error: string | null;
+  message: string | null;
+  id?: string;
+};
+
+export type AddDriverState = {
+  success: boolean;
+  error: string | null;
+  message: string | null;
+  id?: string;
+  errors?: {
+    name?: string[];
+    years_of_exp?: string[];
+    date_of_birth?: string[];
     gender?: string[];
   };
 };
@@ -155,6 +192,77 @@ export type UserStats = {
   totalUsers: number;
   activeUsers: number;
   newUsersThisMonth: number;
+};
+
+export type VendorVehicleStats = {
+  totalVehicles: number;
+  onlineVehicles: number;
+  pendingApprovals: number;
+};
+
+export type VendorVehicleDetails = {
+  id: string;
+  vendor_id: string;
+  name: string;
+  brand: string | null;
+  vehicle_type: string | null;
+  transmission: string | null;
+  fuel_type: string | null;
+  capacity: number | null;
+  price_per_day: number;
+  images: string[] | null;
+  registration_number: string;
+  approval_status: string;
+  is_available: boolean;
+  created_at: string;
+  rc_doc_url: string | null;
+  insurance_doc_url: string | null;
+  rto_verification_doc_url: string | null;
+
+  performance: {
+    totalRevenue: number;
+    utilization: number;
+    totalBookings: number;
+  };
+
+  recentBookings: {
+    id: string;
+    user_name: string;
+    start_date: string;
+    end_date: string;
+    total_amount: number;
+    booking_status: string;
+  }[];
+};
+
+export type VendorDriverDetails = {
+  id: string;
+  vendor_id: string;
+  name: string;
+  date_of_birth: string | null;
+  gender: string | null;
+  years_of_exp: number;
+  rating: number;
+  license_doc_url: string | null;
+  approval_status: string;
+  approval_remarks: string | null;
+  availability_status: boolean;
+  created_at: string;
+
+  performance: {
+    totalRevenue: number;
+    utilization: number;
+    totalBookings: number;
+  };
+
+  recentBookings: {
+    id: string;
+    user_name: string;
+    start_date: string;
+    end_date: string;
+    total_amount: number;
+    booking_status: string;
+  }[];
 };
 
 export type UserListItem = {
@@ -264,10 +372,68 @@ export type VehicleApprovalDetails = {
   created_at: string;
   rc_doc_url: string | null;
   insurance_doc_url: string | null;
+  rto_doc_url: string | null;
   approval_remarks: string | null;
   vendor: {
     name: string;
   };
+};
+
+export type VendorDashboardStats = {
+  totalVehicles: number;
+  activeBookings: number;
+  upcomingBookings: number;
+  availableDrivers: number;
+  totalEarnings: number;
+};
+
+export type VendorRecentBooking = {
+  id: string;
+  vehicle_name: string;
+  vehicle_brand: string | null;
+  start_date: string;
+  end_date: string;
+  created_at: string;
+  booking_status: string;
+  total_amount: number;
+};
+
+export type VendorBooking = {
+  id: string;
+  user_name: string;
+  vehicle_name: string;
+  driver_name: string | null;
+  registration_number: string;
+  start_date: string;
+  end_date: string;
+  total_amount: number;
+  initial_amount: number;
+  booking_status: string;
+  payment_status: string;
+  payment_method: string | null;
+  created_at: string;
+};
+
+export type VendorBookingDetails = VendorBooking & {
+  user_email: string;
+  user_phone: string | null;
+  vehicle_images: string[];
+  vehicle_brand: string | null;
+  driver_license: string | null;
+  payments: {
+    id: string;
+    amount: number;
+    status: string;
+    payment_method: string | null;
+    created_at: string;
+  }[];
+};
+
+export type VendorBookingStats = {
+  totalBookings: number;
+  activeTrips: number;
+  pendingRequests: number;
+  totalRevenue: number;
 };
 
 // Inputs

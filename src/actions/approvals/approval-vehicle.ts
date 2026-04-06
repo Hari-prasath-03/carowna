@@ -2,7 +2,11 @@
 
 import createAdminClient from "@/lib/supabase/clients/admin";
 import { updateTag } from "next/cache";
-import { CACHE_TAGS } from "@/constants/cache-tags";
+import {
+  ADMIN_CACHE_TAGS,
+  VENDOR_CACHE_TAGS,
+  USER_CACHE_TAGS,
+} from "@/constants/cache-tags";
 import { err, ok } from "@/lib/error-handler";
 
 export default async function approveVehicleAction(
@@ -16,9 +20,18 @@ export default async function approveVehicleAction(
 
   if (error) return err({ reason: error.message });
 
-  updateTag(CACHE_TAGS.APPROVALS);
-  updateTag(CACHE_TAGS.APPROVAL_STATS);
-  updateTag(CACHE_TAGS.DASHBOARD_STATS);
+  updateTag(ADMIN_CACHE_TAGS.APPROVALS_LIST);
+  updateTag(ADMIN_CACHE_TAGS.APPROVALS_STATS);
+  updateTag(ADMIN_CACHE_TAGS.DASHBOARD_STATS);
+  updateTag(ADMIN_CACHE_TAGS.VENDOR_VEHICLES);
+
+  updateTag(VENDOR_CACHE_TAGS.VEHICLES_LIST);
+  updateTag(VENDOR_CACHE_TAGS.VEHICLE_STATS);
+  updateTag(VENDOR_CACHE_TAGS.VEHICLE_DETAILS);
+
+  updateTag(USER_CACHE_TAGS.VEHICLES_LIST);
+  updateTag(USER_CACHE_TAGS.VEHICLE_DETAILS);
+  updateTag(USER_CACHE_TAGS.PRICE_RANGE);
 
   return ok({ message: "Vehicle approved successfully." });
 }

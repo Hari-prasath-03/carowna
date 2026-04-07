@@ -1,43 +1,37 @@
 import { err, ok } from "@/lib/error-handler";
 import createClient from "@/lib/supabase/clients/server";
-import publicSupabase from "@/lib/supabase/clients/public";
 import { User } from "@/types";
 import { cache } from "react";
-import { unstable_cache } from "next/cache";
-import { CACHE_TIME, USER_CACHE_TAGS } from "@/constants/cache-tags";
 
-const _verifyTokenSecurely = unstable_cache(
-  async (token: string) => {
-    const {
-      data: { user },
-      error,
-    } = await publicSupabase.auth.getUser(token);
-
-    if (error || !user) return null;
-
-    return {
-      id: user.id,
-      email: user.email,
-      display_name: user.user_metadata?.name,
-      role: user.user_metadata?.role,
-    } as User;
-  },
-  [USER_CACHE_TAGS.AUTH_VERIFICATION],
-  {
-    revalidate: CACHE_TIME.FREQUENT,
-    tags: [USER_CACHE_TAGS.AUTH_VERIFICATION],
-  },
-);
+function decodeJWTPayload(token: string) {
+  try {
+    const payloadPart = token.split(".")[1];
+    if (!payloadPart) return null;
+    return JSON.parse(Buffer.from(payloadPart, "base64").toString());
+  } catch {
+    return null;
+  }
+}
 
 export const getUser = cache(async () => {
-  const s = Date.now();
+  const startTime = Date.now();
   const accessToken = await getAccessToken();
+
   if (!accessToken) return err({ reason: "Unauthorized" });
 
-  const user = await _verifyTokenSecurely(accessToken);
+  const payload = decodeJWTPayload(accessToken);
+  if (!payload || !payload.sub) return err({ reason: "Unauthorized" });
 
-  if (!user) return err({ reason: "Unauthorized" });
-  console.log(`[AUTH] User: ${Date.now() - s}ms`);
+  const user: User = {
+    id: payload.sub,
+    email: payload.email,
+    display_name: payload.user_metadata?.name || payload.email,
+    role: payload.user_metadata?.role || "USER",
+  };
+
+  const totalTime = Date.now() - startTime;
+  console.log(`User retreval time: ${totalTime}ms`);
+
   return ok(user);
 });
 

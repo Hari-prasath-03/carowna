@@ -2,7 +2,7 @@
 
 import createAdminClient from "@/lib/supabase/clients/admin";
 import { updateTag } from "next/cache";
-import { VENDOR_CACHE_TAGS } from "@/constants/cache-tags";
+import { ADMIN_CACHE_TAGS } from "@/constants/cache-tags";
 
 export default async function toggleDriverAvailability(
   driverId: string,
@@ -12,7 +12,7 @@ export default async function toggleDriverAvailability(
 
   const { error } = await sb
     .from("drivers")
-    .update({ availability_status: isAvailable })
+    .update({ is_available: isAvailable, updated_at: new Date() })
     .eq("id", driverId);
 
   if (error) {
@@ -20,8 +20,8 @@ export default async function toggleDriverAvailability(
     return { success: false, error: error.message };
   }
 
-  updateTag(VENDOR_CACHE_TAGS.DRIVERS_LIST);
-  updateTag(VENDOR_CACHE_TAGS.DRIVER_STATS);
+  updateTag(ADMIN_CACHE_TAGS.DRIVERS_LIST);
+  updateTag(ADMIN_CACHE_TAGS.DRIVER_STATS);
 
   return { success: true };
 }

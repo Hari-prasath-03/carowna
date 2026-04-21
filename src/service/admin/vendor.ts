@@ -10,7 +10,7 @@ import {
   VendorStats,
   VendorVehicle,
 } from "@/types";
-import { ADMIN_PAGE_SIZE } from "@/constants";
+import { ADMIN_PAGE_SIZE } from "@/constants/others";
 
 export const getVendorStats = unstable_cache(
   async (): Promise<VendorStats> => {
@@ -174,7 +174,7 @@ export const getVendorVehicles = unstable_cache(
     const { data: vehicleRows, count } = await sb
       .from("vehicles")
       .select(
-        "id, name, brand, vehicle_type, registration_number, price_per_day, approval_status, images",
+        "id, vendor_id, name, brand, vehicle_type, registration_number, price_per_day, approval_status, images",
         { count: "exact" },
       )
       .eq("vendor_id", vendorId)
@@ -209,6 +209,7 @@ export const getVendorVehicles = unstable_cache(
 
     const vehicles: VendorVehicle[] = vehicleRows.map((v) => ({
       id: v.id,
+      vendor_id: v.vendor_id,
       name: v.name,
       brand: v.brand ?? null,
       vehicle_type: v.vehicle_type,

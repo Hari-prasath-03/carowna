@@ -164,6 +164,7 @@ const fetchUserBookingsCache = unstable_cache(
         end_date,
         booking_status,
         total_amount,
+        initial_amount,
         vehicle:vehicles(name, images, vehicle_type)
       `,
       )

@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { useState, useMemo, useTransition } from "react";
 import { useBookingValidation } from "@/hooks/use-booking-validation";
 import { useRazorpay } from "@/hooks/use-razorpay";
-import { Driver, User, Vehicle } from "@/types";
+import { Driver, AuthUser, Vehicle } from "@/types";
 import { AlertCircle, ShieldAlert, CheckCircle2 } from "lucide-react";
 
 import createBookingAction from "@/actions/booking/create-booking";
@@ -18,7 +18,7 @@ import BookingSubmitButton from "../booking/booking-submit-button";
 interface BookingFormProps {
   vehicle: Vehicle;
   driver: Driver | null;
-  user: User;
+  user: AuthUser;
 }
 
 export default function BookingForm({
@@ -98,7 +98,7 @@ export default function BookingForm({
       currency,
       booking_id,
       vehicle_name: vehicle.name,
-      user_name: user.display_name,
+      user_name: user.name,
       user_email: user.email,
     });
   }

@@ -24,10 +24,10 @@ interface EditProfileDrawerProps {
   children: React.ReactNode;
   initialData: {
     name: string;
-    mobile_no?: string;
-    date_of_birth?: string;
-    native_location?: string;
-    gender?: "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY";
+    mobile_no?: string | null;
+    date_of_birth?: string | null;
+    native_location?: string | null;
+    gender?: "MALE" | "FEMALE" | "OTHER" | "PREFER_NOT_TO_SAY" | null;
   };
 }
 
@@ -46,7 +46,7 @@ export default function EditProfileDrawer({
   );
 
   const { location, isLocating, setLocation, fetchCurrentLocation } =
-    useGeolocation(initialData.native_location);
+    useGeolocation(initialData.native_location ?? undefined);
 
   React.useEffect(() => {
     if (state.success && state.message) {
@@ -89,7 +89,7 @@ export default function EditProfileDrawer({
               label="Mobile Number"
               name="mobile_no"
               type="tel"
-              defaultValue={initialData.mobile_no}
+              defaultValue={initialData.mobile_no ?? undefined}
               placeholder="Enter mobile number"
               icon={<Phone className="h-4 w-4" />}
               error={state.errors?.mobile_no}
@@ -102,7 +102,7 @@ export default function EditProfileDrawer({
                 label="Date of Birth"
                 name="date_of_birth"
                 type="date"
-                defaultValue={initialData.date_of_birth}
+                defaultValue={initialData.date_of_birth ?? undefined}
                 icon={<Calendar className="h-4 w-4" />}
                 error={state.errors?.date_of_birth}
                 disabled={isPending}
@@ -113,15 +113,15 @@ export default function EditProfileDrawer({
                 label="Gender"
                 name="gender"
                 placeholder="Select gender"
-                defaultValue={initialData.gender}
+                defaultValue={initialData.gender ?? undefined}
                 icon={<Users className="h-4 w-4" />}
                 error={state.errors?.gender}
                 disabled={isPending}
                 options={[
-                  { label: "Male", value: "MALE" },
-                  { label: "Female", value: "FEMALE" },
-                  { label: "Other", value: "OTHER" },
-                  { label: "Prefer not to say", value: "PREFER_NOT_TO_SAY" },
+                  { label: "Male", value: "Male" },
+                  { label: "Female", value: "Female" },
+                  { label: "Other", value: "Other" },
+                  { label: "Prefer not to say", value: "Prefer not to say" },
                 ]}
               />
             </div>

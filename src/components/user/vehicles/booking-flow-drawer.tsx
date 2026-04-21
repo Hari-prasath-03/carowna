@@ -73,7 +73,7 @@ export default function BookingFlowDrawer({
         <div className="p-6 space-y-6">
           <Activity mode={!isShowDrivers ? "visible" : "hidden"}>
             <ChoiceStep
-              onSelfDrive={() => handleBooking()}
+              onSelfDrive={handleBooking}
               onNeedDriver={() => setIsShowDrivers(true)}
               loading={loading}
             />

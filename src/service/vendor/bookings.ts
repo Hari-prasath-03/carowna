@@ -6,7 +6,7 @@ import {
   VendorBookingStats,
   VendorBookingDetails,
 } from "@/types";
-import { ADMIN_PAGE_SIZE } from "@/constants";
+import { ADMIN_PAGE_SIZE } from "@/constants/others";
 import QueryBuilder from "@/lib/query-builder";
 
 export const getVendorBookingStats = (vendorId: string) =>

@@ -142,10 +142,10 @@ export default function BasicDetailsPage() {
               placeholder="Select Gender"
               icon={<Users className="w-3.5 h-3.5" />}
               options={[
-                { label: "Male", value: "MALE" },
-                { label: "Female", value: "FEMALE" },
-                { label: "Other", value: "OTHER" },
-                { label: "Prefer not to say", value: "PREFER_NOT_TO_SAY" },
+                { label: "Male", value: "Male" },
+                { label: "Female", value: "Female" },
+                { label: "Other", value: "Other" },
+                { label: "Prefer not to say", value: "Prefer not to say" },
               ]}
               defaultValue=""
               error={state.errors?.gender}

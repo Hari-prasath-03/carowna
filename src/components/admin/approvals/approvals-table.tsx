@@ -20,7 +20,6 @@ interface ApprovalsTableProps {
   currentPage: number;
   totalPages: number;
   total: number;
-  currentTab: string;
   currentStatus: string;
 }
 
@@ -29,7 +28,6 @@ export default function ApprovalsTable({
   currentPage,
   totalPages,
   total,
-  currentTab,
   currentStatus,
 }: ApprovalsTableProps) {
   const router = useRouter();
@@ -37,7 +35,6 @@ export default function ApprovalsTable({
 
   const buildUrl = (params: Record<string, string>) => {
     const sp = new URLSearchParams({
-      tab: currentTab,
       status: currentStatus,
       page: String(currentPage),
       ...params,
@@ -45,18 +42,9 @@ export default function ApprovalsTable({
     return `${pathname}?${sp.toString()}`;
   };
 
-  const handleTabChange = (tab: string) => {
-    router.push(buildUrl({ tab, page: "1" }));
-  };
-
   const handleStatusChange = (status: string) => {
     router.push(buildUrl({ status, page: "1" }));
   };
-
-  const TABS = [
-    { label: "Vehicles", value: "vehicles" },
-    { label: "Drivers", value: "drivers" },
-  ];
 
   return (
     <GenericTable
@@ -65,23 +53,6 @@ export default function ApprovalsTable({
         subtitle: "Review and manage pending vehicle and driver registrations",
         renderRightSection: () => (
           <div className="flex items-center gap-3">
-            <div className="flex items-center rounded-lg border border-border/50 p-0.5 bg-muted/30">
-              {TABS.map((tab) => (
-                <button
-                  key={tab.value}
-                  onClick={() => handleTabChange(tab.value)}
-                  className={cn(
-                    "px-4 py-1.5 rounded-md text-xs font-bold tracking-wide transition-all",
-                    currentTab === tab.value
-                      ? "bg-card text-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground",
-                  )}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-
             <div className="w-40">
               <FormSelect
                 label=""
@@ -167,9 +138,7 @@ export default function ApprovalsTable({
           headerClassName: "text-right",
           className: "text-right",
           render: (item) => (
-            <Link
-              href={`/dashboard/pending-approvals/${currentTab}/${item.id}`}
-            >
+            <Link href={`/dashboard/pending-approvals/${item.id}`}>
               <Button
                 size="sm"
                 className="rounded-xl font-semibold text-xs px-5 py-2 h-auto shadow-sm"
@@ -186,7 +155,6 @@ export default function ApprovalsTable({
         total,
         label: "requests",
         extraParams: {
-          tab: currentTab,
           status: currentStatus,
         },
       }}

@@ -8,7 +8,7 @@ import {
   ApprovalStats,
   VehicleApprovalDetails,
 } from "@/types";
-import { ADMIN_PAGE_SIZE } from "@/constants";
+import { ADMIN_PAGE_SIZE } from "@/constants/others";
 import QueryBuilder from "@/lib/query-builder";
 
 export const getApprovalStats = unstable_cache(
@@ -19,12 +19,11 @@ export const getApprovalStats = unstable_cache(
 
     const sb = createAdminClient();
 
-    const [{ data: vehicles }, { data: drivers }] = await Promise.all([
-      sb.from("vehicles").select("approval_status, updated_at"),
-      sb.from("drivers").select("approval_status, updated_at"),
-    ]);
+    const { data: vehicles } = await sb
+      .from("vehicles")
+      .select("approval_status, updated_at");
 
-    const all = [...(vehicles ?? []), ...(drivers ?? [])];
+    const all = [...(vehicles ?? [])];
 
     return {
       totalPending: all.filter((r) => r.approval_status === "PENDING").length,
@@ -80,42 +79,6 @@ export const getPendingVehicles = unstable_cache(
   { tags: [ADMIN_CACHE_TAGS.APPROVALS_LIST], revalidate: CACHE_TIME.FREQUENT },
 );
 
-export const getPendingDrivers = unstable_cache(
-  async (page = 1, statusFilter = "PENDING") => {
-    const { data, count } = await new QueryBuilder(
-      createAdminClient()
-        .from("drivers")
-        .select(
-          `id, name, approval_status, created_at, vendor:users!drivers_vendor_id_fkey(name, profile_url)`,
-          { count: "exact" },
-        ),
-    )
-      .filter(statusFilter !== "ALL", "approval_status", statusFilter)
-      .sort("created_at", false)
-      .paginate(page, ADMIN_PAGE_SIZE)
-      .build();
-
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const items: ApprovalListItem[] = data.map((d: any) => ({
-      id: d.id,
-      name: d.name,
-      vehicle_type: null,
-      approval_status: d.approval_status,
-      created_at: d.created_at,
-      vendor_name: d.vendor?.name ?? "Unknown Vendor",
-      vendor_profile_url: d.vendor?.profile_url ?? null,
-    }));
-
-    return {
-      items,
-      total: count,
-      totalPages: Math.ceil(count / ADMIN_PAGE_SIZE),
-    };
-  },
-  [ADMIN_CACHE_TAGS.APPROVALS_LIST, "drivers"],
-  { tags: [ADMIN_CACHE_TAGS.APPROVALS_LIST], revalidate: CACHE_TIME.FREQUENT },
-);
-
 export const getVehicleApprovalDetails = unstable_cache(
   async (vehicleId: string): Promise<VehicleApprovalDetails | null> => {
     const { data, error } = await createAdminClient()
@@ -145,9 +108,13 @@ export const getVehicleApprovalDetails = unstable_cache(
       approval_status: v.approval_status,
       created_at: v.created_at,
       rc_doc_url: v.rc_doc_url ?? null,
-      rto_doc_url: v.rto_verification_doc_url ?? null,
+      rto_verification_doc_url: v.rto_verification_doc_url ?? null,
       insurance_doc_url: v.insurance_doc_url ?? null,
       approval_remarks: v.approval_remarks ?? null,
+      color: v.color ?? null,
+      state: v.state ?? null,
+      district: v.district ?? null,
+      is_luxury: v.is_luxury ?? false,
       vendor: {
         name: v.vendor?.name ?? "Unknown Vendor",
       },

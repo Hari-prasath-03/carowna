@@ -1,15 +1,12 @@
-import {
-  getVendorDrivers,
-  getVendorDriverStats,
-} from "@/service/vendor/drivers";
+import { getDrivers, getDriverStats } from "@/service/admin/drivers";
 import { getUser } from "@/service/self-user";
 import { redirect } from "next/navigation";
-import VendorDriverStatsView from "@/components/vendor/drivers/vendor-driver-stats";
-import VendorDriverTable from "@/components/vendor/drivers/vendor-driver-table";
+import DriverTable from "@/components/admin/drivers/driver-table";
 import { Plus } from "lucide-react";
 import Header from "@/components/admin/shared/header";
-import { ADMIN_PAGE_SIZE } from "@/constants";
+import { ADMIN_PAGE_SIZE } from "@/constants/others";
 import Link from "next/link";
+import DriverStatsView from "@/components/admin/drivers/driver-stats";
 
 interface Props {
   searchParams: Promise<{
@@ -20,7 +17,7 @@ interface Props {
   }>;
 }
 
-export default async function VendorDriversPage({ searchParams }: Props) {
+export default async function DriversPage({ searchParams }: Props) {
   const [user, userErr] = await getUser();
   if (!user || userErr) redirect("/login");
 
@@ -32,18 +29,18 @@ export default async function VendorDriversPage({ searchParams }: Props) {
   };
 
   const [stats, { drivers, total }] = await Promise.all([
-    getVendorDriverStats(user.id),
-    getVendorDrivers(user.id, page, filters),
+    getDriverStats(),
+    getDrivers(page, filters),
   ]);
 
   return (
     <div className="space-y-8 pb-8">
       <Header
         title="Drivers Management"
-        disc="Track and manage your driver fleet and their compliance status."
+        disc="Track and manage driver fleet and their compliance status."
         actionRender={() => (
           <Link
-            href="/vendor/drivers/add"
+            href="/dashboard/drivers/add"
             className="inline-flex py-3.5 rounded-xl px-5 font-black text-xs uppercase tracking-widest gap-2 bg-foreground text-background hover:bg-foreground/90 transition-all shadow-lg hover:shadow-xl active:scale-95"
           >
             <Plus className="w-4 h-4" />
@@ -52,8 +49,8 @@ export default async function VendorDriversPage({ searchParams }: Props) {
         )}
       />
 
-      <VendorDriverStatsView stats={stats} />
-      <VendorDriverTable
+      <DriverStatsView stats={stats} />
+      <DriverTable
         drivers={drivers}
         total={total}
         currentPage={page}

@@ -10,16 +10,14 @@ import {
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
-interface FormSelectProps {
+interface FormSelectProps extends React.ComponentProps<"select"> {
   label: string;
   name: string;
   placeholder?: string;
   options: { label: string; value: string }[];
   error?: string | string[];
   containerClassName?: string;
-  defaultValue?: string;
   onValueChange?: (value: string) => void;
-  disabled?: boolean;
   icon?: React.ReactNode;
 }
 
@@ -50,7 +48,7 @@ export default function FormSelect({
         )}
         <Select
           name={name}
-          defaultValue={defaultValue}
+          defaultValue={defaultValue as string}
           onValueChange={onValueChange}
           disabled={disabled}
         >

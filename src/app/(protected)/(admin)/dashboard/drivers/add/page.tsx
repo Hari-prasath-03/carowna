@@ -1,7 +1,7 @@
 import PathTillNow from "@/components/admin/shared/path-till-now";
 import BackButton from "@/components/layout/back-button";
 import Header from "@/components/admin/shared/header";
-import DriverForm from "@/components/vendor/drivers/driver-form";
+import DriverForm from "@/components/admin/drivers/driver-form";
 
 export default function AddDriverPage() {
   return (

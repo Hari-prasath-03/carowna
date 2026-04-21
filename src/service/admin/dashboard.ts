@@ -3,7 +3,7 @@
 import { unstable_cache } from "next/cache";
 import createAdminClient from "@/lib/supabase/clients/admin";
 import { ADMIN_CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
-import { months } from "@/constants";
+import { months } from "@/constants/others";
 
 export const getRevenueTrends = unstable_cache(
   async () => {

@@ -5,6 +5,7 @@ import {
   Shield,
   ChevronRight,
 } from "lucide-react";
+import Link from "next/link";
 
 interface SupportItemProps {
   label: string;
@@ -14,7 +15,7 @@ interface SupportItemProps {
 
 function SupportItem({ label, icon: Icon, href }: SupportItemProps) {
   return (
-    <a
+    <Link
       href={href}
       className="flex items-center justify-between p-4 bg-primary-foreground border-b border-border last:border-0 hover:bg-muted/20 transition-colors"
     >
@@ -23,7 +24,7 @@ function SupportItem({ label, icon: Icon, href }: SupportItemProps) {
         <span className="text-sm font-semibold text-foreground">{label}</span>
       </div>
       <ChevronRight className="h-4 w-4 text-muted-foreground/40" />
-    </a>
+    </Link>
   );
 }
 
@@ -34,9 +35,17 @@ export default function SupportSection() {
         Support & Legal
       </h3>
       <div className="rounded-2xl overflow-hidden border border-border shadow-sm bg-primary-foreground">
-        <SupportItem label="Help Center" icon={HelpCircle} href="#" />
-        <SupportItem label="Terms of Service" icon={FileText} href="#" />
-        <SupportItem label="Privacy Policy" icon={Shield} href="#" />
+        <SupportItem label="Help Center" icon={HelpCircle} href="/help" />
+        <SupportItem
+          label="Terms of Service"
+          icon={FileText}
+          href="/help/terms-and-conditions"
+        />
+        <SupportItem
+          label="Privacy Policy"
+          icon={Shield}
+          href="/help/privacy-policy"
+        />
       </div>
     </section>
   );

@@ -63,7 +63,7 @@ export default async function VehiclesPage({ searchParams }: vehicleSearch) {
     <div className="pb-32">
       <HomeHeader />
 
-      <main className="space-y-6">
+      <main className="space-y-6 mt-16 sm:mt-24">
         <Suspense
           fallback={<div className="h-12 w-full animate-pulse bg-muted/20" />}
         >

@@ -9,7 +9,7 @@ import {
   AdminUserProfile,
   UserBookingHistoryItem,
 } from "@/types";
-import { ADMIN_PAGE_SIZE } from "@/constants";
+import { ADMIN_PAGE_SIZE } from "@/constants/others";
 
 export const getUserStats = unstable_cache(
   async (): Promise<UserStats> => {
@@ -136,7 +136,9 @@ export const getUserDetails = unstable_cache(
       date_of_birth: user.date_of_birth || null,
       native_location: user.native_location || null,
       gender: user.gender || null,
+      role: user.role,
       created_at: user.created_at,
+      last_active_at: user.last_active_at || null,
       total_bookings: totalBookings,
       total_cancelled: totalCancelled,
       total_spent: totalSpent,

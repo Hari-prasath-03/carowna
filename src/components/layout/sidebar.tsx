@@ -5,7 +5,7 @@ import * as icons from "lucide-react";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Logo from "../layout/logo";
-import { User } from "@/types";
+import { AuthUser } from "@/types";
 
 interface SidebarProps {
   parentPath: string;
@@ -19,7 +19,7 @@ interface SidebarProps {
     href: string;
   }[];
   user: {
-    details: User;
+    details: AuthUser;
   };
 }
 
@@ -91,7 +91,7 @@ export default function Sidebar({
         <div className="bg-muted/30 rounded-2xl p-4 flex items-center justify-between group relative overflow-hidden transition-all duration-300 border border-transparent hover:border-border/50">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-full bg-primary flex items-center justify-center text-sm font-black text-primary-foreground shadow-md ring-4 ring-primary/5">
-              {user.details.display_name
+              {user.details.name
                 .split(" ")
                 .map((n) => n[0])
                 .join("")
@@ -99,7 +99,7 @@ export default function Sidebar({
             </div>
             <div className="flex flex-col">
               <span className="text-xs font-black tracking-tight text-foreground line-clamp-1">
-                {user.details.display_name}
+                {user.details.name}
               </span>
               <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest leading-none mt-1">
                 {user.details.role}

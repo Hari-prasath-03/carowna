@@ -35,6 +35,7 @@ export default async function VendorVehicleDetailsPage({ params }: Props) {
         name={vehicle.name}
         status={vehicle.approval_status}
         id={vehicle.id}
+        is_luxury={vehicle.is_luxury}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
@@ -50,6 +51,9 @@ export default async function VendorVehicleDetailsPage({ params }: Props) {
             fuel={vehicle.fuel_type}
             capacity={vehicle.capacity}
             price={vehicle.price_per_day}
+            color={vehicle.color}
+            state={vehicle.state}
+            district={vehicle.district}
           />
           <ApprovalStatusCard
             id={vehicle.id}

@@ -3,7 +3,7 @@ import { getUser } from "@/service/self-user";
 import VendorBookingStatsView from "@/components/vendor/bookings/vendor-booking-stats";
 import VendorBookingTable from "@/components/vendor/bookings/vendor-booking-table";
 import Header from "@/components/admin/shared/header";
-import { ADMIN_PAGE_SIZE } from "@/constants";
+import { ADMIN_PAGE_SIZE } from "@/constants/others";
 import {
   getVendorBookings,
   getVendorBookingStats,

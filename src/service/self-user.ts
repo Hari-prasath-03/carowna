@@ -1,6 +1,6 @@
 import { err, ok } from "@/lib/error-handler";
 import createClient from "@/lib/supabase/clients/server";
-import { User } from "@/types";
+import { AuthUser } from "@/types";
 import { cache } from "react";
 
 function decodeJWTPayload(token: string) {
@@ -14,7 +14,6 @@ function decodeJWTPayload(token: string) {
 }
 
 export const getUser = cache(async () => {
-  const startTime = Date.now();
   const accessToken = await getAccessToken();
 
   if (!accessToken) return err({ reason: "Unauthorized" });
@@ -22,16 +21,12 @@ export const getUser = cache(async () => {
   const payload = decodeJWTPayload(accessToken);
   if (!payload || !payload.sub) return err({ reason: "Unauthorized" });
 
-  const user: User = {
+  const user: AuthUser = {
     id: payload.sub,
     email: payload.email,
-    display_name: payload.user_metadata?.name || payload.email,
+    name: payload.user_metadata?.name || payload.email,
     role: payload.user_metadata?.role || "USER",
   };
-
-  const totalTime = Date.now() - startTime;
-  console.log(`User retreval time: ${totalTime}ms`);
-
   return ok(user);
 });
 

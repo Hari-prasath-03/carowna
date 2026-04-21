@@ -1,7 +1,7 @@
-import { getUserBookings } from "@/service/user/bookings";
-import { getUser } from "@/service/self-user";
 import { redirect } from "next/navigation";
-import HistoryClient from "./history-client";
+import { getUser } from "@/service/self-user";
+import { getUserBookings } from "@/service/user/bookings";
+import HistoryClient from "@/components/user/history/history-client";
 import BackButton from "@/components/layout/back-button";
 
 export default async function HistoryPage() {

@@ -28,23 +28,9 @@ const _getVehicles = unstable_cache(
 
     const end = start + limit - 1;
 
-    const query = publicSupabase.from("vehicles").select(
-      `
-      id,
-      name,
-      brand,
-      vehicle_type,
-      transmission,
-      price_per_day,
-      capacity,
-      fuel_type,
-      images,
-      vendor_id,
-      approval_status,
-      created_at
-      `,
-      { count: "exact" },
-    );
+    const query = publicSupabase
+      .from("vehicles")
+      .select("*", { count: "exact" });
 
     const builder = new QueryBuilder(query);
 
@@ -71,10 +57,7 @@ const _getVehicles = unstable_cache(
       return err({ reason: "Failed to fetch vehicles" });
     }
 
-    const vehicleData = data.map((v) => ({
-      ...v,
-      rating: 4.5 + Math.random() * 0.5,
-    }));
+    const vehicleData = data;
 
     return ok(vehicleData as Vehicle[]);
   },
@@ -93,24 +76,7 @@ const _getVehicleById = unstable_cache(
   async (id: string) => {
     const { data, error } = await publicSupabase
       .from("vehicles")
-      .select(
-        `
-        id,
-        name,
-        brand,
-        vehicle_type,
-        transmission,
-        price_per_day,
-        capacity,
-        fuel_type,
-        images,
-        insurance_doc_url,
-        rc_doc_url,
-        rto_verification_doc_url,
-        approval_status,
-        vendor_id
-      `,
-      )
+      .select("*")
       .eq("id", id)
       .eq("approval_status", "APPROVED")
       .eq("is_available", true)
@@ -120,12 +86,7 @@ const _getVehicleById = unstable_cache(
       return err({ reason: "Vehicle not found" });
     }
 
-    const vehicle: Vehicle = {
-      ...data,
-      rating: 4.5 + Math.random() * 0.5,
-    };
-
-    return ok(vehicle);
+    return ok(data as Vehicle);
   },
   [USER_CACHE_TAGS.VEHICLE_DETAILS, "getVehicleById"],
   {

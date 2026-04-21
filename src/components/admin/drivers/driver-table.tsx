@@ -1,33 +1,29 @@
 "use client";
 
-import { VendorDriver } from "@/types";
-import { cn } from "@/lib/utils";
-import { Badge } from "@/components/ui/badge";
+import { SystemDriver } from "@/types";
 import GenericTable from "@/components/layout/generic-table";
-import { APPROVAL_STATUS_STYLES } from "@/constants/shared-styles";
 import { Eye, Pencil, Search, X, Star } from "lucide-react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useCallback } from "react";
-import FormSelect from "@/components/forms/form-select";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import AvailabilityToggle from "@/components/vendor/shared/availability-toggle";
 import toggleDriverAvailability from "@/actions/drivers/toggle-availability";
 
-interface VendorDriverTableProps {
-  drivers: VendorDriver[];
+interface DriverTableProps {
+  drivers: SystemDriver[];
   total: number;
   currentPage: number;
   totalPages: number;
 }
 
-export default function VendorDriverTable({
+export default function DriverTable({
   drivers,
   total,
   currentPage,
   totalPages,
-}: VendorDriverTableProps) {
+}: DriverTableProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -35,11 +31,8 @@ export default function VendorDriverTable({
   const createQueryString = useCallback(
     (name: string, value: string) => {
       const params = new URLSearchParams(searchParams.toString());
-      if (value === "all") {
-        params.delete(name);
-      } else {
-        params.set(name, value);
-      }
+      if (value === "all") params.delete(name);
+      else params.set(name, value);
       params.set("page", "1");
       return params.toString();
     },
@@ -50,7 +43,6 @@ export default function VendorDriverTable({
     router.push(pathname + "?" + createQueryString(name, value));
   };
 
-  const status = searchParams.get("status") || "all";
   const search = searchParams.get("search") || "";
 
   return (
@@ -60,19 +52,6 @@ export default function VendorDriverTable({
         subtitle: `${total} TOTAL DRIVERS TRACKED`,
         renderRightSection: () => (
           <div className="flex items-center gap-3">
-            <FormSelect
-              label=""
-              name="status"
-              defaultValue={status}
-              onValueChange={(v) => handleFilterChange("status", v)}
-              containerClassName="w-[160px] gap-0 text-[10px]"
-              options={[
-                { label: "ALL STATUSES", value: "all" },
-                { label: "PENDING", value: "pending" },
-                { label: "APPROVED", value: "approved" },
-                { label: "REJECTED", value: "rejected" },
-              ]}
-            />
             <div className="relative group w-64 hidden sm:block">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-3.5 text-muted-foreground group-focus-within:text-foreground transition-colors" />
               <Input
@@ -89,7 +68,7 @@ export default function VendorDriverTable({
                 }}
               />
             </div>
-            {(status !== "all" || search !== "") && (
+            {search !== "" && (
               <Button
                 variant="ghost"
                 size="icon"
@@ -152,26 +131,11 @@ export default function VendorDriverTable({
             <div className="flex justify-center">
               <AvailabilityToggle
                 id={item.id}
-                initialAvailable={item.availability_status}
+                initialAvailable={item.is_available}
                 onToggle={toggleDriverAvailability}
-                disabled={item.approval_status !== "APPROVED"}
                 showLabel={false}
               />
             </div>
-          ),
-        },
-        {
-          header: "STATUS",
-          render: (item) => (
-            <Badge
-              variant="outline"
-              className={cn(
-                "text-[10px] font-bold tracking-widest px-2.5 py-1 rounded-md",
-                APPROVAL_STATUS_STYLES[item.approval_status],
-              )}
-            >
-              {item.approval_status}
-            </Badge>
           ),
         },
         {
@@ -181,13 +145,13 @@ export default function VendorDriverTable({
           render: (item) => (
             <div className="flex items-center justify-end gap-1">
               <Link
-                href={`/vendor/drivers/${item.id}`}
+                href={`/dashboard/drivers/${item.id}`}
                 className="p-2 hover:bg-muted/40 rounded-lg transition-colors inline-flex group"
               >
                 <Eye className="size-4 text-muted-foreground group-hover:text-primary transition-colors" />
               </Link>
               <Link
-                href={`/vendor/drivers/${item.id}/edit`}
+                href={`/dashboard/drivers/${item.id}/edit`}
                 className="p-2 hover:bg-muted/40 rounded-lg transition-colors inline-flex group"
               >
                 <Pencil className="size-4 text-muted-foreground group-hover:text-foreground transition-colors" />

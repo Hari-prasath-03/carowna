@@ -6,7 +6,7 @@ export function ContactItem({
   value,
 }: {
   icon: LucideIcon;
-  value?: string;
+  value?: string | null;
 }) {
   if (!value) return null;
   return (
@@ -23,7 +23,7 @@ export function DetailItem({
   align = "left",
 }: {
   label: string;
-  value: string;
+  value: string | null;
   align?: "left" | "right";
 }) {
   return (

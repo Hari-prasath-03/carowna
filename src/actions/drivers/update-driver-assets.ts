@@ -2,7 +2,7 @@
 
 import { updateTag } from "next/cache";
 import createAdminClient from "@/lib/supabase/clients/admin";
-import { VENDOR_CACHE_TAGS } from "@/constants/cache-tags";
+import { ADMIN_CACHE_TAGS } from "@/constants/cache-tags";
 
 export default async function updateDriverAssetsAction(
   driverId: string,
@@ -11,13 +11,13 @@ export default async function updateDriverAssetsAction(
   const sb = createAdminClient();
   const { error } = await sb
     .from("drivers")
-    .update({ license_doc_url: licenseUrl })
+    .update({ license_doc_url: licenseUrl, updated_at: new Date() })
     .eq("id", driverId);
 
   if (error) return { success: false, error: error.message };
 
-  updateTag(VENDOR_CACHE_TAGS.DRIVERS_LIST);
-  updateTag(VENDOR_CACHE_TAGS.DRIVER_DETAILS);
+  updateTag(ADMIN_CACHE_TAGS.DRIVERS_LIST);
+  updateTag(ADMIN_CACHE_TAGS.DRIVER_DETAILS);
 
   return {
     success: true,

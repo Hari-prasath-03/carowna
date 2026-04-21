@@ -1,44 +1,37 @@
 import { err, ok } from "@/lib/error-handler";
 import publicSupabase from "@/lib/supabase/clients/public";
-import { Driver } from "@/types";
 import { unstable_cache } from "next/cache";
 import { USER_CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
 
-const _getDriversByVendor = unstable_cache(
-  async (vendorId: string) => {
+const _getDrivers = unstable_cache(
+  async () => {
     const { data, error } = await publicSupabase
       .from("drivers")
-      .select("id, vendor_id, name, years_of_exp, rating, price_per_day")
-      .eq("vendor_id", vendorId)
-      .eq("approval_status", "APPROVED");
+      .select("*")
+      .eq("is_available", true);
 
     if (error) {
       return err({ reason: error.message });
     }
 
-    const drivers: Driver[] = (data ?? []).map((d) => ({
-      ...d,
-      rating: Number(d.rating) || 4.5,
-    }));
-
-    return ok(drivers);
+    return ok(data);
   },
-  [USER_CACHE_TAGS.DRIVERS, "getDriversByVendor"],
+  [USER_CACHE_TAGS.DRIVERS],
   {
     revalidate: CACHE_TIME.RARE,
     tags: [USER_CACHE_TAGS.DRIVERS],
   },
 );
 
-export function getDriversByVendor(vendorId: string) {
-  return _getDriversByVendor(vendorId);
+export function getDrivers() {
+  return _getDrivers();
 }
 
 const _getDriverById = unstable_cache(
   async (driverId: string) => {
     const { data, error } = await publicSupabase
       .from("drivers")
-      .select("id, vendor_id, name, years_of_exp, rating, price_per_day")
+      .select("*")
       .eq("id", driverId)
       .maybeSingle();
 
@@ -46,12 +39,7 @@ const _getDriverById = unstable_cache(
       return err({ reason: "Driver not found" });
     }
 
-    const driver: Driver = {
-      ...data,
-      rating: Number(data.rating) || 4.5,
-    };
-
-    return ok(driver);
+    return ok(data);
   },
   [USER_CACHE_TAGS.DRIVERS, "getDriverById"],
   {

@@ -1,5 +1,3 @@
-import { User } from "@/types";
-
 type Role = keyof typeof ROLES;
 type Permission = (typeof ROLES)[Role][number];
 
@@ -10,7 +8,7 @@ const ROLES = {
 } as const;
 
 export default function hasPermission(
-  user: User,
+  user: { role: string },
   requiredPermission: Permission,
 ) {
   const userRole = user.role.toLowerCase() as Role;

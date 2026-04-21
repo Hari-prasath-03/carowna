@@ -1,16 +1,14 @@
 "use client";
 
-import { VendorDriverStats } from "@/types";
-import { Users, CheckCircle, Clock } from "lucide-react";
+import { SystemDriverStats } from "@/types";
+import { Users, CheckCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-interface VendorDriverStatsProps {
-  stats: VendorDriverStats;
+interface DriverStatsProps {
+  stats: SystemDriverStats;
 }
 
-export default function VendorDriverStatsView({
-  stats,
-}: VendorDriverStatsProps) {
+export default function DriverStatsView({ stats }: DriverStatsProps) {
   const cards = [
     {
       title: "TOTAL DRIVERS",
@@ -23,12 +21,6 @@ export default function VendorDriverStatsView({
       value: stats.onlineDrivers,
       icon: CheckCircle,
       iconColor: "text-emerald-500",
-    },
-    {
-      title: "PENDING APPROVAL",
-      value: stats.pendingApprovals,
-      icon: Clock,
-      iconColor: "text-amber-500",
     },
   ];
 

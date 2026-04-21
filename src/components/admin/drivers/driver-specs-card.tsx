@@ -1,10 +1,11 @@
 "use client";
 
-import { Briefcase, Star, Calendar, User2 } from "lucide-react";
+import { Briefcase, Star, Calendar, User2, IndianRupee } from "lucide-react";
 
 interface Props {
   experience: number;
   rating: number;
+  pricePerDay: number;
   dob: string | null;
   gender: string | null;
 }
@@ -12,18 +13,20 @@ interface Props {
 export default function DriverSpecsCard({
   experience,
   rating,
+  pricePerDay,
   dob,
   gender,
 }: Props) {
   const specs = [
     { label: "EXPERIENCE", value: `${experience} Years`, icon: Briefcase },
-    {
-      label: "RATING",
-      value: rating > 0 ? rating.toFixed(1) : "N/A",
-      icon: Star,
-    },
+    { label: "RATING", value: rating ?? "N/A", icon: Star },
     { label: "DATE OF BIRTH", value: dob || "Not Set", icon: Calendar },
     { label: "GENDER", value: gender || "Not Set", icon: User2 },
+    {
+      label: "PRICE PER DAY",
+      value: `₹${pricePerDay.toLocaleString()}`,
+      icon: IndianRupee,
+    },
   ].filter((s) => s.value);
 
   return (

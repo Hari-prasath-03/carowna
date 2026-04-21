@@ -8,7 +8,7 @@ import {
 import createAdminClient from "@/lib/supabase/clients/admin";
 import { getUser } from "@/service/self-user";
 import { AddVehicleState } from "@/types";
-import { VehicleSchema } from "@/types/validation-schema";
+import { VehicleFormSchema } from "@/types/validation-schema";
 import { updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
@@ -24,15 +24,19 @@ export default async function updateVehicleAction(
     name: formData.get("name"),
     brand: formData.get("brand"),
     vehicle_type: formData.get("vehicle_type"),
+    transmission: formData.get("transmission"),
+    is_luxury: formData.get("is_luxury") === "true",
+    color: formData.get("color"),
     registration_number: formData.get("registration_number"),
     fuel_type: formData.get("fuel_type"),
     capacity: formData.get("capacity"),
-    price_per_day: formData.get("price_per_day"),
-    transmission: formData.get("transmission"),
+    state: formData.get("state"),
+    district: formData.get("district"),
     is_available: formData.get("is_available") === "true",
+    price_per_day: formData.get("price_per_day"),
   };
 
-  const validated = VehicleSchema.safeParse(rawData);
+  const validated = VehicleFormSchema.safeParse(rawData);
 
   if (!validated.success) {
     return {
@@ -45,7 +49,7 @@ export default async function updateVehicleAction(
   const sb = createAdminClient();
   const { error } = await sb
     .from("vehicles")
-    .update(validated.data)
+    .update({ ...validated.data, updated_at: new Date().toISOString() })
     .eq("id", vehicleId)
     .eq("vendor_id", user.id);
 

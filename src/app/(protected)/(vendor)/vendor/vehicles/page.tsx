@@ -8,7 +8,7 @@ import VendorVehicleStatsView from "@/components/vendor/vehicles/vendor-vehicle-
 import VendorVehicleTable from "@/components/vendor/vehicles/vendor-vehicle-table";
 import { Plus } from "lucide-react";
 import Header from "@/components/admin/shared/header";
-import { ADMIN_PAGE_SIZE } from "@/constants";
+import { ADMIN_PAGE_SIZE } from "@/constants/others";
 import Link from "next/link";
 
 interface Props {

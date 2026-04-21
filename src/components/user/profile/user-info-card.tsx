@@ -19,14 +19,14 @@ import EditProfileDrawer from "./edit-profile-drawer";
 interface UserInfoCardProps {
   userId: string;
   name: string;
-  phone?: string;
+  phone?: string | null;
   email: string;
   membership: string;
   since: string;
-  avatarUrl?: string;
-  date_of_birth?: string;
-  native_location?: string;
-  gender?: "MALE" | "FEMALE" | "OTHER";
+  avatarUrl?: string | null;
+  date_of_birth?: string | null;
+  native_location?: string | null;
+  gender?: "MALE" | "FEMALE" | "OTHER" | null;
 }
 
 export default function UserInfoCard({

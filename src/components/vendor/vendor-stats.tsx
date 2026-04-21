@@ -1,13 +1,7 @@
 "use client";
 
 import { VendorDashboardStats } from "@/types";
-import {
-  Car,
-  CalendarCheck,
-  CalendarClock,
-  UserCheck,
-  Wallet,
-} from "lucide-react";
+import { Car, CalendarCheck, CalendarClock, Wallet } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface VendorStatsProps {
@@ -37,17 +31,10 @@ export default function VendorStats({ stats }: VendorStatsProps) {
       iconColor: "text-primary",
       description: "Bookings in next 7 days",
     },
-    {
-      title: "AVAILABLE DRIVERS",
-      value: stats.availableDrivers,
-      icon: UserCheck,
-      iconColor: "text-emerald-500",
-      description: "Approved & ready on standby",
-    },
   ];
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
       {cards.map((card, i) => {
         const Icon = card.icon;
         return (

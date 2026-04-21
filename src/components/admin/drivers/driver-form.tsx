@@ -17,7 +17,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { Loader2, FileText, Upload, ExternalLink } from "lucide-react";
-import { AddDriverState, VendorDriverDetails } from "@/types";
+import { AddDriverState, SystemDriverDetails } from "@/types";
 import { cn } from "@/lib/utils";
 
 const initialState: AddDriverState = {
@@ -27,13 +27,13 @@ const initialState: AddDriverState = {
 };
 
 interface DriverFormProps {
-  initialData?: VendorDriverDetails;
+  initialData?: SystemDriverDetails;
 }
 
 export default function DriverForm({ initialData }: DriverFormProps) {
   const isEditing = !!initialData;
   const router = useRouter();
-  
+
   const [licenseFile, setLicenseFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [processStatus, setProcessStatus] = useState<string>("");
@@ -65,8 +65,10 @@ export default function DriverForm({ initialData }: DriverFormProps) {
     setIsProcessing(true);
     try {
       if (!licenseFile) {
-        toast.success(isEditing ? "Driver profile updated" : "Driver added successfully");
-        router.replace(`/vendor/drivers/${driverId}`);
+        toast.success(
+          isEditing ? "Driver profile updated" : "Driver added successfully",
+        );
+        router.replace(`/dashboard/drivers/${driverId}`);
         return;
       }
 
@@ -78,8 +80,10 @@ export default function DriverForm({ initialData }: DriverFormProps) {
         await updateDriverAssetsAction(driverId, licenseUrl);
       }
 
-      toast.success(isEditing ? "Driver profile updated" : "Driver added successfully");
-      router.replace(`/vendor/drivers/${driverId}`);
+      toast.success(
+        isEditing ? "Driver profile updated" : "Driver added successfully",
+      );
+      router.replace(`/dashboard/drivers/${driverId}`);
     } catch (error) {
       console.error("Asset sync error:", error);
       toast.error("Failed to sync driver documents");
@@ -141,11 +145,19 @@ export default function DriverForm({ initialData }: DriverFormProps) {
             name="gender"
             placeholder="Select Gender"
             options={[
-              { label: "Male", value: "MALE" },
-              { label: "Female", value: "FEMALE" },
-              { label: "Other", value: "OTHER" },
+              { label: "Male", value: "Male" },
+              { label: "Female", value: "Female" },
+              { label: "Other", value: "Others" },
             ]}
             defaultValue={initialData?.gender ?? ""}
+          />
+          <FormInput
+            label="Price Per Day"
+            name="price_per_day"
+            type="number"
+            placeholder="e.g. 1500"
+            defaultValue={initialData?.price_per_day ?? ""}
+            required
           />
         </div>
       </DriverFormSection>
@@ -177,10 +189,11 @@ export default function DriverForm({ initialData }: DriverFormProps) {
               { label: "Available", value: "true" },
               { label: "Offline", value: "false" },
             ]}
-            defaultValue={initialData?.availability_status ? "true" : "false"}
+            defaultValue={initialData?.is_available ? "true" : "false"}
           />
           <p className="text-[10px] text-muted-foreground font-medium uppercase tracking-wider leading-relaxed px-1">
-            Drivers must be APPROVED by the admin before they can accept bookings, regardless of their online status.
+            Drivers must be APPROVED by the admin before they can accept
+            bookings, regardless of their online status.
           </p>
         </div>
       </DriverFormSection>
@@ -281,11 +294,7 @@ function DocUploadItem({
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-1.5 overflow-hidden">
             <p className="text-xs font-bold text-foreground truncate max-w-full">
-              {file
-                ? file.name
-                : existingUrl
-                  ? "Update License"
-                  : "Select PDF"}
+              {file ? file.name : existingUrl ? "Update License" : "Select PDF"}
             </p>
             {existingUrl && !file && (
               <button

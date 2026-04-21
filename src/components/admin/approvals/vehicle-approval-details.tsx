@@ -22,6 +22,8 @@ import {
   ExternalLink,
   CheckCircle,
   XCircle,
+  MapPin,
+  Palette,
 } from "lucide-react";
 import BackButton from "@/components/layout/back-button";
 import PathTillNow from "@/components/admin/shared/path-till-now";
@@ -64,12 +66,21 @@ export default function VehicleApprovalDetailsView({ vehicle }: Props) {
       value: vehicle.capacity ? `${vehicle.capacity} Adults` : null,
       Icon: Users,
     },
+    {
+      label: "Base Location",
+      value:
+        vehicle.district && vehicle.state
+          ? `${vehicle.district}, ${vehicle.state}`
+          : null,
+      Icon: MapPin,
+    },
+    { label: "Color", value: vehicle.color, Icon: Palette },
   ].filter((s) => s.value);
 
   const docs = [
     { label: "RC Document", url: vehicle.rc_doc_url },
     { label: "Insurance Certificate", url: vehicle.insurance_doc_url },
-    { label: "RTO Document", url: vehicle.rto_doc_url },
+    { label: "RTO Document", url: vehicle.rto_verification_doc_url },
   ];
 
   return (

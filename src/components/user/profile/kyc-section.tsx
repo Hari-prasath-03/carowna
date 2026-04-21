@@ -22,7 +22,7 @@ interface KYCItemProps {
   label: string;
   icon: LucideIcon;
   verified: boolean;
-  docUrl?: string;
+  docUrl?: string | null;
   type: "aadhaar" | "license";
 }
 
@@ -166,8 +166,8 @@ interface KYCSectionProps {
   userId: string;
   aadhaar_verified: boolean;
   license_verified: boolean;
-  aadhaar_doc_url: string;
-  license_doc_url: string;
+  aadhaar_doc_url: string | null;
+  license_doc_url: string | null;
 }
 
 export default function KYCSection({

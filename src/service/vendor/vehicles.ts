@@ -8,7 +8,7 @@ import {
   VendorVehicleStats,
   VendorVehicleDetails,
 } from "@/types";
-import { ADMIN_PAGE_SIZE } from "@/constants";
+import { ADMIN_PAGE_SIZE } from "@/constants/others";
 import QueryBuilder from "@/lib/query-builder";
 
 export const getVendorVehicleStats = unstable_cache(
@@ -77,6 +77,7 @@ export const getVendorVehicles = unstable_cache(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const vehicles: VendorVehicle[] = (data || []).map((v: any) => ({
       id: v.id,
+      vendor_id: v.vendor_id,
       name: v.name,
       brand: v.brand,
       vehicle_type: v.vehicle_type,
@@ -166,23 +167,8 @@ export const getVendorVehicleDetails = unstable_cache(
       : 0;
 
     return {
-      id: vehicle.id,
-      vendor_id: vehicle.vendor_id,
-      name: vehicle.name,
-      brand: vehicle.brand,
-      vehicle_type: vehicle.vehicle_type,
-      transmission: vehicle.transmission,
-      fuel_type: vehicle.fuel_type,
-      capacity: vehicle.capacity,
+      ...vehicle,
       price_per_day: Number(vehicle.price_per_day),
-      images: vehicle.images,
-      registration_number: vehicle.registration_number,
-      approval_status: vehicle.approval_status,
-      is_available: vehicle.is_available,
-      created_at: vehicle.created_at,
-      rc_doc_url: vehicle.rc_doc_url,
-      insurance_doc_url: vehicle.insurance_doc_url,
-      rto_verification_doc_url: vehicle.rto_verification_doc_url,
       performance: {
         totalRevenue: totalRevenue,
         utilization: utilization,
@@ -197,7 +183,7 @@ export const getVendorVehicleDetails = unstable_cache(
         total_amount: Number(b.total_amount),
         booking_status: b.booking_status,
       })),
-    };
+    } as VendorVehicleDetails;
   },
   [VENDOR_CACHE_TAGS.VEHICLE_DETAILS, "getVendorVehicleDetails"],
   {

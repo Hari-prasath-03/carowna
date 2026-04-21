@@ -13,7 +13,6 @@ export const getVendorDashboardStats = unstable_cache(
       { count: totalVehicles },
       { count: activeBookings },
       { count: upcomingBookings },
-      { count: availableDrivers },
       { data: payments },
     ] = await Promise.all([
       sb
@@ -44,12 +43,6 @@ export const getVendorDashboardStats = unstable_cache(
         .eq("vehicle.vendor_id", vendorId),
 
       sb
-        .from("drivers")
-        .select("id", { count: "exact", head: true })
-        .eq("vendor_id", vendorId)
-        .eq("approval_status", "APPROVED"),
-
-      sb
         .from("payments")
         .select("amount, booking:bookings!inner(vehicle:vehicles!inner(id))")
         .eq("status", "SUCCESS")
@@ -63,7 +56,6 @@ export const getVendorDashboardStats = unstable_cache(
       totalVehicles: totalVehicles || 0,
       activeBookings: activeBookings || 0,
       upcomingBookings: upcomingBookings || 0,
-      availableDrivers: availableDrivers || 0,
       totalEarnings: earnings,
     };
   },

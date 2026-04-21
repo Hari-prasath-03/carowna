@@ -18,9 +18,9 @@ const initialState: AddVendorState = {
 };
 
 const GENDER_OPTIONS = [
-  { label: "Male", value: "MALE" },
-  { label: "Female", value: "FEMALE" },
-  { label: "Other", value: "OTHER" },
+  { label: "Male", value: "Male" },
+  { label: "Female", value: "Female" },
+  { label: "Other", value: "Other" },
 ];
 
 export default function AddVendorForm({

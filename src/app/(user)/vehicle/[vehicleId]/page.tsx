@@ -1,9 +1,17 @@
 import { notFound, redirect } from "next/navigation";
-import { Fuel, Users, LocateFixed, BadgeCheck, Star } from "lucide-react";
+import {
+  Fuel,
+  Users,
+  LocateFixed,
+  BadgeCheck,
+  Star,
+  Crown,
+  MapPin,
+} from "lucide-react";
 
 import BackButton from "@/components/layout/back-button";
 import { getVehicleById } from "@/service/user/vehicles";
-import { getDriversByVendor } from "@/service/user/drivers";
+import { getDrivers } from "@/service/user/drivers";
 import { getUser } from "@/service/self-user";
 import ImageGallery from "@/components/user/vehicles/image-gallery";
 import SpecCard from "@/components/user/vehicles/spec-card";
@@ -28,7 +36,7 @@ export default async function VehicleDetailsPage({
   const [vehicle, err] = await getVehicleById(vehicleId);
   if (err || !vehicle) return notFound();
 
-  const [drivers] = await getDriversByVendor(vehicle.vendor_id);
+  const [drivers] = await getDrivers();
 
   return (
     <div className="min-h-screen bg-background pb-32">
@@ -55,15 +63,19 @@ export default async function VehicleDetailsPage({
                 {vehicle.name}
               </h2>
               <div className="flex items-center gap-2 pt-1">
+                {vehicle.is_luxury && (
+                  <div className="flex items-center gap-1 px-2 py-0.5 bg-amber-500/10 rounded border border-amber-500/20 text-[9px] font-black text-amber-600 uppercase tracking-widest">
+                    <Crown className="size-2.5 fill-amber-500" />
+                    Lux
+                  </div>
+                )}
                 <span className="text-xs font-bold text-muted-foreground">
-                  2023 • Pearl White Multi-Coat
+                  {vehicle.color || "Standard Finish"}
                 </span>
                 <div className="h-1 w-1 rounded-full bg-muted-foreground/40" />
                 <div className="flex items-center gap-1">
                   <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                  <span className="text-xs font-bold text-foreground">
-                    {vehicle.rating.toFixed(1)}
-                  </span>
+                  <span className="text-xs font-bold text-foreground">4.8</span>
                 </div>
               </div>
             </div>
@@ -73,6 +85,18 @@ export default async function VehicleDetailsPage({
               </p>
               <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">
                 per day
+              </p>
+            </div>
+          </div>
+
+          <div className="p-4 rounded-3xl bg-muted/30 border border-border/40 flex items-center gap-3">
+            <MapPin className="h-4 w-4 text-primary" />
+            <div className="space-y-0.5">
+              <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                Base Location
+              </p>
+              <p className="text-xs font-bold text-foreground uppercase tracking-tight">
+                {vehicle.district}, {vehicle.state}
               </p>
             </div>
           </div>

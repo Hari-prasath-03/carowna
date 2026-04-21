@@ -84,7 +84,7 @@ export default function VehicleInfiniteScrollList({
             brand={vehicle.brand}
             name={vehicle.name}
             price={vehicle.price_per_day}
-            rating={vehicle.rating}
+            rating={4.8}
             transmission={vehicle.transmission}
             capacity={vehicle.capacity}
             fuelType={vehicle.fuel_type}

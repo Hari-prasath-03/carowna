@@ -28,18 +28,23 @@ CREATE TABLE public.vehicles (
 
   name TEXT NOT NULL,
   brand TEXT,
-  vehicle_type TEXT CHECK (vehicle_type IN ('bike', 'car', 'luxury')),
+  vehicle_type TEXT CHECK (vehicle_type IN ('bike', 'car')),
   transmission TEXT CHECK (transmission IN ('automatic', 'manual')),
+  is_luxury BOOLEAN DEFAULT FALSE,
+  color TEXT,
 
   registration_number TEXT UNIQUE NOT NULL,
   images TEXT[],
 
-  fuel_type TEXT,
+  fuel_type TEXT CHECK (fuel_type IN ('petrol', 'diesel', 'electric', 'cng', 'hybrid')),
   capacity INT,
+
+  state TEXT NOT NULL DEFAULT 'Tamil Nadu',
+  district TEXT NOT NULL DEFAULT 'Salem';
 
   approval_status public.approval_status DEFAULT 'PENDING',
   approval_remarks TEXT,
-  is_available BOOLEAN DEFAULT FALSE,
+  is_available BOOLEAN DEFAULT TRUE,
 
   insurance_doc_url TEXT,
   rc_doc_url TEXT,
@@ -53,7 +58,6 @@ CREATE TABLE public.vehicles (
 
 CREATE TABLE public.drivers (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  vendor_id UUID NOT NULL REFERENCES public.users(id) ON DELETE CASCADE,
 
   name TEXT NOT NULL,
   date_of_birth DATE,
@@ -61,8 +65,8 @@ CREATE TABLE public.drivers (
   years_of_exp INT,
   rating NUMERIC(2,1) DEFAULT 0.0,
 
-  approval_status public.approval_status DEFAULT 'PENDING',
-  approval_remarks TEXT,
+  price_per_day NUMERIC(10,2) NOT NULL DEFAULT 0.00,
+  is_available BOOLEAN DEFAULT TRUE,
 
   license_doc_url TEXT,
 
@@ -143,9 +147,6 @@ CREATE INDEX idx_users_role ON public.users(role);
 
 CREATE INDEX idx_vehicle_vendor ON public.vehicles(vendor_id);
 CREATE INDEX idx_vehicle_approval ON public.vehicles(approval_status);
-
-CREATE INDEX idx_driver_vendor ON public.drivers(vendor_id);
-CREATE INDEX idx_driver_approval ON public.drivers(approval_status);
 
 CREATE INDEX idx_booking_vehicle ON public.bookings(vehicle_id);
 CREATE INDEX idx_booking_user ON public.bookings(user_id);

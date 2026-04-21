@@ -5,7 +5,7 @@ import {
 import Header from "@/components/admin/shared/header";
 import BookingStats from "@/components/admin/booking/booking-stats";
 import BookingTable from "@/components/admin/booking/booking-table";
-import { ADMIN_PAGE_SIZE } from "@/constants";
+import { ADMIN_PAGE_SIZE } from "@/constants/others";
 
 interface BookingsPageProps {
   searchParams: Promise<{ page?: string; status?: string }>;

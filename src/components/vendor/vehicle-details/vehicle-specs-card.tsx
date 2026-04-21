@@ -1,6 +1,15 @@
 "use client";
 
-import { Car, Fuel, Users, Settings2, Tag, CreditCard } from "lucide-react";
+import {
+  Car,
+  Fuel,
+  Users,
+  Settings2,
+  Tag,
+  CreditCard,
+  Palette,
+  MapPin,
+} from "lucide-react";
 
 interface Props {
   brand: string | null;
@@ -9,6 +18,9 @@ interface Props {
   fuel: string | null;
   capacity: number | null;
   price: number;
+  color: string | null;
+  state: string | null;
+  district: string | null;
 }
 
 export default function VehicleSpecsCard({
@@ -18,19 +30,25 @@ export default function VehicleSpecsCard({
   fuel,
   capacity,
   price,
+  color,
+  state,
+  district,
 }: Props) {
   const specs = [
-    { label: "BRAND", value: brand, icon: Car },
-    { label: "TYPE", value: type, icon: Tag },
-    { label: "REGISTRATION", value: reg, icon: CreditCard },
-    { label: "FUEL TYPE", value: fuel, icon: Fuel },
+    { label: "brand", value: brand, icon: Car },
+    { label: "type", value: type, icon: Tag },
+    { label: "registration", value: reg, icon: CreditCard },
+    { label: "fuel type", value: fuel, icon: Fuel },
+    { label: "color", value: color, icon: Palette },
+    { label: "state", value: state, icon: MapPin },
+    { label: "district", value: district, icon: MapPin },
     {
-      label: "CAPACITY",
+      label: "capacity",
       value: capacity ? `${capacity} Passengers` : null,
       icon: Users,
     },
     {
-      label: "PRICE/DAY",
+      label: "price/day",
       value: `₹${price.toLocaleString()}`,
       icon: Settings2,
     },
@@ -51,7 +69,7 @@ export default function VehicleSpecsCard({
                 <Icon className="size-3" />
                 {spec.label}
               </div>
-              <p className="text-sm font-black text-foreground uppercase tracking-tight">
+              <p className="text-sm font-semibold text-foreground uppercase tracking-tight">
                 {spec.value}
               </p>
             </div>

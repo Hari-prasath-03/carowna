@@ -10,6 +10,7 @@ import {
   Trophy,
   XCircle,
   Loader2,
+  CreditCard,
 } from "lucide-react";
 import Link from "next/link";
 import { format, isAfter, isBefore, isWithinInterval } from "date-fns";
@@ -17,8 +18,10 @@ import cancelBookingAction from "@/actions/booking/cancel-booking";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { useRazorpay } from "@/hooks/use-razorpay";
+import initiateExistingPaymentAction from "@/actions/booking/initiate-existing-payment";
 
-export type BookingStatus = "Active" | "Upcoming" | "Completed" | "Cancelled";
+export type BookingStatus = "Active" | "Upcoming" | "Pending" | "Completed" | "Cancelled";
 
 export interface HistoryVehicle {
   name: string;
@@ -32,6 +35,7 @@ export interface HistoryBooking {
   end_date: string;
   booking_status: string;
   total_amount: number;
+  initial_amount: number;
   vehicle: HistoryVehicle;
 }
 
@@ -48,6 +52,7 @@ export default function HistoryClient({
     const end = new Date(b.end_date);
 
     if (activeTab === "Cancelled") return b.booking_status === "CANCELLED";
+    if (activeTab === "Pending") return b.booking_status === "PENDING_PAYMENT";
     if (activeTab === "Completed")
       return (
         b.booking_status === "COMPLETED" ||
@@ -88,6 +93,7 @@ function HistoryTabs({
   const tabs: BookingStatus[] = [
     "Active",
     "Upcoming",
+    "Pending",
     "Completed",
     "Cancelled",
   ];
@@ -130,6 +136,7 @@ function BookingCard({ booking }: { booking: HistoryBooking }) {
   const vehicle = booking.vehicle;
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const { openCheckout } = useRazorpay();
   const now = new Date();
   const end = new Date(booking.end_date);
 
@@ -151,6 +158,27 @@ function BookingCard({ booking }: { booking: HistoryBooking }) {
         toast.success("Booking cancelled successfully");
         router.refresh();
       }
+    });
+  };
+
+  const handlePayNow = async () => {
+    startTransition(async () => {
+      const [data, err] = await initiateExistingPaymentAction(booking.id);
+      if (err) {
+        toast.error(err.reason);
+        return;
+      }
+
+      await openCheckout({
+        key_id: data.key_id!,
+        order_id: data.order_id,
+        amount: data.amount,
+        currency: data.currency,
+        booking_id: data.booking_id,
+        vehicle_name: data.vehicle_name,
+        user_name: data.user_name,
+        user_email: data.user_email,
+      });
     });
   };
 
@@ -188,10 +216,14 @@ function BookingCard({ booking }: { booking: HistoryBooking }) {
                     ? "bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
                     : isCancelled
                       ? "bg-destructive/10 text-destructive border-destructive/20"
-                      : "bg-primary/10 text-primary border-primary/20"
+                      : booking.booking_status === "PENDING_PAYMENT"
+                        ? "bg-amber-500/10 text-amber-500 border-amber-500/20"
+                        : "bg-primary/10 text-primary border-primary/20"
                 }`}
               >
-                {isCompleted ? "COMPLETED" : booking.booking_status}
+                {isCompleted
+                  ? "COMPLETED"
+                  : booking.booking_status.replace("_", " ")}
               </span>
             </div>
 
@@ -209,7 +241,9 @@ function BookingCard({ booking }: { booking: HistoryBooking }) {
       <div className="px-5 pb-5 pt-1">
         <div className="flex items-center justify-between p-4 bg-muted/30 rounded-2xl border border-border/50">
           <span className="text-[10px] uppercase tracking-widest font-bold text-muted-foreground">
-            Total Paid
+            {booking.booking_status === "PENDING_PAYMENT"
+              ? "Initial Deposit"
+              : "Total Paid"}
           </span>
           <span className="text-sm font-black tracking-tight">
             ₹{booking.total_amount.toLocaleString()}
@@ -225,7 +259,20 @@ function BookingCard({ booking }: { booking: HistoryBooking }) {
             Invoice
           </Link>
 
-          {isCancellable ? (
+          {booking.booking_status === "PENDING_PAYMENT" ? (
+            <button
+              onClick={handlePayNow}
+              disabled={isPending}
+              className="flex items-center justify-center gap-2 py-3 bg-amber-500 text-white rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg active:scale-95 transition-all disabled:opacity-50"
+            >
+              {isPending ? (
+                <Loader2 className="h-3 w-3 animate-spin" />
+              ) : (
+                <CreditCard className="h-3 w-3" />
+              )}
+              Pay Now
+            </button>
+          ) : isCancellable ? (
             <button
               onClick={handleCancel}
               disabled={isPending}

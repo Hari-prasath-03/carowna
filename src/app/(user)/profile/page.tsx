@@ -18,7 +18,7 @@ export default async function ProfilePage() {
   if (unexpectedError) redirect("/");
 
   const profileData = {
-    name: userDetails.display_name,
+    name: userDetails.name,
     phone: userDetails.mobile_no,
     email: userDetails.email,
     membership: "Gold Elite",

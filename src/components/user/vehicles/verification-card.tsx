@@ -20,7 +20,7 @@ interface VerificationCardProps {
   subtitle: string;
   icon: keyof typeof ICON_MAP;
   verified: boolean;
-  docUrl?: string;
+  docUrl?: string | null;
 }
 
 export default function VerificationCard({

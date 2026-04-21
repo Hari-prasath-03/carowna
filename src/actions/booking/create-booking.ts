@@ -3,7 +3,7 @@
 import createClient from "@/lib/supabase/clients/server";
 import { validateBookingConstraints } from "@/service/user/bookings";
 import { getUser } from "@/service/self-user";
-import { bookingSchema } from "@/types/validation-schema";
+import { BookingFormSchema } from "@/types/validation-schema";
 import { err, ok } from "@/lib/error-handler";
 import Razorpay from "razorpay";
 
@@ -27,7 +27,7 @@ export default async function createBookingAction(formData: FormData) {
     initial_amount: Number(formData.get("initial_amount")),
   };
 
-  const validated = bookingSchema.safeParse(data);
+  const validated = BookingFormSchema.safeParse(data);
   if (!validated.success) {
     return err({
       reason: "Invalid booking data",

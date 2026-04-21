@@ -38,6 +38,11 @@ export default async function VendorLayout({
             href: "/dashboard/users",
           },
           {
+            icon: "Car",
+            label: "Drivers",
+            href: "/dashboard/drivers",
+          },
+          {
             icon: "CalendarCheck",
             label: "Bookings",
             href: "/dashboard/bookings",

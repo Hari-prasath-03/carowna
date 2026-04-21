@@ -22,6 +22,11 @@ export const ADMIN_CACHE_TAGS = {
   USER_DETAILS: "admin:user-details",
   USER_BOOKINGS: "admin:user-bookings",
 
+  // Driver Management
+  DRIVERS_LIST: "admin:drivers-list",
+  DRIVER_STATS: "admin:driver-stats",
+  DRIVER_DETAILS: "admin:driver-details",
+
   // Vendor detail page
   VENDOR_PROFILE: "admin:vendor-profile",
   VENDOR_DETAIL_STATS: "admin:vendor-detail-stats",
@@ -39,11 +44,6 @@ export const VENDOR_CACHE_TAGS = {
   VEHICLES_LIST: "vendor:vehicles-list",
   VEHICLE_STATS: "vendor:vehicle-stats",
   VEHICLE_DETAILS: "vendor:vehicle-details",
-
-  // Driver Management
-  DRIVERS_LIST: "vendor:drivers-list",
-  DRIVER_STATS: "vendor:driver-stats",
-  DRIVER_DETAILS: "vendor:driver-details",
 
   // Booking Management
   BOOKINGS_LIST: "vendor:bookings-list",

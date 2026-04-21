@@ -1,78 +1,58 @@
-"use server";
-
-import { unstable_cache } from "next/cache";
-import createAdminClient from "@/lib/supabase/clients/admin";
-import { VENDOR_CACHE_TAGS, CACHE_TIME } from "@/constants/cache-tags";
-import { VendorDriver, VendorDriverStats, VendorDriverDetails } from "@/types";
-import { ADMIN_PAGE_SIZE } from "@/constants";
+import { CACHE_TIME, ADMIN_CACHE_TAGS } from "@/constants/cache-tags";
+import { ADMIN_PAGE_SIZE } from "@/constants/others";
 import QueryBuilder from "@/lib/query-builder";
+import createAdminClient from "@/lib/supabase/clients/admin";
+import { SystemDriverDetails, SystemDriver, SystemDriverStats } from "@/types";
+import { unstable_cache } from "next/cache";
 
-export const getVendorDriverStats = unstable_cache(
-  async (vendorId: string): Promise<VendorDriverStats> => {
+export const getDriverStats = unstable_cache(
+  async (): Promise<SystemDriverStats> => {
     const sb = createAdminClient();
 
-    const { data: drivers } = await sb
-      .from("drivers")
-      .select("approval_status, availability_status")
-      .eq("vendor_id", vendorId);
+    const { data: drivers } = await sb.from("drivers").select("is_available");
 
     const totalDrivers = drivers?.length || 0;
     const onlineDrivers =
-      drivers?.filter((d) => d.availability_status === true).length || 0;
-    const pendingApprovals =
-      drivers?.filter((d) => d.approval_status === "PENDING").length || 0;
+      drivers?.filter((d) => d.is_available === true).length || 0;
 
     return {
       totalDrivers,
       onlineDrivers,
-      pendingApprovals,
     };
   },
-  [VENDOR_CACHE_TAGS.DRIVER_STATS],
+  [ADMIN_CACHE_TAGS.DRIVER_STATS],
   {
-    tags: [VENDOR_CACHE_TAGS.DRIVERS_LIST],
+    tags: [ADMIN_CACHE_TAGS.DRIVER_STATS],
     revalidate: CACHE_TIME.FREQUENT,
   },
 );
 
-export const getVendorDrivers = unstable_cache(
+export const getDrivers = unstable_cache(
   async (
-    vendorId: string,
     page: number = 1,
     filters?: {
-      status?: string;
       search?: string;
     },
-  ): Promise<{ drivers: VendorDriver[]; total: number }> => {
+  ): Promise<{ drivers: SystemDriver[]; total: number }> => {
     const sb = createAdminClient();
 
     const query = new QueryBuilder(
       sb.from("drivers").select("*", { count: "exact" }),
     )
-      .filter(true, "vendor_id", vendorId)
       .paginate(page, ADMIN_PAGE_SIZE)
       .sort("created_at", false);
-
-    if (filters?.status && filters.status !== "all") {
-      query.filter(true, "approval_status", filters.status.toUpperCase());
-    }
-
-    if (filters?.search) {
-      query.search(["name"], filters.search);
-    }
+    if (filters?.search) query.search(["name"], filters.search);
 
     const { data, count, error } = await query.build();
-
     if (error) throw error;
 
-    const drivers: VendorDriver[] = (data || []).map((d) => ({
+    const drivers: SystemDriver[] = (data || []).map((d) => ({
       id: d.id,
       name: d.name,
       avatar_url: null,
       years_of_exp: d.years_of_exp || 0,
       rating: Number(d.rating || 0),
-      availability_status: !!d.availability_status,
-      approval_status: d.approval_status || "PENDING",
+      is_available: !!d.is_available,
     }));
 
     return {
@@ -80,15 +60,15 @@ export const getVendorDrivers = unstable_cache(
       total: count || 0,
     };
   },
-  [VENDOR_CACHE_TAGS.DRIVERS_LIST],
+  [ADMIN_CACHE_TAGS.DRIVERS_LIST],
   {
-    tags: [VENDOR_CACHE_TAGS.DRIVERS_LIST],
+    tags: [ADMIN_CACHE_TAGS.DRIVERS_LIST],
     revalidate: CACHE_TIME.FREQUENT,
   },
 );
 
-export const getVendorDriverDetails = unstable_cache(
-  async (driverId: string): Promise<VendorDriverDetails | null> => {
+export const getDriverDetails = unstable_cache(
+  async (driverId: string): Promise<SystemDriverDetails | null> => {
     const sb = createAdminClient();
 
     const { data: driver, error } = await sb
@@ -144,16 +124,14 @@ export const getVendorDriverDetails = unstable_cache(
 
     return {
       id: driver.id,
-      vendor_id: driver.vendor_id,
       name: driver.name,
       date_of_birth: driver.date_of_birth,
       gender: driver.gender,
       years_of_exp: driver.years_of_exp,
       rating: Number(driver.rating || 0),
+      price_per_day: driver.price_per_day,
       license_doc_url: driver.license_doc_url,
-      approval_status: driver.approval_status,
-      approval_remarks: driver.approval_remarks,
-      availability_status: !!driver.availability_status,
+      is_available: !!driver.is_available,
       created_at: driver.created_at,
       performance: {
         totalRevenue,
@@ -171,9 +149,9 @@ export const getVendorDriverDetails = unstable_cache(
       })),
     };
   },
-  [VENDOR_CACHE_TAGS.DRIVER_DETAILS],
+  [ADMIN_CACHE_TAGS.DRIVER_DETAILS],
   {
-    tags: [VENDOR_CACHE_TAGS.DRIVERS_LIST],
+    tags: [ADMIN_CACHE_TAGS.DRIVERS_LIST],
     revalidate: CACHE_TIME.FREQUENT,
   },
 );

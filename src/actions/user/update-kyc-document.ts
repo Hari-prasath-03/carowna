@@ -12,7 +12,7 @@ import {
 export default async function updateKYCDocumentAction(
   type: "aadhaar" | "license",
   docUrl: string,
-  oldDocUrl?: string,
+  oldDocUrl?: string | null,
 ) {
   const [user, userErr] = await getUser();
   if (userErr) return err({ reason: "Unauthorized" });

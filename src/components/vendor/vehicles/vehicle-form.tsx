@@ -348,7 +348,6 @@ function BasicInfoSection({
           options={[
             { label: "Car", value: "car" },
             { label: "Bike", value: "bike" },
-            { label: "Luxury", value: "luxury" },
           ]}
           defaultValue={initialData?.vehicle_type ?? ""}
         />
@@ -367,6 +366,7 @@ function BasicInfoSection({
             { label: "Petrol", value: "petrol" },
             { label: "Diesel", value: "diesel" },
             { label: "Electric", value: "electric" },
+            { label: "CNG", value: "cng" },
             { label: "Hybrid", value: "hybrid" },
           ]}
           defaultValue={initialData?.fuel_type ?? ""}
@@ -396,6 +396,29 @@ function BasicInfoSection({
           placeholder="0.00"
           defaultValue={initialData?.price_per_day ?? ""}
           required
+        />
+        <FormInput
+          label="State"
+          name="state"
+          type="text"
+          placeholder="e.g. Kerala"
+          defaultValue={initialData?.state ?? ""}
+          required
+        />
+        <FormInput
+          label="District"
+          name="district"
+          type="text"
+          placeholder="e.g. Ernakulam"
+          defaultValue={initialData?.district ?? ""}
+          required
+        />
+        <FormInput
+          label="Color"
+          name="color"
+          type="text"
+          placeholder="e.g. White"
+          defaultValue={initialData?.color ?? ""}
         />
       </div>
     </VehicleFormSection>
@@ -607,7 +630,7 @@ function OperationalStatusSection({
       title="Operational Status"
       description="Readiness for public listing"
     >
-      <div className="space-y-4 max-w-sm">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <FormSelect
           label="Current Availability"
           name="is_available"
@@ -617,6 +640,16 @@ function OperationalStatusSection({
             { label: "Maintenance / Offline", value: "false" },
           ]}
           defaultValue={initialData?.is_available ? "true" : "false"}
+        />
+        <FormSelect
+          label="Luxury"
+          name="is_luxury"
+          placeholder="Select Luxury"
+          options={[
+            { label: "Luxury", value: "true" },
+            { label: "Normal", value: "false" },
+          ]}
+          defaultValue={initialData?.is_luxury ? "true" : "false"}
         />
       </div>
     </VehicleFormSection>

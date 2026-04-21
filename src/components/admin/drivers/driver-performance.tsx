@@ -1,6 +1,6 @@
 "use client";
 
-import { VendorDriverDetails } from "@/types";
+import { SystemDriverDetails } from "@/types";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -11,8 +11,8 @@ import {
 } from "@/constants/shared-styles";
 
 interface Props {
-  performance: VendorDriverDetails["performance"];
-  bookings: VendorDriverDetails["recentBookings"];
+  performance: SystemDriverDetails["performance"];
+  bookings: SystemDriverDetails["recentBookings"];
 }
 
 export default function DriverPerformance({ performance, bookings }: Props) {
